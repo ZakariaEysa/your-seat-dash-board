@@ -15,6 +15,8 @@ class ButtonBuilder extends StatelessWidget {
     this.frameColor,
     this.isActivated = true,
     this.image,
+    this.borderRadius = 50.0,
+    this.borderShape,
   });
 
   final String? image;
@@ -27,6 +29,8 @@ class ButtonBuilder extends StatelessWidget {
   final Color? buttonColor;
   final Color? frameColor;
   final bool isActivated;
+  final double borderRadius;
+  final BorderRadiusGeometry? borderShape; // ✅ شكل مخصص جديد
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +48,7 @@ class ButtonBuilder extends StatelessWidget {
             color: !isActivated
                 ? (buttonColor ?? ColorManager.primaryW).withOpacity(0.5)
                 : buttonColor ?? ColorManager.primaryW,
-            borderRadius: BorderRadius.circular(50),
+            borderRadius: borderShape ?? BorderRadius.circular(borderRadius),
             border: Border.all(
               color: frameColor ?? buttonColor ?? ColorManager.primaryW,
               width: isActivated ? 1 : 0,
@@ -53,21 +57,20 @@ class ButtonBuilder extends StatelessWidget {
           child: isLoading
               ? const Center(child: CircularProgressIndicator())
               : Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    if (image != null && image!.isNotEmpty)
-                      Image.asset(
-                        image!,
-                        width: 75.w,
-                        height: 75.h,
-                        // fit: BoxFit.cover,
-                      ),
-                    Text(
-                      text,
-                      style: style ?? theme.textTheme.labelLarge,
-                    ),
-                  ],
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (image != null && image!.isNotEmpty)
+                Image.asset(
+                  image!,
+                  width: 75.w,
+                  height: 75.h,
                 ),
+              Text(
+                text,
+                style: style ?? theme.textTheme.labelLarge,
+              ),
+            ],
+          ),
         ),
       ),
     );
