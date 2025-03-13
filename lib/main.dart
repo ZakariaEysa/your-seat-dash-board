@@ -3,7 +3,12 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/Rooming/presentation/views/rooming.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/home/presentation/views/home_screen.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/widgets/App_move.dart';
+import 'features/admin_flow/Ticket_details/presentation/views/ticket_details.dart';
+import 'features/admin_flow/setting/presentation/views/Cinema _info.dart';
+import 'features/admin_flow/setting/presentation/widgets/list.dart';
 import 'firebase_options.dart';
 import 'services/simple_bloc_observer_service.dart';
 
@@ -43,7 +48,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: "Admin Dashboard",
           theme: ThemeData.dark(),
-          home: const HomeScreen(),
+          home: NavigationList(),
         );
       },
     );
