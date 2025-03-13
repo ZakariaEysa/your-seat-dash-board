@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/home/presentation/views/home_screen.dart';
+import 'features/admin_flow/setting/presentation/widgets/list.dart';
 import 'firebase_options.dart';
 import 'services/simple_bloc_observer_service.dart';
 
@@ -43,7 +44,7 @@ class MyApp extends StatelessWidget {
           debugShowCheckedModeBanner: false,
           title: "Admin Dashboard",
           theme: ThemeData.dark(),
-          home: const HomeScreen(),
+          home:NavigationList(),
         );
       },
     );
