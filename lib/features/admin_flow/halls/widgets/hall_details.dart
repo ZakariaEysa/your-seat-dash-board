@@ -23,9 +23,9 @@ class HallDetails extends StatelessWidget {
                 SizedBox(width:250, height:45, child: NewTextField()),
               ],
             ),
-             SizedBox(height: 5),
+            SizedBox(height: 5),
             Container(
-              
+
               color: const Color(0xFFBFBFBF),
               padding:  EdgeInsets.all(18),
               child: Row(
@@ -47,8 +47,8 @@ class HallDetails extends StatelessWidget {
                 ],
               ),
             ),
-             SizedBox(height: 10),
-      
+            SizedBox(height: 10),
+
             Container(
               color: const Color(0xFFBFBFBF),
               padding:  EdgeInsets.all(18),
@@ -71,7 +71,7 @@ class HallDetails extends StatelessWidget {
                 ],
               ),
             ),
-      
+
           ],
         ),
       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../../../widgets/text_field/text_field/new_text_field_builder.dart';
+import '../../../../widgets/button/button_builder.dart';
 import '../widgets/log_in.dart';
 class SignIn extends StatelessWidget {
   const SignIn({super.key});
@@ -42,7 +42,21 @@ class SignIn extends StatelessWidget {
                     ),
 
                     LogIn(),
+                    SizedBox(height: 30.h,),
 
+                    ButtonBuilder(
+                      text: 'Sign In',
+                      onTap: () {},
+                      width: 40.w,
+                      height: 50.h,
+                      buttonColor: Color(0xFF560B76),
+                      borderShape: BorderRadius.circular(10.r),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 7.sp,
+                      ),
+                    ),
                   ],
                 ),
               ),
