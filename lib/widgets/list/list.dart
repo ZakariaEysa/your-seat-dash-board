@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/Rooming/presentation/views/rooming.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/Ticket_details/presentation/views/ticket_details.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/widgets/App_move.dart';
+
+import '../../features/admin_flow/Rooming/presentation/views/rooming.dart';
+import '../../features/admin_flow/Ticket_details/presentation/views/ticket_details.dart';
+import '../../features/admin_flow/halls/view/halls.dart';
+import '../../features/admin_flow/homepage/view/home.dart';
+import '../../features/admin_flow/moives/view/movies.dart';
+import '../../features/admin_flow/setting/presentation/widgets/App_move.dart';
+import '../../features/admin_flow/transactions/view/transactions.dart';
 
 class NavigationList extends StatefulWidget {
   @override
@@ -14,9 +19,10 @@ class _NavigationListState extends State<NavigationList> {
 
   final List<Widget> _pages = [
     Center(child: Text("Home Page", style: TextStyle(fontSize: 24))),
-    Center(child: Text("Transactions", style: TextStyle(fontSize: 24))),
-    Center(child: Text("Halls", style: TextStyle(fontSize: 24))),
-    Center(child: Text("Movies", style: TextStyle(fontSize: 24))),
+    //Home(),
+    Transactions(),
+    Halls(),
+    Movies(),
     TicketDetails(),
     Rooming(),
     App(),
@@ -37,7 +43,7 @@ class _NavigationListState extends State<NavigationList> {
   @override
   Widget build(BuildContext context) {
 
-    double sideBarWidth = 45.w;
+    double sideBarWidth = 50.w;
 
     return Scaffold(
       body: Row(
@@ -88,7 +94,7 @@ class _NavigationListState extends State<NavigationList> {
                   color: Colors.white,
                   size:8.sp,
                 ),
-                 SizedBox(width:3.w),
+                SizedBox(width:3.w),
                 Text(
                   _menuItems[index]['title'],
                   style: TextStyle(
