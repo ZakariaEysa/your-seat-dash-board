@@ -15,6 +15,8 @@ class _PaymentTableState extends State<PaymentTable> {
     {'id': '#CXR003', 'date': '1 hour ago', 'status': 'Refund'},
     {'id': '#CXR004', 'date': 'Yesterday', 'status': 'Refund'},
     {'id': '#CXR005', 'date': 'Feb 2, 2025', 'status': 'Rejected'},
+    {'id': '#CXR006', 'date': 'Just now', 'status': 'Suspended'},
+
     {'id': '#CXR001', 'date': 'Just now', 'status': 'Complete'},
     {'id': '#CXR002', 'date': 'A minute ago', 'status': 'Complete'},
     {'id': '#CXR003', 'date': '1 hour ago', 'status': 'Refund'},
@@ -24,6 +26,7 @@ class _PaymentTableState extends State<PaymentTable> {
     {'id': '#CXR002', 'date': 'A minute ago', 'status': 'Complete'},
     {'id': '#CXR003', 'date': '1 hour ago', 'status': 'Refund'},
     {'id': '#CXR004', 'date': 'Yesterday', 'status': 'Refund'},
+
   ];
 
   final List<String> paymentStatuses = ['Complete', 'Refund', 'Rejected', 'Suspended'];
@@ -36,39 +39,39 @@ class _PaymentTableState extends State<PaymentTable> {
 
     return Container(
       color: Colors.white,
+      padding: EdgeInsets.all(16.sp),
       child: Column(
         children: [
+          /// Filter UI
           Align(
             alignment: Alignment.centerRight,
-            child: Container(
-              color: Colors.white,
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text('Filter', style: TextStyle(color: Colors.black)),
-                  SizedBox(width: 5),
-                  PopupMenuButton<String>(
-                    icon: Icon(Icons.filter_list, color: Colors.black),
-                    onSelected: (value) {
-                      setState(() {
-                        selectedStatus = value == 'All' ? null : value;
-                      });
-                    },
-                    itemBuilder: (context) => <PopupMenuEntry<String>>[
-                      PopupMenuItem(value: 'All', child: Text('All')),
-                      ...paymentStatuses.map((status) => PopupMenuItem(
-                        value: status,
-                        child: Text(status),
-                      ))
-                    ],
-                  ),
-                ],
-              ),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Filter', style: TextStyle(color: Colors.black)),
+                SizedBox(width: 5),
+                PopupMenuButton<String>(
+                  icon: Icon(Icons.filter_list, color: Colors.black),
+                  onSelected: (value) {
+                    setState(() {
+                      selectedStatus = value == 'All' ? null : value;
+                    });
+                  },
+                  itemBuilder: (context) => <PopupMenuEntry<String>>[
+                    PopupMenuItem(value: 'All', child: Text('All')),
+                    ...paymentStatuses.map((status) => PopupMenuItem(
+                      value: status,
+                      child: Text(status),
+                    )),
+                  ],
+                ),
+              ],
             ),
           ),
+
+          /// No Transactions Found
           if (filteredTransactions.isEmpty)
             Container(
-              color: Colors.white,
               padding: EdgeInsets.all(16.sp),
               child: Center(
                 child: Text(
@@ -78,6 +81,7 @@ class _PaymentTableState extends State<PaymentTable> {
               ),
             )
           else
+          /// Transactions Table
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: DataTable(
@@ -105,13 +109,16 @@ class _PaymentTableState extends State<PaymentTable> {
                       statusColor = Colors.black;
                   }
                   return DataRow(cells: [
+                    /// Transaction ID
                     DataCell(Text(
                       transaction['id']!,
                       style: TextStyle(color: Colors.black),
                     )),
+
+                    /// Date
                     DataCell(Row(
                       children: [
-                        Icon(Icons.calendar_today, color: Colors.black),
+                        Icon(Icons.calendar_today, color: Colors.black, size: 16),
                         SizedBox(width: 5.w),
                         Text(
                           transaction['date']!,
@@ -119,9 +126,24 @@ class _PaymentTableState extends State<PaymentTable> {
                         ),
                       ],
                     )),
-                    DataCell(Text(
-                      transaction['status']!,
-                      style: TextStyle(color: statusColor),
+
+                    /// Payment Status with Colored Circle
+                    DataCell(Row(
+                      children: [
+                        Container(
+                          width: 3.w,
+                          height: 3.w,
+                          decoration: BoxDecoration(
+                            color: statusColor,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        SizedBox(width: 4.w),
+                        Text(
+                          transaction['status']!,
+                          style: TextStyle(color: statusColor),
+                        ),
+                      ],
                     )),
                   ]);
                 }).toList(),
