@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../features/admin_flow/Rooming/presentation/views/rooming.dart';
+import '../../features/admin_flow/Ticket_details/presentation/views/ticket_details.dart';
 import '../../features/admin_flow/halls/view/halls.dart';
 import '../../features/admin_flow/homepage/view/home.dart';
 import '../../features/admin_flow/moives/view/movies.dart';
+import '../../features/admin_flow/setting/presentation/widgets/App_move.dart';
 import '../../features/admin_flow/transactions/view/transactions.dart';
 
 class NavigationList extends StatefulWidget {
@@ -15,14 +18,14 @@ class _NavigationListState extends State<NavigationList> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    //Center(child: Text("Home Page", style: TextStyle(fontSize: 24))),
-    Home(),
+    Center(child: Text("Home Page", style: TextStyle(fontSize: 24))),
+    //Home(),
     Transactions(),
     Halls(),
     Movies(),
-    // TicketDetails(),
-    // Rooming(),
-    // App(),
+    TicketDetails(),
+    Rooming(),
+    App(),
     Center(child: Text("Logging Out...", style: TextStyle(fontSize: 24))),
   ];
 
