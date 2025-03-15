@@ -3,7 +3,15 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/home/presentation/views/home_screen.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/homepage/widgets/salessummarypage.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/signin/view/signin.dart';
+import 'package:yourseatgraduationproject/widgets/list/list.dart';
+import 'features/admin_flow/homepage/widgets/MoviStates.dart';
+import 'features/admin_flow/moives/widgets/movietable.dart';
+import 'features/admin_flow/movie_detail/view/movie_details.dart';
+import 'features/admin_flow/movie_detail/widgets/movie_info.dart';
+import 'features/admin_flow/movie_detail/widgets/names.dart';
+import 'features/admin_flow/movie_detail/widgets/story_line.dart';
 import 'firebase_options.dart';
 import 'services/simple_bloc_observer_service.dart';
 
@@ -28,7 +36,6 @@ void main() async {
   runApp(const MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -36,14 +43,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(360, 690), // اضبط الأبعاد حسب التصميم الخاص بك
-      minTextAdapt: true,  // هذا يحل المشكلة المتعلقة بـ _minTextAdapt
+      minTextAdapt: true, // هذا يحل المشكلة المتعلقة بـ _minTextAdapt
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: "Admin Dashboard",
           theme: ThemeData.dark(),
-          home: const HomeScreen(),
+          home: NavigationList(),
+          //home: MovieDetail(),
+          // home:SignIn()
         );
       },
     );
