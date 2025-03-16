@@ -10,24 +10,20 @@ class CinemaText extends StatefulWidget {
 }
 
 class CinemaTextState extends State<CinemaText> {
-  // ✅ Controllers
   final TextEditingController _cinemaNameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _managerController = TextEditingController();
 
-  // ✅ Regex للتحقق
+
   final RegExp _nameRegExp = RegExp(r"^[a-zA-Z\s]+$");
   final RegExp _emailRegExp = RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$");
   final RegExp _phoneRegExp = RegExp(r"^[0-9]{11}$");
-
-  // ✅ أخطاء الحقول
   String? _cinemaNameError;
   String? _emailError;
   String? _phoneError;
   String? _managerError;
 
-  // ✅ التحقق من الحقول
   bool validateFields() {
     setState(() {
       _cinemaNameError = _validateName(_cinemaNameController.text.trim());
@@ -42,21 +38,18 @@ class CinemaTextState extends State<CinemaText> {
         _managerError == null;
   }
 
-  // ✅ التحقق من الاسم
+
   String? _validateName(String value) {
     if (value.isEmpty) return "⚠️ This field is required!";
     if (!_nameRegExp.hasMatch(value)) return "⚠️ Only letters allowed!";
     return null;
   }
-
-  // ✅ التحقق من الإيميل
   String? _validateEmail(String value) {
     if (value.isEmpty) return "⚠️ This field is required!";
     if (!_emailRegExp.hasMatch(value)) return "⚠️ Enter a valid email!";
     return null;
   }
 
-  // ✅ التحقق من الرقم
   String? _validatePhone(String value) {
     if (value.isEmpty) return "⚠️ This field is required!";
     if (!_phoneRegExp.hasMatch(value)) return "⚠️ Must be 11 digits!";

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/home/presentation/views/home_screen.dart';
 
 class TicketDetails extends StatelessWidget {
   const TicketDetails({super.key});

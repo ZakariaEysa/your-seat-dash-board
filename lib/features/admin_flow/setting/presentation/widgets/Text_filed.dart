@@ -37,7 +37,6 @@ class TextFiled extends StatelessWidget {
             ),
           ),
 
-        // ✅ حقل النص (مع دعم الأخطاء لو فيه مشكلة)
         Padding(
           padding: EdgeInsets.only(top: 5.h, left: 10.w, right: 60.w),
           child: SizedBox(
@@ -49,8 +48,6 @@ class TextFiled extends StatelessWidget {
               onFieldSubmitted: onFieldSubmitted,
               style: TextStyle(fontSize: 5.sp, color: Colors.black),
               textAlign: TextAlign.start,
-
-              // ✅ إعدادات المربع والحدود والألوان
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.r),
@@ -66,13 +63,28 @@ class TextFiled extends StatelessWidget {
                     color: Color(0XFFEB68E3),
                   ),
                 ),
+
+
+                errorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8.r),
+                  borderSide: const BorderSide(
+                    color: Colors.red,
+                    width: 1.0,
+                  ),
+                ),
+                focusedErrorBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(12.r),
+                  borderSide: const BorderSide(
+                    color: Colors.black,
+                    width: 1.0,
+                  ),
+                ),
+
                 hintText: hintText,
                 hintStyle: TextStyle(
                   color: const Color(0xFF837D7D),
                   fontSize: 3.sp,
                 ),
-
-                // ✅ دعم خطأ التحقق — لو فيه مشكلة
                 errorText: errorText,
                 errorStyle: TextStyle(
                   color: Colors.red,

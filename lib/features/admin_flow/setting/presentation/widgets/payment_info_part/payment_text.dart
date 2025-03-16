@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/halls/view/halls.dart';
 import '../Text_filed.dart';
 
 class PaymentText extends StatefulWidget {
