@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/moives/widgets/movietable.dart';
 
-import '../../movie_detail/view/movie_details.dart';
+import '../../movie_detail/presentation/view/movie_details.dart';
 
 class Movies extends StatefulWidget {
   @override

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/movie_detail/widgets/story_line.dart';
-import '../../../../widgets/button/button_builder.dart';
-import '../../../../widgets/text_field/text_field/new_text_field_builder.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/movie_detail/presentation/widgets/story_line.dart';
+import '../../../../../widgets/button/button_builder.dart';
+import '../../../../../widgets/text_field/text_field/new_text_field_builder.dart';
 
 class MovieInfoScreen extends StatefulWidget {
   @override

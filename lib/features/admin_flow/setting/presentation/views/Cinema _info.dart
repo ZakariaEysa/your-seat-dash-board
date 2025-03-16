@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:yourseatgraduationproject/utils/app_logs.dart';
 import '../../../../../widgets/button/button_builder.dart';
+import '../cubit/settings_cubit.dart';
 import '../widgets/cinema_info_text/cinema_text.dart';
 import '../widgets/cinema_info_text/country.dart';
 
@@ -28,7 +30,8 @@ class CinemaInfo extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top:40.h, right: 20.w, left:10.w),
+                    padding:
+                        EdgeInsets.only(top: 40.h, right: 20.w, left: 10.w),
                     child: Text(
                       "Public Info",
                       style: TextStyle(
@@ -39,7 +42,7 @@ class CinemaInfo extends StatelessWidget {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only( right: 20.w, left:10.w),
+                    padding: EdgeInsets.only(right: 20.w, left: 10.w),
                     child: Text(
                       "Update Your Cinema details here",
                       style: TextStyle(
@@ -48,10 +51,9 @@ class CinemaInfo extends StatelessWidget {
                       ),
                     ),
                   ),
-                  SizedBox(height:50.h),
+                  SizedBox(height: 50.h),
                   CinemaText(key: cinemaTextKey),
                   SizedBox(height: 20.h),
-
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
@@ -105,7 +107,6 @@ class CinemaInfo extends StatelessWidget {
               ),
             ),
           ),
-
           Padding(
             padding: EdgeInsets.only(left: 80.w, top: 40.h),
             child: Row(
@@ -113,8 +114,12 @@ class CinemaInfo extends StatelessWidget {
                 ButtonBuilder(
                   text: 'Save',
                   onTap: () {
-                    bool isCinemaInfoValid = cinemaTextKey.currentState?.validateFields() ?? false;
-                    bool isCountrySelected = countryKey.currentState?.selectedCountry != null;
+                    AppLogs.scussessLog(
+                        "Cinema info saved successfully ${SettingsCubit.get(context).selectedCountry} ${SettingsCubit.get(context).cinemaNameController.text} ${SettingsCubit.get(context).emailController.text} ${SettingsCubit.get(context).phoneController.text} ${SettingsCubit.get(context).managerController.text}");
+                    bool isCinemaInfoValid =
+                        cinemaTextKey.currentState?.validateFields() ?? false;
+                    bool isCountrySelected =
+                        SettingsCubit.get(context).selectedCountry != null;
 
                     if (isCinemaInfoValid && isCountrySelected) {
                       ScaffoldMessenger.of(context).showSnackBar(
@@ -127,10 +132,9 @@ class CinemaInfo extends StatelessWidget {
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(
                         SnackBar(
-                          content: Text(
-                              isCinemaInfoValid
-                                  ? '⚠️ Please select a country!'
-                                  : '⚠️ Please fill all fields correctly!'),
+                          content: Text(isCinemaInfoValid
+                              ? '⚠️ Please select a country!'
+                              : '⚠️ Please fill all fields correctly!'),
                           backgroundColor: Colors.red,
                           duration: const Duration(seconds: 2),
                         ),
@@ -149,7 +153,6 @@ class CinemaInfo extends StatelessWidget {
                   ),
                 ),
                 SizedBox(width: 20.w),
-
                 ButtonBuilder(
                   text: 'Cancel',
                   onTap: () {

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/views/Cinema_design.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/views/Contract.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/cubit/settings_cubit.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/views/cinema_design.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/views/contract.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/views/payment_info.dart';
-import '../views/Cinema _info.dart';
+import '../views/cinema _info.dart';
 
 class App extends StatefulWidget {
   final int initialTab;
@@ -53,12 +55,15 @@ class _AppState extends State<App> {
             ),
           ),
         ),
-        body: const TabBarView(
+        body: TabBarView(
           children: [
-            CinemaInfo(),
-            CinemaDesign(),
-            PaymentInfo(),
-            Contract(),
+            BlocProvider(
+              create: (context) => SettingsCubit(),
+              child: CinemaInfo(),
+            ),
+            const CinemaDesign(),
+            const PaymentInfo(),
+            const Contract(),
           ],
         ),
       ),

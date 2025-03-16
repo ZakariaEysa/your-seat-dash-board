@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/cubit/settings_cubit.dart';
 
 class Country extends StatefulWidget {
   const Country({super.key});
@@ -9,7 +10,7 @@ class Country extends StatefulWidget {
 }
 
 class CountryState extends State<Country> {
-  String? selectedCountry;
+  
 
   final List<String> countries = [
     'Egypt',
@@ -19,7 +20,7 @@ class CountryState extends State<Country> {
     'Qatar',
   ];
   bool validateCountry() {
-    return selectedCountry != null;
+    return SettingsCubit.get(context).selectedCountry != null;
   }
 
   @override
@@ -33,11 +34,11 @@ class CountryState extends State<Country> {
             children: [
               DropdownWidget(
                 hintText: 'Country',
-                selectedValue: selectedCountry,
+                selectedValue: SettingsCubit.get(context).selectedCountry,
                 itemsList: countries,
                 onChanged: (String? newValue) {
                   setState(() {
-                    selectedCountry = newValue;
+                    SettingsCubit.get(context).selectedCountry = newValue;
                   });
                 },
               ),
