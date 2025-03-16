@@ -28,7 +28,7 @@ class CinemaDesign extends StatelessWidget {
                             Text(
                               "update Cinema Tax Register here",
                               style: TextStyle(
-                                  color: Color(0xFF6A6767), fontSize: 5.sp),
+                                  color: const Color(0xFF6A6767), fontSize: 5.sp),
                             ),
                             SizedBox(
                               height: 50.h,
@@ -44,7 +44,7 @@ class CinemaDesign extends StatelessWidget {
                                           Text(
                                             "upload PDF",
                                             style: TextStyle(
-                                                color: Color(0xFF6A6767),
+                                                color: const Color(0xFF6A6767),
                                                 fontSize: 5.sp),
                                           ),
                                           SizedBox(
@@ -61,7 +61,7 @@ class CinemaDesign extends StatelessWidget {
                                           Text(
                                             "*PDF maximum 10 MB .",
                                             style: TextStyle(
-                                                color: Color(0xFF6A6767),
+                                                color: const Color(0xFF6A6767),
                                                 fontSize:3.sp),
                                           ),
                                         ],
@@ -74,8 +74,8 @@ class CinemaDesign extends StatelessWidget {
                                             onTap: () {},
                                             width: 30.w,
                                             height: 51.h,
-                                            buttonColor: Color(0xFF292D32),
-                                            frameColor: Color(0xFF560B76),
+                                            buttonColor: const Color(0xFF292D32),
+                                            frameColor: const Color(0xFF560B76),
                                             borderShape:
                                                 BorderRadius.circular(15.r),
                                             style: TextStyle(
@@ -108,7 +108,7 @@ class CinemaDesign extends StatelessWidget {
                                         Text(
                                           "upload cover",
                                           style: TextStyle(
-                                              color: Color(0xFF6A6767),
+                                              color: const Color(0xFF6A6767),
                                               fontSize: 5.sp),
                                         ),
                                         SizedBox(
@@ -125,7 +125,7 @@ class CinemaDesign extends StatelessWidget {
                                         Text(
                                           "*Cover size (342×120) pixels , maximum 1 MB  .",
                                           style: TextStyle(
-                                              color: Color(0xFF6A6767),
+                                              color: const Color(0xFF6A6767),
                                               fontSize:3.sp),
                                         ),
                                       ],
@@ -137,8 +137,8 @@ class CinemaDesign extends StatelessWidget {
                                           onTap: () {},
                                           width: 30.w,
                                           height: 51.h,
-                                          buttonColor: Color(0xFF292D32),
-                                          frameColor: Color(0xFF560B76),
+                                          buttonColor: const Color(0xFF292D32),
+                                          frameColor: const Color(0xFF560B76),
                                           borderShape:
                                               BorderRadius.circular(15.r),
                                           style: TextStyle(
@@ -168,7 +168,7 @@ class CinemaDesign extends StatelessWidget {
                               ],
                             ),
                             Padding(
-                              padding: EdgeInsets.only(top: 100.h),
+                              padding: EdgeInsets.only(top: 100.h,right: 20.w),
                               child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
@@ -177,8 +177,8 @@ class CinemaDesign extends StatelessWidget {
                                     onTap: () {},
                                     width: 45.w,
                                     height: 60.h,
-                                    buttonColor: Color(0xFF292D32),
-                                    frameColor: Colors.black,
+                                    buttonColor: const Color(0xFF560B76),
+                                    frameColor: const Color(0xFF560B76),
                                     borderShape: BorderRadius.circular(15.r),
                                     style: TextStyle(
                                       color: Colors.white,
@@ -192,7 +192,7 @@ class CinemaDesign extends StatelessWidget {
                                     onTap: () {},
                                     width: 45.w,
                                     height: 60.h,
-                                    buttonColor: Color(0xFFF3F3F3),
+                                    buttonColor: const Color(0xFFF3F3F3),
                                     frameColor: Colors.black,
                                     borderShape: BorderRadius.circular(15.r),
                                     style: TextStyle(

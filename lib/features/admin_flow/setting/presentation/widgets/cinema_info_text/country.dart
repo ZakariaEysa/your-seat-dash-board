@@ -5,10 +5,10 @@ class Country extends StatefulWidget {
   const Country({super.key});
 
   @override
-  State<Country> createState() => _CountrySelectionPageState();
+  State<Country> createState() => CountryState();
 }
 
-class _CountrySelectionPageState extends State<Country> {
+class CountryState extends State<Country> {
   String? selectedCountry;
 
   final List<String> countries = [
@@ -17,8 +17,10 @@ class _CountrySelectionPageState extends State<Country> {
     'United Arab Emirates',
     'Kuwait',
     'Qatar',
-    // ... more countries
   ];
+  bool validateCountry() {
+    return selectedCountry != null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,31 +66,31 @@ class DropdownWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal:4.w),
-      width:40.w,
+      padding: EdgeInsets.symmetric(horizontal: 4.w),
+      width: 40.w,
       height: 51.h,
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Color(0xFFEB68E3)),
+        border: Border.all(color: const Color(0xFFEB68E3)),
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: DropdownButton<String>(
         value: selectedValue,
         hint: Text(
           hintText,
-          style: TextStyle(color: Colors.black),
+          style: const TextStyle(color: Colors.black),
         ),
         icon: Icon(
           Icons.arrow_drop_down,
           size: 10.sp,
-          color: Color(0XFFEB68E3),
+          color: const Color(0XFFEB68E3),
         ),
         items: itemsList.map((String item) {
           return DropdownMenuItem<String>(
             value: item,
             child: Text(
               item,
-              style: TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.black),
             ),
           );
         }).toList(),
@@ -96,7 +98,7 @@ class DropdownWidget extends StatelessWidget {
         isExpanded: true,
         underline: const SizedBox.shrink(),
         dropdownColor: Colors.white,
-        style: TextStyle(color: Colors.black),
+        style: const TextStyle(color: Colors.black),
       ),
     );
   }
