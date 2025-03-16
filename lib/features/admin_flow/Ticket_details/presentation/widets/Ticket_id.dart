@@ -1,24 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // ✅ لازم نستدعيه عشان inputFormatters
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../widgets/button/button_builder.dart';
 
-class TicketId extends StatelessWidget {
+class TicketId extends StatefulWidget {
   const TicketId({super.key});
+
+  @override
+  State<TicketId> createState() => _TicketIdState();
+}
+
+class _TicketIdState extends State<TicketId> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _ticketController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding:  EdgeInsets.only(left:50.w, right:80.w),
+      padding: EdgeInsets.only(left: 50.w, right: 80.w),
       child: Container(
-        width:600.w,
+        width: 600.w,
         height: 169.h,
         decoration: BoxDecoration(
           color: const Color(0xFFF3F3F3),
           borderRadius: BorderRadius.circular(12.r),
           border: Border.all(
             color: Colors.black,
-            width:0.3.w,
+            width: 0.3.w,
           ),
         ),
         child: Row(
@@ -26,46 +35,87 @@ class TicketId extends StatelessWidget {
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                 Padding(
+                Padding(
                   padding: EdgeInsets.all(2.0.sp),
                   child: Text(
                     "Enter order ID ",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
-                      fontSize:5.sp,
+                      fontSize: 5.sp,
                       color: Colors.black,
                     ),
                   ),
                 ),
                 SizedBox(
-                  width:100.w,
+                  width: 100.w,
                   height: 120.h,
                   child: Padding(
-                    padding:  EdgeInsets.only(
+                    padding: EdgeInsets.only(
                       top: 15.h,
                       right: 20.w,
-                      left:10.w,
+                      left: 10.w,
                     ),
-                    child: TextFormField(
-                      obscureText: false,
-                      style: TextStyle(fontSize:4.sp, color: Colors.black),
-                      textAlign: TextAlign.start,
-                      decoration: InputDecoration(
-                        filled: true,
-                        fillColor: const Color(0xFFDBD9D9),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(8.r),
-                          borderSide: const BorderSide(
-                            color: Colors.black,
-                            width: 1.0,
+                    child: Form(
+                      key: _formKey,
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          inputDecorationTheme: InputDecorationTheme(
+                            errorStyle: TextStyle(
+                              color: Colors.black, // ✅ لون نص الخطأ بقى أسود
+                              fontSize: 3.sp,
+                            ),
                           ),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12.0.r),
-                          borderSide: const BorderSide(
-                            width: 1,
-                            color: Colors.black,
+                        child: TextFormField(
+                          controller: _ticketController,
+                          obscureText: false,
+                          style: TextStyle(fontSize: 4.sp, color: Colors.black),
+                          textAlign: TextAlign.start,
+                          // ✅ يخليه يقبل أرقام بس
+                          keyboardType: TextInputType.number,
+                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: const Color(0xFFDBD9D9),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                              borderSide: const BorderSide(
+                                color: Colors.black,
+                                width: 1.0,
+                              ),
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.0.r),
+                              borderSide: const BorderSide(
+                                width: 1,
+                                color: Colors.black,
+                              ),
+                            ),
+                            errorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(8.r),
+                              borderSide: const BorderSide(
+                                color: Colors.black,
+                                width: 1.0,
+                              ),
+                            ),
+                            focusedErrorBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12.r),
+                              borderSide: const BorderSide(
+                                color: Colors.black,
+                                width: 1.0,
+                              ),
+                            ),
                           ),
+
+                          autovalidateMode: AutovalidateMode.onUserInteraction,
+
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Please enter your ticket number';
+                            }
+                            return null;
+                          },
                         ),
                       ),
                     ),
@@ -73,22 +123,39 @@ class TicketId extends StatelessWidget {
                 ),
               ],
             ),
-            SizedBox(width:20.w),
+            SizedBox(width: 20.w),
             ButtonBuilder(
-              text:'Ticket',
-              onTap: () {},
-              width:40.w,
+              text: 'Ticket',
+              onTap: () {
+                if (_formKey.currentState!.validate()) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Ticket number accepted: ${_ticketController.text}',
+                      ),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Please enter your ticket number!'),
+                      backgroundColor: Colors.red,
+                    ),
+                  );
+                }
+              },
+              width: 40.w,
               height: 50.h,
-              buttonColor: Color(0xFF560B76),
+              buttonColor: const Color(0xFF560B76),
               frameColor: Colors.black,
               borderShape: BorderRadius.circular(10.r),
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.bold,
-                fontSize:6.sp,
+                fontSize: 6.sp,
               ),
             ),
-
           ],
         ),
       ),

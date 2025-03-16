@@ -5,10 +5,10 @@ class RoomMovie extends StatefulWidget {
   const RoomMovie({super.key});
 
   @override
-  State<RoomMovie> createState() => _RoomMovieSelectionPageState();
+  State<RoomMovie> createState() => RoomMovieSelectionPageState();
 }
 
-class _RoomMovieSelectionPageState extends State<RoomMovie> {
+class RoomMovieSelectionPageState extends State<RoomMovie> {
   String? selectedRoom;
   String? selectedMovie;
 
@@ -18,6 +18,17 @@ class _RoomMovieSelectionPageState extends State<RoomMovie> {
     'Guardians Of The Galaxy',
     'Shang chi: Legend of the Ten Rings'
   ];
+  bool roomError = false;
+  bool movieError = false;
+
+  bool validateSelection() {
+    setState(() {
+      roomError = selectedRoom == null;
+      movieError = selectedMovie == null;
+    });
+
+    return !roomError && !movieError;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,54 +43,30 @@ class _RoomMovieSelectionPageState extends State<RoomMovie> {
                 hintText: 'ROOM',
                 selectedValue: selectedRoom,
                 itemsList: rooms,
+                hasError: roomError,
                 onChanged: (String? newValue) {
                   setState(() {
                     selectedRoom = newValue;
+                    roomError = false;
                   });
                 },
               ),
-              SizedBox(width:10.w),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10.w),
-                width: 60.w,
-                height: 51.h,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(color: Colors.black),
-                  borderRadius: BorderRadius.circular(8.r),
-                ),
-                child: DropdownButton<String>(
-                  value: selectedMovie,
-                  hint: Text(
-                    'Movie name',
-                    style: TextStyle(color: Colors.black),
-                  ),
-                  icon: Icon(
-                    Icons.arrow_drop_down,
-                    color: Colors.black,
-                  ),
-                  items: movies.map((String item) {
-                    return DropdownMenuItem<String>(
-                      value: item,
-                      child: Text(
-                        item,
-                        style: TextStyle(color: Colors.black),
-                      ),
-                    );
-                  }).toList(),
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      selectedMovie = newValue;
-                    });
-                  },
-                  isExpanded: true,
-                  underline: const SizedBox.shrink(),
-                  dropdownColor: Colors.white,
-                  style: TextStyle(color: Colors.black),
-                ),
+              SizedBox(width: 10.w),
+              DropdownWidget(
+                hintText: 'Movie name',
+                selectedValue: selectedMovie,
+                itemsList: movies,
+                hasError: movieError,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedMovie = newValue;
+                    movieError = false;
+                  });
+                },
               ),
             ],
           ),
+          SizedBox(height: 20.h),
         ],
       ),
     );
@@ -91,12 +78,14 @@ class DropdownWidget extends StatelessWidget {
   final String? selectedValue;
   final List<String> itemsList;
   final ValueChanged<String?> onChanged;
+  final bool hasError;
 
   const DropdownWidget({
     required this.hintText,
     required this.selectedValue,
     required this.itemsList,
     required this.onChanged,
+    this.hasError = false,
     super.key,
   });
 
@@ -108,25 +97,22 @@ class DropdownWidget extends StatelessWidget {
       height: 51.h,
       decoration: BoxDecoration(
         color: Colors.white,
-        border: Border.all(color: Colors.black),
+        border: Border.all(color: hasError ? Colors.red : Colors.black),
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: DropdownButton<String>(
         value: selectedValue,
         hint: Text(
           hintText,
-          style: TextStyle(color: Colors.black),
+          style: const TextStyle(color: Colors.black),
         ),
-        icon: Icon(
-          Icons.arrow_drop_down,
-          color: Colors.black,
-        ),
+        icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
         items: itemsList.map((String item) {
           return DropdownMenuItem<String>(
             value: item,
             child: Text(
               item,
-              style: TextStyle(color: Colors.black),
+              style: const TextStyle(color: Colors.black),
             ),
           );
         }).toList(),
@@ -134,7 +120,7 @@ class DropdownWidget extends StatelessWidget {
         isExpanded: true,
         underline: const SizedBox.shrink(),
         dropdownColor: Colors.white,
-        style: TextStyle(color: Colors.black),
+        style: const TextStyle(color: Colors.black),
       ),
     );
   }
