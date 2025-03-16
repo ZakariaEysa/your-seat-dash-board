@@ -29,7 +29,6 @@ void main() async {
   runApp(const MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
@@ -37,15 +36,14 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenUtilInit(
       designSize: const Size(360, 690), // اضبط الأبعاد حسب التصميم الخاص بك
-      minTextAdapt: true,  // هذا يحل المشكلة المتعلقة بـ _minTextAdapt
+      minTextAdapt: true, // هذا يحل المشكلة المتعلقة بـ _minTextAdapt
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: "Admin Dashboard",
           theme: ThemeData.dark(),
-          home:NavigationList(),
-
+          home: NavigationList(),
         );
       },
     );
