@@ -18,15 +18,14 @@ class _NavigationListState extends State<NavigationList> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    Center(child: Text("Home Page", style: TextStyle(fontSize: 24))),
-    //Home(),
+    const Center(child: Text("Home Page", style: TextStyle(fontSize: 24))),
     Transactions(),
     Halls(),
     Movies(),
     TicketDetails(),
     Rooming(),
     App(),
-    Center(child: Text("Logging Out...", style: TextStyle(fontSize: 24))),
+    const Center(child: Text("Logging Out...", style: TextStyle(fontSize: 24))),
   ];
 
   final List<Map<String, dynamic>> _menuItems = [
@@ -42,28 +41,27 @@ class _NavigationListState extends State<NavigationList> {
 
   @override
   Widget build(BuildContext context) {
-
-    double sideBarWidth = 50.w;
+    double sideBarWidth = 45.w;
 
     return Scaffold(
       body: Row(
         children: [
-
+          // ✅ الشريط الجانبي (Sidebar)
           Container(
             width: sideBarWidth,
-            color: Color(0xFF5A2D82),
+            color: const Color(0xFF5A2D82),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Image.asset("assets/images/yourseat.png"),
-                SizedBox(height:15.h),
-
-                for (int i = 0; i < _menuItems.length; i++)
-                  buildNavItem(i),
+                Image.asset("assets/images/yourseat.png", width: 80.w),
+                SizedBox(height: 15.h),
+                // ✅ بناء عناصر القائمة
+                for (int i = 0; i < _menuItems.length; i++) buildNavItem(i),
               ],
             ),
           ),
 
+          // ✅ منطقة عرض الصفحة
           Expanded(
             child: _pages[_currentIndex],
           ),
@@ -72,55 +70,66 @@ class _NavigationListState extends State<NavigationList> {
     );
   }
 
+  /// ✅ **بناء عنصر القائمة (الأيقونة والنص) مع المسافات**
   Widget buildNavItem(int index) {
     bool isSelected = index == _currentIndex;
 
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          _currentIndex = index;
-        });
-      },
-      child: Stack(
-        children: [
-          Container(
-            padding: EdgeInsets.symmetric(vertical:2.w, horizontal:1.h),
-            color: isSelected ? Colors.purple[200] : Colors.transparent,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Icon(
-                  _menuItems[index]['icon'],
-                  color: Colors.white,
-                  size:8.sp,
-                ),
-                SizedBox(width:3.w),
-                Text(
-                  _menuItems[index]['title'],
-                  style: TextStyle(
+    return Padding(
+      padding: EdgeInsets.only(bottom: 20.h),
+      child: GestureDetector(
+        onTap: () {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        child: Stack(
+          children: [
+            Container(
+              padding: EdgeInsets.symmetric(vertical: 5.h, horizontal: 2.w),
+              margin: EdgeInsets.only(left: 5.w),
+              decoration: BoxDecoration(
+                color: isSelected ? Colors.purple[300] : Colors.transparent,
+                borderRadius: BorderRadius.circular(8.r),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    _menuItems[index]['icon'],
                     color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize:3.sp,
+                    size: 6.sp,
                   ),
-                ),
-              ],
-            ),
-          ),
-
-          if (isSelected)
-            Positioned(
-              left: 0,
-              top: 0,
-              bottom: 0,
-              child: Container(
-                width: 1.w,
-                color: Colors.white,
+                  SizedBox(width: 3.w),
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: Text(
+                        _menuItems[index]['title'],
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 3.sp,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
-        ],
+
+            if (isSelected)
+              Positioned(
+                left: 5.w,
+                top: 0,
+                bottom: 0,
+                child: Container(
+                  width: 1.w,
+                  color: Colors.white,
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }
-
-
 }
