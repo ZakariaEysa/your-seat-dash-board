@@ -21,10 +21,10 @@ class TicketInfo extends StatelessWidget {
             width:0.3.w,
           ),
         ),
-        child: Column(
+        child: const Column(
           children: [
-            const MovieInfo(),
-            const TicketDetails(),
+            MovieInfo(),
+            TicketDetails(),
           ],
         ),
       ),

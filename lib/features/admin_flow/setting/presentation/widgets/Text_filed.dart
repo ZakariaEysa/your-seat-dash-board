@@ -1,58 +1,87 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 class TextFiled extends StatelessWidget {
-  final String? hinitText;
+  final String? hintText;
   final String? label;
-  const TextFiled({super.key, this.hinitText, this.label});
+  final TextEditingController? controller;
+  final Function(String)? onChanged;
+  final Function(String)? onFieldSubmitted;
+  final String? errorText;
+
+  const TextFiled({
+    super.key,
+    this.hintText,
+    this.label,
+    this.controller,
+    this.onChanged,
+    this.onFieldSubmitted,
+    this.errorText,
+  });
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.start,
       children: [
-        Padding(
-          padding: EdgeInsets.only(top:40.h, left:13.w,right: 12.w),
-          child: Text(
-            label!,
-            style: TextStyle(
-              fontSize:3.sp,
-              color: Color(0XFF000000),
-              fontWeight: FontWeight.bold,
+        if (label != null)
+          Padding(
+            padding: EdgeInsets.only(top: 5.h, left: 13.w, right: 12.w),
+            child: Text(
+              label!,
+              style: TextStyle(
+                fontSize: 3.sp,
+                color: const Color(0XFF000000),
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
-        ),
+
+        // ✅ حقل النص (مع دعم الأخطاء لو فيه مشكلة)
         Padding(
-          padding: EdgeInsets.only(top:5.h, left:10.w, right:60.w
-          ),
+          padding: EdgeInsets.only(top: 5.h, left: 10.w, right: 60.w),
           child: SizedBox(
             width: 180.w,
             height: 65.67.h,
             child: TextFormField(
-              obscureText: false,
-              style: TextStyle(fontSize:5.sp, color: Colors.black),
+              controller: controller,
+              onChanged: onChanged,
+              onFieldSubmitted: onFieldSubmitted,
+              style: TextStyle(fontSize: 5.sp, color: Colors.black),
               textAlign: TextAlign.start,
+
+              // ✅ إعدادات المربع والحدود والألوان
               decoration: InputDecoration(
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.r),
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                     color: Color(0XFFEB68E3),
-                    width:0.2.w,
+                    width: 0.2,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12.0.r),
-                  borderSide:
-                      const BorderSide(width: 1, color: Color(0XFFEB68E3)),
+                  borderSide: const BorderSide(
+                    width: 1,
+                    color: Color(0XFFEB68E3),
+                  ),
                 ),
-                hintText: hinitText,
+                hintText: hintText,
                 hintStyle: TextStyle(
-                  color: Color(0xFF837D7D),
-                  fontSize:3.sp,
+                  color: const Color(0xFF837D7D),
+                  fontSize: 3.sp,
+                ),
+
+                // ✅ دعم خطأ التحقق — لو فيه مشكلة
+                errorText: errorText,
+                errorStyle: TextStyle(
+                  color: Colors.red,
+                  fontSize: 2.5.sp,
                 ),
               ),
             ),
           ),
-        )
+        ),
       ],
     );
   }
