@@ -16,18 +16,14 @@ class CinemaTextState extends State<CinemaText> {
   String? _emailError;
   String? _phoneError;
   String? _managerError;
-
-  // ✅ التحقق من الحقول
+  late SettingsCubit cubit;
   bool validateFields() {
+    if (!mounted) return false; // Check if the widget is still mounted
     setState(() {
-      _cinemaNameError = validateName(
-          SettingsCubit.get(context).cinemaNameController.text.trim());
-      _emailError =
-          validateEmail(SettingsCubit.get(context).emailController.text.trim());
-      _phoneError =
-          validatePhone(SettingsCubit.get(context).phoneController.text.trim());
-      _managerError = validateName(
-          SettingsCubit.get(context).managerController.text.trim());
+      _cinemaNameError = validateName(cubit.cinemaNameController.text.trim());
+      _emailError = validateEmail(cubit.emailController.text.trim());
+      _phoneError = validatePhone(cubit.phoneController.text.trim());
+      _managerError = validateName(cubit.managerController.text.trim());
     });
 
     return _cinemaNameError == null &&
@@ -37,9 +33,14 @@ class CinemaTextState extends State<CinemaText> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    var cubit = SettingsCubit.get(context);
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    cubit = SettingsCubit.get(context);
+  }
 
+  @override
+  Widget build(BuildContext context) {
     return Column(
       children: [
         Row(
@@ -102,11 +103,18 @@ class CinemaTextState extends State<CinemaText> {
   }
 
   @override
+  // void dispose() {
+  //   // Dispose controllers safely
+  //   if (mounted) {
+  //     cubit.cinemaNameController.dispose();
+  //     cubit.emailController.dispose();
+  //     cubit.phoneController.dispose();
+  //     cubit.managerController.dispose();
+  //   }
+  //
+
+  @override
   void dispose() {
-    SettingsCubit.get(context).cinemaNameController.dispose();
-    SettingsCubit.get(context).emailController.dispose();
-    SettingsCubit.get(context).phoneController.dispose();
-    SettingsCubit.get(context).managerController.dispose();
     super.dispose();
   }
 }

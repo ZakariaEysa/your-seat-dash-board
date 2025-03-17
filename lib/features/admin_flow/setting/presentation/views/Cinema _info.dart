@@ -6,8 +6,19 @@ import '../cubit/settings_cubit.dart';
 import '../widgets/cinema_info_text/cinema_text.dart';
 import '../widgets/cinema_info_text/country.dart';
 
-class CinemaInfo extends StatelessWidget {
+class CinemaInfo extends StatefulWidget {
   const CinemaInfo({super.key});
+
+  @override
+  State<CinemaInfo> createState() => _CinemaInfoState();
+}
+
+class _CinemaInfoState extends State<CinemaInfo> {
+  @override
+  void initState() {
+    SettingsCubit.get(context).getCinemaData();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -113,7 +124,7 @@ class CinemaInfo extends StatelessWidget {
               children: [
                 ButtonBuilder(
                   text: 'Save',
-                  onTap: () {
+                  onTap: () async {
                     AppLogs.scussessLog(
                         "Cinema info saved successfully ${SettingsCubit.get(context).selectedCountry} ${SettingsCubit.get(context).cinemaNameController.text} ${SettingsCubit.get(context).emailController.text} ${SettingsCubit.get(context).phoneController.text} ${SettingsCubit.get(context).managerController.text}");
                     bool isCinemaInfoValid =
@@ -122,6 +133,8 @@ class CinemaInfo extends StatelessWidget {
                         SettingsCubit.get(context).selectedCountry != null;
 
                     if (isCinemaInfoValid && isCountrySelected) {
+                      await SettingsCubit.get(context).addOrUpdateCinemaData();
+
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text('✅ Saved Successfully!'),
