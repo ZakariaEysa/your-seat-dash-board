@@ -1,42 +1,62 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NewTextField extends StatelessWidget {
-  final bool? obscureText; // جعله اختياريًا
-  final String? hintText; // جعله اختياريًا
-  final Color borderColor; // لون البورد يكون مطلوبًا دائمًا
+  final TextEditingController? controller;
+  final String? hintText;
+  final bool obscureText;
+  final Color borderColor;
+  final String? errorText;
+  final EdgeInsetsGeometry? contentPadding;
+  final TextStyle? errorStyle;
+  final TextAlign textAlign; // إضافة هذا السطر
 
   const NewTextField({
-    super.key,
-    this.obscureText,
+    Key? key,
+    this.textAlign = TextAlign.left, // إضافة هذا السطر
+
+    this.controller,
     this.hintText,
-    this.borderColor=Colors.black, // borderColor مطلوب دائمًا
-  });
+    this.obscureText = false,
+    this.borderColor = Colors.grey,
+    this.errorText,
+    this.contentPadding,
+    this.errorStyle,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return TextFormField(
-      obscureText: obscureText ?? false, // إذا كان null، استخدم false كقيمة افتراضية
-      style: TextStyle(fontSize: 5.sp, color: Colors.black),
-      textAlign: TextAlign.start,
+    return TextField(
+      controller: controller,
+      obscureText: obscureText,
+      style: TextStyle(color: Colors.black),
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
-        hintText: hintText, // hintText اختياري
+        hintText: hintText,
+        hintStyle: TextStyle(color: Colors.grey),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: borderColor),
+        ),
         enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(8.r),
-          borderSide: BorderSide(
-            color: borderColor, // لون البورد من المتغير
-            width: 1.0,
-          ),
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: borderColor),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(12.0.r),
-          borderSide: BorderSide(
-            width: 1,
-            color: borderColor, // لون البورد من المتغير
-          ),
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: borderColor),
         ),
+        errorText: errorText,
+        errorStyle: errorStyle, // استخدام errorStyle هنا
+        errorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.red),
+        ),
+        focusedErrorBorder: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(8),
+          borderSide: BorderSide(color: Colors.red),
+        ),
+        contentPadding: contentPadding, // استخدام contentPadding هنا
       ),
     );
   }
