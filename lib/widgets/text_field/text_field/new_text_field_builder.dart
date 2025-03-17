@@ -4,10 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 class NewTextField extends StatelessWidget {
   final bool? obscureText; // جعله اختياريًا
   final String? hintText; // جعله اختياريًا
-  final Color borderColor; // لون البورد يكون مطلوبًا دائمًا
-
-  const NewTextField({
+  final Color borderColor;
+  TextEditingController? controller = TextEditingController();
+   NewTextField({
     super.key,
+      this.controller,
     this.obscureText,
     this.hintText,
     this.borderColor=Colors.black, // borderColor مطلوب دائمًا
@@ -19,6 +20,7 @@ class NewTextField extends StatelessWidget {
       obscureText: obscureText ?? false, // إذا كان null، استخدم false كقيمة افتراضية
       style: TextStyle(fontSize: 5.sp, color: Colors.black),
       textAlign: TextAlign.start,
+      controller: controller,
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,

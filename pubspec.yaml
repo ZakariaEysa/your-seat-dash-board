@@ -35,6 +35,7 @@ dependencies:
   google_fonts: ^6.2.1
   google_sign_in: null
   hive_flutter: ^1.1.0
+  html: ^0.15.5
   intl_utils: ^2.8.7
   otp_pin_field: ^1.3.1
 
