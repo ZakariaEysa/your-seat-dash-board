@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yourseatgraduationproject/utils/app_logs.dart';
 
+import '../../../../../data/local_storage_service/local_storage_service.dart';
+
 part 'settings_state.dart';
 
 class SettingsCubit extends Cubit<SettingsState> {
@@ -18,18 +20,17 @@ class SettingsCubit extends Cubit<SettingsState> {
   String? cinemaId;
 
   static SettingsCubit get(context) => BlocProvider.of<SettingsCubit>(context);
-
   Future<void> getCinemaData() async {
-    cinemaId = "almodhsheenN";
+    cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
     emit(SettingsLoading());
     try {
       final cinemaRef = FirebaseFirestore.instance.collection('Cinemas');
-      final querySnapshot =
-          await cinemaRef.where('name', isEqualTo: cinemaId).limit(1).get();
+      // البحث باستخدام cinemaId كمعرف المستند مباشرة
+      final docSnapshot = await cinemaRef.doc(cinemaId).get();
 
-      AppLogs.scussessLog(querySnapshot.docs.toString());
-      if (querySnapshot.docs.isNotEmpty) {
-        final data = querySnapshot.docs.first.data();
+      if (docSnapshot.exists) {
+        // إذا وجدت السينما، املأ البيانات
+        final data = docSnapshot.data() as Map<String, dynamic>;
         cinemaNameController.text = data['name'] ?? '';
         phoneController.text = data['phone'] ?? '';
         emailController.text = data['mail'] ?? '';
@@ -37,6 +38,7 @@ class SettingsCubit extends Cubit<SettingsState> {
         selectedCountry = data['country'];
         emit(SettingsLoaded());
       } else {
+        // إذا لم يتم العثور على السينما، قم بتحميل الصفحة بدون بيانات
         emit(SettingsLoaded());
       }
     } catch (e) {
@@ -45,9 +47,19 @@ class SettingsCubit extends Cubit<SettingsState> {
   }
 
   Future<void> addOrUpdateCinemaData() async {
+    cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
     emit(SettingsLoading());
     try {
       final cinemaRef = FirebaseFirestore.instance.collection('Cinemas');
+
+      // نتأكد إن cinemaId مش فاضي أو null
+      if (cinemaId == null) {
+        throw Exception("cinemaId cannot be null or empty");
+      }
+
+      // البحث باستخدام cinemaId كمعرف المستند مباشرة
+      final querySnapshot = await cinemaRef.doc(cinemaId).get();
+
       Map<String, dynamic> cinemaData = {
         'rating': 0,
         'rating_count': 0,
@@ -58,20 +70,29 @@ class SettingsCubit extends Cubit<SettingsState> {
         'country': selectedCountry,
       };
 
-      final querySnapshot =
-          await cinemaRef.where('name', isEqualTo: cinemaId).limit(1).get();
-
-      if (querySnapshot.docs.isNotEmpty) {
-        await cinemaRef.doc(querySnapshot.docs.first.id).update(cinemaData);
-        AppLogs.debugLog("updated");
+      if (querySnapshot.exists) {
+        await cinemaRef.doc(cinemaId).update(cinemaData);
+        AppLogs.debugLog("Updated document with ID: $cinemaId");
       } else {
         await cinemaRef.doc(cinemaId).set(cinemaData);
-        AppLogs.debugLog("added");
+        AppLogs.debugLog("Added document with ID: $cinemaId");
       }
 
       emit(SettingsLoaded());
     } catch (e) {
       emit(SettingsError('Error adding/updating cinema data: $e'));
+    }
+  }
+
+  String extractUsername(String email) {
+    AppLogs.errorLog(email.toString());
+
+    // نفترض إن الإيميل دايماً بينتهي بـ @admin.com
+    if (email.contains("@")) {
+      // بنشيل الجزء بتاع @admin.com ونرجع الاسم
+      return email.substring(0, email.indexOf("@admin.com"));
+    } else {
+      return "Invalid email format"; // لو الإيميل مش بالصيغة المطلوبة
     }
   }
 }

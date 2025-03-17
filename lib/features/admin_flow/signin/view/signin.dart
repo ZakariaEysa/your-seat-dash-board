@@ -71,19 +71,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../data/local_storage_service/local_storage_service.dart';
+import '../../../../utils/app_logs.dart';
 import '../../../../widgets/button/button_builder.dart';
 import '../../../../widgets/list/list.dart';
 import '../../../../widgets/text_field/text_field/new_text_field_builder.dart';
 import '../widgets/log_in.dart';
 
-
 class SignIn extends StatelessWidget {
   const SignIn({super.key});
 
-  Future<void> _signIn(BuildContext context, String email, String password) async {
+  Future<void> _signIn(
+      BuildContext context, String email, String password) async {
     try {
-      final adminUsersRef = FirebaseFirestore.instance.collection('admin_users');
-      final querySnapshot = await adminUsersRef.where('email', isEqualTo: email).get();
+      final adminUsersRef =
+          FirebaseFirestore.instance.collection('admin_users');
+      final querySnapshot =
+          await adminUsersRef.where('email', isEqualTo: email).get();
 
       if (querySnapshot.docs.isEmpty) {
         print('Email not found');
@@ -95,10 +98,9 @@ class SignIn extends StatelessWidget {
       if (docData['password'] == password) {
         print('Login successful');
 
+        LocalStorageService.saveUserData(email);
 
-          LocalStorageService.saveUserData(email);
-
-          print(LocalStorageService.getUserData());
+        print(LocalStorageService.getUserData());
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => NavigationList()),
@@ -115,6 +117,7 @@ class SignIn extends StatelessWidget {
   Widget build(BuildContext context) {
     final TextEditingController emailController = TextEditingController();
     final TextEditingController passwordController = TextEditingController();
+    AppLogs.scussessLog(LocalStorageService.getUserData().toString());
 
     return Scaffold(
       body: Row(
@@ -192,11 +195,14 @@ class SignIn extends StatelessWidget {
                         ],
                       ),
                     ),
-                    SizedBox(height: 30.h,),
+                    SizedBox(
+                      height: 30.h,
+                    ),
                     ButtonBuilder(
                       text: 'Sign In',
                       onTap: () {
-                        _signIn(context, emailController.text, passwordController.text);
+                        _signIn(context, emailController.text,
+                            passwordController.text);
                       },
                       width: 40.w,
                       height: 50.h,

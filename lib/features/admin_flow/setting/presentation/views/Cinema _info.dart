@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yourseatgraduationproject/utils/app_logs.dart';
+import '../../../../../data/local_storage_service/local_storage_service.dart';
 import '../../../../../widgets/button/button_builder.dart';
 import '../cubit/settings_cubit.dart';
 import '../widgets/cinema_info_text/cinema_text.dart';
@@ -10,8 +11,13 @@ import '../widgets/cinema_info_text/country.dart';
 class CinemaInfo extends StatelessWidget {
   const CinemaInfo({super.key});
 
+
+
   @override
   Widget build(BuildContext context) {
+
+
+    AppLogs.debugLog(SettingsCubit.get(context).cinemaId.toString());
     return BlocProvider(
       create: (context) => SettingsCubit()..getCinemaData(),
       child: BlocBuilder<SettingsCubit, SettingsState>(
