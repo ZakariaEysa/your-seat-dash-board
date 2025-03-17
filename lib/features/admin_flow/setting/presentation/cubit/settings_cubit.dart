@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yourseatgraduationproject/utils/app_logs.dart';
 
 part 'settings_state.dart';
 
@@ -13,111 +14,64 @@ class SettingsCubit extends Cubit<SettingsState> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController managerController = TextEditingController();
   String? selectedCountry;
+
+  String? cinemaId;
+
   static SettingsCubit get(context) => BlocProvider.of<SettingsCubit>(context);
 
-  // الفانكشن الأولى لجلب بيانات السينما
-  Future<Map<String, dynamic>?> getCinemaData() async {
+  Future<void> getCinemaData() async {
+    cinemaId = "almodhsheenN";
+    emit(SettingsLoading());
     try {
-      print('Starting getCinemaData...');
-      print('Cinema name to search: ${cinemaNameController.text}');
-      
-      // الوصول للـ Collection بتاعة Cinemas
       final cinemaRef = FirebaseFirestore.instance.collection('Cinemas');
-      print('Accessing Firestore collection: Cinemas');
+      final querySnapshot =
+          await cinemaRef.where('name', isEqualTo: cinemaId).limit(1).get();
 
-      // البحث عن السينما بالاسم
-      print('Querying Firestore for cinema with name: ${cinemaNameController.text}');
-      final querySnapshot = await cinemaRef
-          .where('name', isEqualTo: cinemaNameController.text)
-          .limit(1)
-          .get();
-      print('Query completed. Number of documents found: ${querySnapshot.docs.length}');
-
-      // لو لقينا داتا
+      AppLogs.scussessLog(querySnapshot.docs.toString());
       if (querySnapshot.docs.isNotEmpty) {
-        print('Cinema found! Document ID: ${querySnapshot.docs.first.id}');
-        print('Original data from Firestore: ${querySnapshot.docs.first.data()}');
-        
-        querySnapshot.docs.first.data()['name'] = cinemaNameController.text;
-        querySnapshot.docs.first.data()['phone'] = phoneController.text;
-        querySnapshot.docs.first.data()['mail'] = emailController.text;
-        querySnapshot.docs.first.data()['manager'] = managerController.text;
-        querySnapshot.docs.first.data()['country'] = selectedCountry;
-        
-        print('Modified data to return: ${querySnapshot.docs.first.data()}');
-        return querySnapshot.docs.first.data();
+        final data = querySnapshot.docs.first.data();
+        cinemaNameController.text = data['name'] ?? '';
+        phoneController.text = data['phone'] ?? '';
+        emailController.text = data['mail'] ?? '';
+        managerController.text = data['manager'] ?? '';
+        selectedCountry = data['country'];
+        emit(SettingsLoaded());
       } else {
-        print('No cinema found with name: ${cinemaNameController.text}');
-        return null;
+        emit(SettingsLoaded());
       }
     } catch (e) {
-      print('Error getting cinema data: $e');
-      return null;
+      emit(SettingsError('Error getting cinema data: $e'));
     }
   }
 
-  // الفانكشن التانية لإضافة أو تحديث بيانات السينما
-  Future<bool> addOrUpdateCinemaData() async {
+  Future<void> addOrUpdateCinemaData() async {
+    emit(SettingsLoading());
     try {
-      print('Starting addOrUpdateCinemaData...');
-      print('Cinema name: ${cinemaNameController.text}');
-      print('Phone: ${phoneController.text}');
-      print('Email: ${emailController.text}');
-      print('Manager: ${managerController.text}');
-      print('Country: $selectedCountry');
-
-      // الوصول للـ Collection بتاعة Cinemas
       final cinemaRef = FirebaseFirestore.instance.collection('Cinemas');
-      print('Accessing Firestore collection: Cinemas');
-      
-      Map<String, dynamic> cinemaData = {};
-      print('Initialized empty cinemaData map');
+      Map<String, dynamic> cinemaData = {
+        'rating': 0,
+        'rating_count': 0,
+        'name': cinemaNameController.text,
+        'phone': phoneController.text,
+        'mail': emailController.text,
+        'manager': managerController.text,
+        'country': selectedCountry,
+      };
 
-      // ندور الأول لو السينما موجودة
-      print('Querying Firestore for cinema with name: ${cinemaNameController.text}');
-      final querySnapshot = await cinemaRef
-          .where('name', isEqualTo: cinemaNameController.text)
-          .limit(1)
-          .get();
-      print('Query completed. Number of documents found: ${querySnapshot.docs.length}');
+      final querySnapshot =
+          await cinemaRef.where('name', isEqualTo: cinemaId).limit(1).get();
 
       if (querySnapshot.docs.isNotEmpty) {
-        // لو موجودة نعمل update
-        print('Cinema exists! Document ID: ${querySnapshot.docs.first.id}');
-        cinemaData['rating'] = 0;
-        cinemaData['rating_count'] = 0;
-        cinemaData['name'] = cinemaNameController.text;
-        cinemaData['phone'] = phoneController.text;
-        cinemaData['mail'] = emailController.text;
-        cinemaData['manager'] = managerController.text;
-        cinemaData['country'] = selectedCountry;
-        print('Data prepared for update: $cinemaData');
-
-        print('Updating document with ID: ${querySnapshot.docs.first.id}');
         await cinemaRef.doc(querySnapshot.docs.first.id).update(cinemaData);
-        print("Cinema updated successfully");
+        AppLogs.debugLog("updated");
       } else {
-        // لو مش موجودة نضيفها جديد باسم السينما كـ ID
-        print('No cinema found. Preparing to add new cinema with ID: ${cinemaNameController.text}');
-        cinemaData['rating'] = 0;
-        cinemaData['rating_count'] = 0;
-        cinemaData['name'] = cinemaNameController.text;
-        cinemaData['phone'] = phoneController.text;
-        cinemaData['mail'] = emailController.text;
-        cinemaData['manager'] = managerController.text;
-        cinemaData['country'] = selectedCountry;
-        print('Data prepared for new document: $cinemaData');
-
-        print('Adding new document with ID: ${cinemaNameController.text}');
-        await cinemaRef.doc(cinemaNameController.text).set(cinemaData);
-        print("Cinema added successfully with ID: ${cinemaNameController.text}");
+        await cinemaRef.doc(cinemaId).set(cinemaData);
+        AppLogs.debugLog("added");
       }
 
-      print('addOrUpdateCinemaData completed successfully');
-      return true;
+      emit(SettingsLoaded());
     } catch (e) {
-      print('Error adding/updating cinema data: $e');
-      return false;
+      emit(SettingsError('Error adding/updating cinema data: $e'));
     }
   }
 }
