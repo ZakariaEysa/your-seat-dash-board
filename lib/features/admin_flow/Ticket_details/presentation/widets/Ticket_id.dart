@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart'; // ✅ لازم نستدعيه عشان inputFormatters
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../widgets/button/button_builder.dart';
@@ -61,7 +61,7 @@ class _TicketIdState extends State<TicketId> {
                         data: Theme.of(context).copyWith(
                           inputDecorationTheme: InputDecorationTheme(
                             errorStyle: TextStyle(
-                              color: Colors.black, // ✅ لون نص الخطأ بقى أسود
+                              color: Colors.black,
                               fontSize: 3.sp,
                             ),
                           ),
@@ -71,7 +71,6 @@ class _TicketIdState extends State<TicketId> {
                           obscureText: false,
                           style: TextStyle(fontSize: 4.sp, color: Colors.black),
                           textAlign: TextAlign.start,
-                          // ✅ يخليه يقبل أرقام بس
                           keyboardType: TextInputType.number,
                           inputFormatters: [FilteringTextInputFormatter.digitsOnly],
 

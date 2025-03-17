@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../movie_detail/view/movie_details.dart'; // تأكد من أن المسار صحيح
+import '../../movie_detail/presentation/view/movie_details.dart'; // تأكد من أن المسار صحيح
 
 class MovieTablePage extends StatefulWidget {
   @override

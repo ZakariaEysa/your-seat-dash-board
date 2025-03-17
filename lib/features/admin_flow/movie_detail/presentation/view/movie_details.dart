@@ -1,9 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/movie_detail/widgets/movie_info.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/movie_detail/widgets/story_line.dart';
-import '../../../../widgets/button/button_builder.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/movie_detail/presentation/widgets/movie_info.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/movie_detail/presentation/widgets/story_line.dart';
+import '../../../../../widgets/button/button_builder.dart';
 import '../widgets/story_line.dart';
 
 class MovieDetail extends StatelessWidget {
