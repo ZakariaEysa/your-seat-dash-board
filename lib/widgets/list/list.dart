@@ -8,6 +8,16 @@ import '../../features/admin_flow/homepage/view/home.dart';
 import '../../features/admin_flow/moives/view/movies.dart';
 import '../../features/admin_flow/setting/presentation/widgets/App_move.dart';
 import '../../features/admin_flow/transactions/view/transactions.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import '../../features/admin_flow/Rooming/presentation/views/rooming.dart';
+import '../../features/admin_flow/Ticket_details/presentation/views/ticket_details.dart';
+import '../../features/admin_flow/halls/view/halls.dart';
+import '../../features/admin_flow/homepage/view/home.dart';
+import '../../features/admin_flow/moives/view/movies.dart';
+import '../../features/admin_flow/setting/presentation/widgets/App_move.dart';
+import '../../features/admin_flow/transactions/view/transactions.dart';
 
 class NavigationList extends StatefulWidget {
   @override
@@ -46,7 +56,6 @@ class _NavigationListState extends State<NavigationList> {
     return Scaffold(
       body: Row(
         children: [
-          // ✅ الشريط الجانبي (Sidebar)
           Container(
             width: sideBarWidth,
             color: const Color(0xFF5A2D82),
@@ -116,7 +125,6 @@ class _NavigationListState extends State<NavigationList> {
                 ],
               ),
             ),
-
             if (isSelected)
               Positioned(
                 left: 5.w,

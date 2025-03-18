@@ -27,17 +27,16 @@ class _NamesState extends State<Names> {
             children: [
               CircleAvatar(
                 backgroundImage: AssetImage('assets/images/director.png'),
-                radius: 14,
+                radius: 14.r,
               ),
-              SizedBox(width: 10),
+              SizedBox(width: 3.w),
               Text(
                 'director name',
                 style: TextStyle(
-                    fontSize: 18,
+                    fontSize: 6.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
               ),
-              Spacer(),
               IconButton(
                 icon: Icon(Icons.add_circle_outline, color: Colors.black),
                 onPressed: _addDirectorTextField,
@@ -46,8 +45,7 @@ class _NamesState extends State<Names> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 5.h),
-            child: SizedBox(
-                width: 350, height: 70, child: NewTextField()),
+            child: SizedBox(width: 350, height: 70, child: NewTextField()),
           ),
         ],
       ),
@@ -65,15 +63,14 @@ class _NamesState extends State<Names> {
                 backgroundImage: AssetImage('assets/images/director.png'),
                 radius: 14,
               ),
-              SizedBox(width: 10),
+              SizedBox(width: 3.w),
               Text(
                 'Actor name',
                 style: TextStyle(
-                    fontSize: 24,
+                    fontSize: 6.sp,
                     fontWeight: FontWeight.bold,
                     color: Colors.black),
               ),
-              Spacer(),
               IconButton(
                 icon: Icon(Icons.add_circle_outline, color: Colors.black),
                 onPressed: _addActorTextField,
@@ -82,8 +79,7 @@ class _NamesState extends State<Names> {
           ),
           Padding(
             padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 5.h),
-            child: SizedBox(
-                width: 350, height: 70, child: NewTextField()),
+            child: SizedBox(width: 350.w, height: 70.h, child: NewTextField()),
           ),
         ],
       ),
@@ -102,7 +98,7 @@ class _NamesState extends State<Names> {
                   backgroundImage: AssetImage('assets/images/director.png'),
                   radius: 14,
                 ),
-                SizedBox(width: 10),
+                SizedBox(width: 3.w),
                 Text(
                   'director name',
                   style: TextStyle(
@@ -110,7 +106,6 @@ class _NamesState extends State<Names> {
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                 ),
-                Spacer(),
                 IconButton(
                   icon: Icon(Icons.add_circle_outline, color: Colors.black),
                   onPressed: _addDirectorTextField,
@@ -119,7 +114,7 @@ class _NamesState extends State<Names> {
             ),
             Padding(
                 padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 5.h),
-                child: SizedBox(width: 350, height: 70, child: NewTextField())),
+                child: SizedBox(width: 350.w, height: 70.h, child: NewTextField())),
           ],
         ),
       );
@@ -136,17 +131,16 @@ class _NamesState extends State<Names> {
               children: [
                 CircleAvatar(
                   backgroundImage: AssetImage('assets/images/director.png'),
-                  radius: 14,
+                  radius: 14.r,
                 ),
-                SizedBox(width: 10),
+                SizedBox(width: 3.w),
                 Text(
                   'Actor name',
                   style: TextStyle(
-                      fontSize: 24,
+                      fontSize: 6.sp,
                       fontWeight: FontWeight.bold,
                       color: Colors.black),
                 ),
-                Spacer(),
                 IconButton(
                   icon: Icon(Icons.add_circle_outline, color: Colors.black),
                   onPressed: _addActorTextField,
@@ -155,8 +149,7 @@ class _NamesState extends State<Names> {
             ),
             Padding(
               padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 5.h),
-              child: SizedBox(
-                  width: 350, height: 70, child: NewTextField()),
+              child: SizedBox(width: 350.w, height: 70.h, child: NewTextField()),
             ),
           ],
         ),
@@ -166,33 +159,37 @@ class _NamesState extends State<Names> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.grey[200],
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ...directorTextFields,
-                  ],
-                ),
+    return Padding(
+      //padding on the whole container
+      padding:  EdgeInsets.symmetric(horizontal: 25.h),
+      child: Container(
+        width: 220.w,
+        decoration: BoxDecoration(
+          color: Colors.grey[200],
+          borderRadius: BorderRadius.circular(12.r),
+        ),
+        padding: EdgeInsets.all(10.sp),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...directorTextFields,
+                ],
               ),
-              SizedBox(width: 20),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    ...actorTextFields,
-                  ],
-                ),
+            ),
+            SizedBox(width: 20.h),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  ...actorTextFields,
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

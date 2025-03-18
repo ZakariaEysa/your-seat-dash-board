@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/movie_detail/presentation/widgets/story_line.dart';
-import '../../../../../widgets/button/button_builder.dart';
-import '../../../../../widgets/text_field/text_field/new_text_field_builder.dart';
+import '../../../../widgets/button/button_builder.dart';
+import '../../../../widgets/text_field/text_field/new_text_field_builder.dart';
 
 class MovieInfoScreen extends StatefulWidget {
   @override
@@ -26,93 +25,90 @@ class _MovieInfoScreenState extends State<MovieInfoScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding:  EdgeInsets.only(left:22.w,right: 22.w),
-      child: Container(
-        width: 450.w,
-        height: 300.h,
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        padding: EdgeInsets.only(top: 50.h, left: 30.w),
-        child: Row(
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildLabel("Movie Name"),
-                  SizedBox(height: 5.h),
-                  _buildTextField(),
-                  SizedBox(height: 15.h),
-                  _buildLabel("Language"),
-                  SizedBox(height: 10.h),
-                  _buildTextField(),
-                ],
-              ),
+    return Container(
+      width: 220.w,
+      height: 295.h,
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(12.r),
+      ),
+      padding: EdgeInsets.only(top: 30.h, left: 10.w),
+      child: Row(
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildLabel("Movie Name"),
+                SizedBox(height: 5.h),
+                _buildTextField(),
+                SizedBox(height: 15.h),
+                _buildLabel("Language"),
+                SizedBox(height: 10.h),
+                _buildTextField(),
+              ],
             ),
-            SizedBox(width: 40.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  _buildLabel("Movie Genre"),
-                  SizedBox(height: 10.h),
-                  _buildTextField(),
-                  SizedBox(height: 15.h),
-                  _buildLabel("Censorship"),
-                  SizedBox(height: 10.h),
-                  _buildTextField(),
-                ],
-              ),
+          ),
+          SizedBox(width: 20.w),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                _buildLabel("Movie Genre"),
+                SizedBox(height: 10.h),
+                _buildTextField(),
+                SizedBox(height: 15.h),
+                _buildLabel("Censorship"),
+                SizedBox(height: 10.h),
+                _buildTextField(),
+              ],
             ),
-            SizedBox(width: 20.w),
-            Expanded(
-              child: Column(
-                children: [
-                  Image.asset(
-                    "assets/images/avatar_film.png",
-                    width: 50.w,
-                    height: 130.h,
-                  ),
-                  SizedBox(height: 25.h),
-                  Row(
-                    children: [
-                      SizedBox(width: 15.w),
-                      ButtonBuilder(
-                        text: 'Upload',
-                        onTap: () {},
-                        width: 30.w,
-                        height: 51.h,
-                        buttonColor: Color(0xFF292D32),
-                        frameColor: Color(0xFF560B76),
-                        borderShape: BorderRadius.circular(15.r),
+          ),
+          SizedBox(width: 20.w),
+          Expanded(
+            child: Column(
+              children: [
+                Image.asset(
+                  "assets/images/avatar_film.png",
+                  width: 50.w,
+                  height: 130.h,
+                ),
+                SizedBox(height: 25.h),
+                Row(
+                  children: [
+                    SizedBox(width: 5.w),
+                    ButtonBuilder(
+                      text: 'Upload',
+                      onTap: () {},
+                      width: 30.w,
+                      height: 51.h,
+                      buttonColor: Color(0xFF560B76),
+                      frameColor: Color(0xFF560B76),
+                      borderShape: BorderRadius.circular(15.r),
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 6.sp,
+                      ),
+                    ),
+                    SizedBox(width: 2.w),
+                    TextButton(
+                      onPressed: () {},
+                      child: Text(
+                        'Delete',
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Color(0xFFFF0000),
+                          fontSize: 4.sp,
                           fontWeight: FontWeight.bold,
-                          fontSize: 6.sp,
                         ),
                       ),
-                      SizedBox(width: 2.w),
-                      TextButton(
-                        onPressed: () {},
-                        child: Text(
-                          'Delete',
-                          style: TextStyle(
-                            color: Color(0xFFFF0000),
-                            fontSize: 4.sp,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
