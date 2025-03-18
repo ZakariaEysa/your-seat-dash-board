@@ -1,6 +1,16 @@
 import 'package:flutter/material.dart';
 
 class NewTextField extends StatelessWidget {
+<<<<<<< HEAD
+  final bool? obscureText; // جعله اختياريًا
+  final String? hintText; // جعله اختياريًا
+  final Color borderColor;
+  TextEditingController? controller = TextEditingController();
+   NewTextField({
+    super.key,
+      this.controller,
+    this.obscureText,
+=======
   final TextEditingController? controller;
   final String? hintText;
   final bool obscureText;
@@ -15,6 +25,7 @@ class NewTextField extends StatelessWidget {
     this.textAlign = TextAlign.left, // إضافة هذا السطر
 
     this.controller,
+>>>>>>> origin/Roaa
     this.hintText,
     this.obscureText = false,
     this.borderColor = Colors.grey,
@@ -25,10 +36,18 @@ class NewTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
+    return TextFormField(
+      obscureText: obscureText ?? false, // إذا كان null، استخدم false كقيمة افتراضية
+      style: TextStyle(fontSize: 5.sp, color: Colors.black),
+      textAlign: TextAlign.start,
+      controller: controller,
+=======
     return TextField(
       controller: controller,
       obscureText: obscureText,
       style: TextStyle(color: Colors.black),
+>>>>>>> origin/Roaa
       decoration: InputDecoration(
         filled: true,
         fillColor: Colors.white,
