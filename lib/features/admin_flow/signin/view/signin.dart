@@ -1,6 +1,8 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../data/local_storage_service/local_storage_service.dart';
 import '../../../../widgets/button/button_builder.dart';
 import '../../../../widgets/list/list.dart';
 import '../../../../widgets/text_field/text_field/new_text_field_builder.dart';
@@ -8,14 +10,16 @@ import '../../../../widgets/text_field/text_field/new_text_field_builder.dart';
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
 
+  
   @override
   _SignInState createState() => _SignInState();
 }
 
 class _SignInState extends State<SignIn> {
   final _formKey = GlobalKey<FormState>();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   bool _emailError = false;
   bool _passwordError = false;
   String _emailErrorMessage = '';
@@ -41,31 +45,57 @@ class _SignInState extends State<SignIn> {
       _passwordErrorMessage = '';
 
       // Email validation
-      if (_emailController.text.isEmpty) {
+      if (emailController.text.isEmpty) {
         _emailError = true;
         _emailErrorMessage = 'Email is required';
-      } else if (!_validateEmail(_emailController.text)) {
+      } else if (!_validateEmail(emailController.text)) {
         _emailError = true;
         _emailErrorMessage = 'Email must be a valid';
       }
 
       // Password validation
-      if (_passwordController.text.isEmpty) {
+      if (passwordController.text.isEmpty) {
         _passwordError = true;
         _passwordErrorMessage = 'Password is required';
-      } else if (!_validatePassword(_passwordController.text)) {
+      } else if (!_validatePassword(passwordController.text)) {
         _passwordError = true;
         _passwordErrorMessage = 'Password must be at least 8 characters';
       }
 
       // If all validations pass, navigate to NavigationList
       if (!_emailError && !_passwordError) {
+        _signIn(context, emailController.text, passwordController.text);      }
+    });
+  }
+  Future<void> _signIn(BuildContext context, String email, String password) async {
+    try {
+      final adminUsersRef = FirebaseFirestore.instance.collection('admin_users');
+      final querySnapshot = await adminUsersRef.where('email', isEqualTo: email).get();
+
+      if (querySnapshot.docs.isEmpty) {
+        print('Email not found');
+        return;
+      }
+
+      final docData = querySnapshot.docs.first.data();
+
+      if (docData['password'] == password) {
+        print('Login successful');
+
+
+        LocalStorageService.saveUserData(email);
+
+        print(LocalStorageService.getUserData());
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => NavigationList()),
         );
+      } else {
+        print('Incorrect password');
       }
-    });
+    } catch (e) {
+      print('Error: $e');
+    }
   }
 
   @override
@@ -122,7 +152,7 @@ class _SignInState extends State<SignIn> {
                               NewTextField(
                                 textAlign: TextAlign.right, // إضافة هذا السطر
 
-                                controller: _emailController,
+                                controller: emailController,
                                 borderColor: _emailError
                                     ? Colors.red
                                     : Color(0xFFd7b6e1),
@@ -144,7 +174,7 @@ class _SignInState extends State<SignIn> {
                             ),
                             SizedBox(height: 5.h),
                             NewTextField(
-                              controller: _passwordController,
+                              controller: passwordController,
                               borderColor: _passwordError
                                   ? Colors.red
                                   : Color(0xFFd7b6e1),
