@@ -143,9 +143,9 @@ class MovieDetail extends StatelessWidget {
             ),
 
             StoryLine(),
-            // SizedBox(height: 10.h,),
+
             Padding(
-              padding: EdgeInsets.all(48.sp),
+              padding: EdgeInsets.only(left:48.w,right: 28.w),
               child: Names(),
             ),
             SizedBox(

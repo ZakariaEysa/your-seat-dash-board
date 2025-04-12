@@ -28,7 +28,8 @@ class _NavigationListState extends State<NavigationList> {
   int _currentIndex = 0;
 
   final List<Widget> _pages = [
-    const Center(child: Text("Home Page", style: TextStyle(fontSize: 24))),
+    // const Center(child: Text("Home Page", style: TextStyle(fontSize: 24))),
+   Home(),
     Transactions(),
     Halls(),
     Movies(),
