@@ -86,10 +86,12 @@ class _SignInState extends State<SignIn> {
         LocalStorageService.saveUserData(email);
 
         print(LocalStorageService.getUserData());
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => NavigationList()),
-        );
+      Navigator.pushAndRemoveUntil(
+  context,
+  MaterialPageRoute(builder: (context) => NavigationList()),
+  (Route<dynamic> route) => false,
+);
+
       } else {
         print('Incorrect password');
       }
