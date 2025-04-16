@@ -18,6 +18,7 @@ import '../../features/admin_flow/moives/view/movies.dart';
 import '../../features/admin_flow/setting/presentation/widgets/App_move.dart';
 import '../../features/admin_flow/transactions/view/transactions.dart';
 
+
 class NavigationList extends StatefulWidget {
   @override
   State<NavigationList> createState() => _NavigationListState();
