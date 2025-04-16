@@ -101,6 +101,7 @@ class _NavigationListState extends State<NavigationList> {
                 color: isSelected ? Colors.purple[300] : Colors.transparent,
                 borderRadius: BorderRadius.circular(8.r),
               ),
+
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
