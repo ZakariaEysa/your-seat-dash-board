@@ -1,193 +1,131 @@
-// import 'package:flutter/cupertino.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-// import 'package:yourseatgraduationproject/features/admin_flow/movie_detail/widgets/movie_info.dart';
-// import 'package:yourseatgraduationproject/features/admin_flow/movie_detail/widgets/names.dart';
-// import 'package:yourseatgraduationproject/features/admin_flow/movie_detail/widgets/story_line.dart';
-// import 'package:yourseatgraduationproject/widgets/list/list.dart';
-// import '../../../../widgets/button/button_builder.dart';
-// import '../widgets/story_line.dart';
-// class MovieDetail extends StatelessWidget {
-//   const MovieDetail({super.key});
-//
-//   @override
-//   Widget build(BuildContext context) {
-//
-//     return Scaffold(
-//       backgroundColor: Colors.white,
-//       body: Row(
-//         children: [
-//           // Navigation List (بدون تغيير)
-//          // NavigationList(),
-//
-//           // المحتوى الرئيسي
-//           Expanded(
-//             child: SingleChildScrollView(
-//               child: Padding(
-//                 padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
-//                 child: Column(
-//                   //crossAxisAlignment: CrossAxisAlignment.start,
-//                   children: [
-//                     // MovieInfoScreen
-//                     MovieInfoScreen(),
-//                     SizedBox(height: 20.h),
-//
-//                     // Names
-//                     Names(),
-//                     SizedBox(height: 20.h),
-//
-//                     // StoryLine
-//                      Text(
-//                       'StoryLine',
-//                       style: TextStyle(
-//                         color: Colors.black,
-//                         fontWeight: FontWeight.bold,
-//                         fontSize: 6.sp,
-//                       ),
-//                     ),
-//                     SizedBox(height: 10.h),
-//                     StoryLine(),
-//                     SizedBox(height: 5.h),
-//
-//                     Row(
-//                       mainAxisAlignment: MainAxisAlignment.center,
-//                       children: [
-//                         ButtonBuilder(
-//                           text: 'Add Movie',
-//                           onTap: () {},
-//                           width: 100.w,
-//                           height: 40.h,
-//                           buttonColor: Color(0xFF560B76),
-//                           borderShape: BorderRadius.circular(10.r),
-//                           style: TextStyle(
-//                             color: Colors.white,
-//                             fontWeight: FontWeight.bold,
-//                             fontSize: 14.sp,
-//                           ),
-//                         ),
-//                         SizedBox(width: 20.w),
-//                         ButtonBuilder(
-//                           text: 'Cancel',
-//                           onTap: () {},
-//                           width: 100.w,
-//                           height: 40.h,
-//                           buttonColor: Color(0xFF560B76),
-//                           borderShape: BorderRadius.circular(10.r),
-//                           style: TextStyle(
-//                             color: Colors.white,
-//                             fontWeight: FontWeight.bold,
-//                             fontSize: 14.sp,
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                    // SizedBox(height: 20.h),
-//                   ],
-//                 ),
-//               ),
-//             ),
-//           ),
-//         ],
-//       ),
-//     );
-//   }
-// }
-
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../../widgets/button/button_builder.dart';
+import '../../../../../widgets/list/list.dart';
 import '../widgets/movie_info.dart';
 import '../widgets/names.dart';
 import '../widgets/story_line.dart';
 
-
 class MovieDetail extends StatelessWidget {
   const MovieDetail({super.key});
+
+  static final GlobalKey<MovieInfoScreenState> _movieInfoKey =
+  GlobalKey<MovieInfoScreenState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: SingleChildScrollView(
-        child: Column(
-          //mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(left: 20.w, top: 30.h),
-              child: Align(
-                alignment: Alignment.topLeft,
-                child: IconButton(
-                  icon: Icon(Icons.arrow_back, color: Colors.black),
-                  onPressed: () {
-                    Navigator.pop(context);
-                  },
-                ),
-              ),
-            ),
-            SizedBox(height: 20.h),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 60.w),
-              child: MovieInfoScreen(),
-            ),
+      body: Row(
+        children: [
+          // شريط التنقل (ابقيه كما هو)
+          Container(
+            width: 45.w,
+            color: const Color(0xFF5A2D82),
+            child: NavigationList(),
+          ),
 
-            Padding(
-              padding:  EdgeInsets.only(left: 100.w,top:30.h,bottom: 10.h),
-              child: Text(
-                "Story Line",
-                style:
-                TextStyle(color: Colors.black, fontWeight: FontWeight.bold,fontSize: 6.sp),
-              ),
-            ),
+          // المحتوى الرئيسي مع إصلاح الـ Overflow
+          Expanded(
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: IntrinsicHeight(
+                      child: Padding(
+                        padding:  EdgeInsets.only(left: 30.w,right: 30.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.stretch,
+                          children: [
+                            // باقي المحتوى كما هو بدون تعديل
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: IconButton(
+                                icon: Icon(Icons.arrow_back, color: Colors.black),
+                                onPressed: () => Navigator.pop(context),
+                              ),
+                            ),
+                            SizedBox(height: 20.h),
 
-            StoryLine(),
+                            MovieInfoScreen(key: _movieInfoKey),
 
-            Padding(
-              padding: EdgeInsets.only(left:48.w,right: 28.w),
-              child: Names(),
-            ),
-            SizedBox(
-              height: 25.h,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                ButtonBuilder(
-                  text: 'Add Movie',
-                  onTap: () {},
-                  width: 40.w,
-                  height: 50.h,
-                  buttonColor: Color(0xFF560B76),
-                  borderShape: BorderRadius.circular(10.r),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 7.sp,
+                            Padding(
+                              padding: EdgeInsets.only(left: 30.w, top: 30.h, bottom: 10.h),
+                              child: Text(
+                                "Story Line",
+                                style: TextStyle(
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 6.sp,
+                                ),
+                              ),
+                            ),
+
+                            StoryLine(),
+
+                            Padding(
+                              padding: EdgeInsets.only(left: 8.w, right: 2.w,top: 20.h),
+                              child: Names(),
+                            ),
+
+                            SizedBox(height: 35.h),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                ButtonBuilder(
+                                  text: 'Add Movie',
+                                  onTap: () {
+                                    final isMovieInfoValid =
+                                        _movieInfoKey.currentState?.validateFields() ?? false;
+                                    final isNamesValid = Names.validate();
+                                    final isStoryLineValid = StoryLine.validate();
+
+                                    if (isMovieInfoValid && isNamesValid && isStoryLineValid) {
+                                      print('All fields are valid');
+                                    } else {
+                                      print('Validation failed');
+                                    }
+                                  },
+                                  width: 40.w,
+                                  height: 50.h,
+                                  buttonColor: Color(0xFF560B76),
+                                  borderShape: BorderRadius.circular(10.r),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 7.sp,
+                                  ),
+                                ),
+                                SizedBox(width: 10.w),
+                                ButtonBuilder(
+                                  text: 'cancel',
+                                  onTap: () {},
+                                  width: 40.w,
+                                  height: 50.h,
+                                  buttonColor: Color(0xFF560B76),
+                                  borderShape: BorderRadius.circular(10.r),
+                                  style: TextStyle(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 7.sp,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            SizedBox(height: 10),
+                          ],
+                        ),
+                      ),
+                    ),
                   ),
-                ),
-                SizedBox(width: 10.w),
-                ButtonBuilder(
-                  text: 'cancel',
-                  onTap: () {},
-                  width: 40.w,
-                  height: 50.h,
-                  buttonColor: Color(0xFF560B76),
-                  borderShape: BorderRadius.circular(10.r),
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 7.sp,
-                  ),
-                ),
-              ],
+                );
+              },
             ),
-            SizedBox(
-              height: 10,
-            )
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

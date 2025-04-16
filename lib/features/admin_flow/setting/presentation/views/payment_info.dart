@@ -46,21 +46,14 @@ class PaymentInfo extends StatelessWidget {
                     SizedBox(height: 50.h,),
                     PaymentText(key: paymentTextKey),
 
-                    Padding(
-                      padding: EdgeInsets.only(left: 60.w, top: 60.h),
-                      child: Row(
-                        children: [
+
+                    SizedBox(height: 50.h,),
+
                           ButtonBuilder(
                             text: 'Save',
                             onTap: () {
                               if (paymentTextKey.currentState?.validateFields() ?? false) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('✅ Saved Successfully!'),
-                                    backgroundColor: Colors.green,
-                                    duration: Duration(seconds: 2),
-                                  ),
-                                );
+                                paymentTextKey.currentState?.savePaymentDetails();// ✅ حفظ البيانات
                               } else {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
@@ -71,6 +64,8 @@ class PaymentInfo extends StatelessWidget {
                                 );
                               }
                             },
+
+
                             width: 45.w,
                             height: 60.h,
                             buttonColor: const Color(0xFF560B76),
@@ -82,33 +77,11 @@ class PaymentInfo extends StatelessWidget {
                               fontSize: 8.sp,
                             ),
                           ),
-                          SizedBox(width: 20.w),
 
-                          ButtonBuilder(
-                            text: 'Cancel',
-                            onTap: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('❌ Cancelled!'),
-                                  backgroundColor: Colors.orange,
-                                  duration: Duration(seconds: 1),
-                                ),
-                              );
-                            },
-                            width: 45.w,
-                            height: 60.h,
-                            buttonColor: const Color(0xFFF3F3F3),
-                            frameColor: Colors.black,
-                            borderShape: BorderRadius.circular(15.r),
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 8.sp,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+
+
+
+
                   ],
                 ),
               ),

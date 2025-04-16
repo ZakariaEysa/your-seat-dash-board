@@ -9,6 +9,7 @@ import 'package:yourseatgraduationproject/widgets/list/list.dart';
 import 'features/admin_flow/homepage/widgets/MoviStates.dart';
 import 'features/admin_flow/homepage/widgets/booking_states.dart';
 import 'features/admin_flow/homepage/widgets/sales_dashboard.dart';
+
 import 'firebase_options.dart';
 import 'services/simple_bloc_observer_service.dart';
 
@@ -39,15 +40,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(360, 690), // اضبط الأبعاد حسب التصميم الخاص بك
-      minTextAdapt: true, // هذا يحل المشكلة المتعلقة بـ _minTextAdapt
+      designSize: const Size(360, 690), 
+      minTextAdapt: true, 
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: "Admin Dashboard",
           theme: ThemeData.dark(),
-          home: NavigationList(),
+          home:  const SignIn(),
         );
       },
     );

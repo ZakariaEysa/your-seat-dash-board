@@ -1,8 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/movie_detail/presentation/widgets/person_name_field.dart';
 import '../../../../../widgets/text_field/text_field/new_text_field_builder.dart';
+import '../../../../../widgets/validators/Validators.dart';
 
 class Names extends StatefulWidget {
+  const Names({super.key});
+
+  static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  static bool validate() {
+    return formKey.currentState?.validate() ?? false;
+  }
+
   @override
   _NamesState createState() => _NamesState();
 }
@@ -11,147 +21,45 @@ class _NamesState extends State<Names> {
   List<Widget> directorTextFields = [];
   List<Widget> actorTextFields = [];
 
+  final List<TextEditingController> _directorControllers = [];
+  final List<TextEditingController> _actorControllers = [];
+
   @override
   void initState() {
     super.initState();
-    _addInitialDirectorTextField();
-    _addInitialActorTextField();
+    _addDirectorField();
+    _addActorField();
   }
 
-  void _addInitialDirectorTextField() {
-    directorTextFields.add(
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/images/director.png'),
-                radius: 14.r,
-              ),
-              SizedBox(width: 3.w),
-              Text(
-                'director name',
-                style: TextStyle(
-                    fontSize: 6.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-              ),
-              IconButton(
-                icon: Icon(Icons.add_circle_outline, color: Colors.black),
-                onPressed: _addDirectorTextField,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 5.h),
-            child: SizedBox(width: 350, height: 70, child: NewTextField()),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _addInitialActorTextField() {
-    actorTextFields.add(
-      Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              CircleAvatar(
-                backgroundImage: AssetImage('assets/images/director.png'),
-                radius: 14,
-              ),
-              SizedBox(width: 3.w),
-              Text(
-                'Actor name',
-                style: TextStyle(
-                    fontSize: 6.sp,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black),
-              ),
-              IconButton(
-                icon: Icon(Icons.add_circle_outline, color: Colors.black),
-                onPressed: _addActorTextField,
-              ),
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 5.h),
-            child: SizedBox(width: 350.w, height: 70.h, child: NewTextField()),
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _addDirectorTextField() {
+  void _addDirectorField() {
+    final controller = TextEditingController();
+    _directorControllers.add(controller);
     setState(() {
       directorTextFields.add(
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/director.png'),
-                  radius: 14,
-                ),
-                SizedBox(width: 3.w),
-                Text(
-                  'director name',
-                  style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
-                ),
-                IconButton(
-                  icon: Icon(Icons.add_circle_outline, color: Colors.black),
-                  onPressed: _addDirectorTextField,
-                ),
-              ],
-            ),
-            Padding(
-                padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 5.h),
-                child: SizedBox(width: 350.w, height: 70.h, child: NewTextField())),
-          ],
+        PersonNameField(
+          label: 'Director Name',
+          imagePath: 'assets/images/director.png',
+          onAdd: _addDirectorField,
+          controller: controller,
+          validator: (value) =>
+              Validators.validateRequired(value, 'Director Name', maxLength: 20),
         ),
       );
     });
   }
 
-  void _addActorTextField() {
+  void _addActorField() {
+    final controller = TextEditingController();
+    _actorControllers.add(controller);
     setState(() {
       actorTextFields.add(
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                CircleAvatar(
-                  backgroundImage: AssetImage('assets/images/director.png'),
-                  radius: 14.r,
-                ),
-                SizedBox(width: 3.w),
-                Text(
-                  'Actor name',
-                  style: TextStyle(
-                      fontSize: 6.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black),
-                ),
-                IconButton(
-                  icon: Icon(Icons.add_circle_outline, color: Colors.black),
-                  onPressed: _addActorTextField,
-                ),
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 5.h),
-              child: SizedBox(width: 350.w, height: 70.h, child: NewTextField()),
-            ),
-          ],
+        PersonNameField(
+          label: 'Actor Name',
+          imagePath: 'assets/images/director.png',
+          onAdd: _addActorField,
+          controller: controller,
+          validator: (value) =>
+              Validators.validateRequired(value, 'Actor Name', maxLength: 20),
         ),
       );
     });
@@ -159,37 +67,35 @@ class _NamesState extends State<Names> {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      //padding on the whole container
-      padding:  EdgeInsets.symmetric(horizontal: 25.h),
-      child: Container(
-        width: 220.w,
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(12.r),
-        ),
-        padding: EdgeInsets.all(10.sp),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ...directorTextFields,
-                ],
+    return Form(
+      key: Names.formKey,
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 25.h),
+        child: Container(
+          width: 220.w,
+          decoration: BoxDecoration(
+            color: Colors.grey[200],
+            borderRadius: BorderRadius.circular(12.r),
+          ),
+          padding: EdgeInsets.all(10.sp),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [...directorTextFields],
+                ),
               ),
-            ),
-            SizedBox(width: 20.h),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ...actorTextFields,
-                ],
+              SizedBox(width: 20.h),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [...actorTextFields],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
