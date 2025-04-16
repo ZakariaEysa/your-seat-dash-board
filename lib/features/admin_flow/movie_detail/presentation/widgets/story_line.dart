@@ -1,67 +1,56 @@
-// import 'package:flutter/material.dart';
-// import 'package:flutter_screenutil/flutter_screenutil.dart';
-//
-// class StoryLine extends StatelessWidget {
-//   const StoryLine({Key? key}) : super(key: key);
-//
-//   @override
-//   Widget build(BuildContext context) {
-//     return Container(
-//       color: Colors.white,
-//       // appBar: AppBar(
-//       //   backgroundColor: Colors.white,
-//       //   title: const Text('                                                                 StoryLine',style: TextStyle(color: Colors.black,fontWeight: FontWeight.bold),),
-//       // ),
-//       child: Center(
-//         child: SizedBox(
-//           width: 170.w,height: 490.h,
-//           child: TextField(
-//             maxLines: null,
-//             keyboardType: TextInputType.multiline,
-//             style: const TextStyle(color: Colors.black),
-//             decoration: const InputDecoration(
-//               enabledBorder: OutlineInputBorder(
-//                 borderSide: BorderSide(color: Colors.black),
-//               ),
-//               focusedBorder: OutlineInputBorder(
-//                 borderSide: BorderSide(color: Colors.black),
-//               ),
-//               hintText: 'Write  story line here ... ',
-//               hintStyle: TextStyle(color: Colors.grey),
-//             ),
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-//
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../../widgets/text_field/text_field/new_text_field_builder.dart';
+import '../../../../../widgets/validators/Validators.dart';
 
-class StoryLine extends StatelessWidget {
-  const StoryLine({Key? key}) : super(key: key);
+class StoryLine extends StatefulWidget {
+  const StoryLine({super.key});
+
+  static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  static final TextEditingController controller = TextEditingController();
+
+  static bool validate() {
+    return formKey.currentState?.validate() ?? false;
+  }
+
+  @override
+  State<StoryLine> createState() => _StoryLineState();
+}
+
+class _StoryLineState extends State<StoryLine> {
+  String? _errorText;
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: SizedBox(
-        width: 170.w,
-        height: 200.h,
-        child: TextField(
-          maxLines: null,
-          keyboardType: TextInputType.multiline,
-          style: const TextStyle(color: Colors.black),
-          decoration: const InputDecoration(
-            enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black),
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: Colors.black),
-            ),
-            hintText: 'Write  story line here ... ',
-            hintStyle: TextStyle(color: Colors.grey),
+    return Form(
+      key: StoryLine.formKey,
+      child: Center(
+        child: Padding(
+          padding:  EdgeInsets.only(left: 30.w,right: 30.w,top:8.h,bottom: 28.h),
+          child: NewTextField(
+            controller: StoryLine.controller,
+            hintText: '\n\n Write story line here ...',
+            borderColor: _errorText != null ? Colors.red : Colors.black,
+            errorText: _errorText,
+            keyboardType: TextInputType.multiline,
+            obscureText: false,
+            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            errorStyle: TextStyle(fontSize: 12, color: Colors.red),
+            isMultiline: true,
+            maxLines: 5, // عدد الأسطر الظاهرة بشكل مبدئي
+            validator: (value) {
+              final error = Validators.validateRequired(value, 'Story Line', maxLength: 50);
+              setState(() {
+                if (value != null && value.length > 50) {
+                  _errorText = 'Story line cannot exceed 50 characters';
+                } else {
+                  _errorText = error;
+                }
+              });
+              return _errorText;
+            },
           ),
+
         ),
       ),
     );

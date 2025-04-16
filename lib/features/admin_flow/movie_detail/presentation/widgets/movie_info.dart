@@ -1,20 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
-import '../../../../../widgets/button/button_builder.dart';
-import '../../../../../widgets/text_field/text_field/new_text_field_builder.dart';
-
+import '../../../../../widgets/validators/Validators.dart';
+import 'movie_text_field_label.dart';
+import 'movie_image.dart';
 
 class MovieInfoScreen extends StatefulWidget {
+  const MovieInfoScreen({Key? key}) : super(key: key);
+
   @override
-  _MovieInfoScreenState createState() => _MovieInfoScreenState();
+  MovieInfoScreenState createState() => MovieInfoScreenState();
 }
 
-class _MovieInfoScreenState extends State<MovieInfoScreen> {
+class MovieInfoScreenState extends State<MovieInfoScreen> {
   final TextEditingController _movieNameController = TextEditingController();
   final TextEditingController _movieGenreController = TextEditingController();
   final TextEditingController _languageController = TextEditingController();
   final TextEditingController _censorshipController = TextEditingController();
+
+  String? _movieNameError;
+  String? _movieGenreError;
+  String? _languageError;
+  String? _censorshipError;
+
+  bool validateFields() {
+    setState(() {
+      _movieNameError = Validators.validateRequired(
+        _movieNameController.text,
+        'Movie name',
+      );
+      _movieGenreError = Validators.validateRequired(
+        _movieGenreController.text,
+        'Movie genre',
+      );
+      _languageError = Validators.validateRequired(
+        _languageController.text,
+        'Language',
+      );
+      _censorshipError = Validators.validateRequired(
+        _censorshipController.text,
+        'Censorship',
+      );
+    });
+
+    return _movieNameError == null &&
+        _movieGenreError == null &&
+        _languageError == null &&
+        _censorshipError == null;
+  }
+
+  void _onFieldChanged(
+      String value, Function(String?) setError, String fieldName) {
+    if (_movieNameError != null ||
+        _movieGenreError != null ||
+        _languageError != null ||
+        _censorshipError != null) {
+      setState(() {
+        setError(Validators.validateRequired(value, fieldName));
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -28,7 +72,7 @@ class _MovieInfoScreenState extends State<MovieInfoScreen> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 220.w,
+      width: 240.w,
       height: 295.h,
       decoration: BoxDecoration(
         color: Colors.grey[200],
@@ -41,13 +85,27 @@ class _MovieInfoScreenState extends State<MovieInfoScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildLabel("Movie Name"),
-                SizedBox(height: 5.h),
-                _buildTextField(),
+                MovieTextFieldLabel(
+                  label: "Movie Name",
+                  controller: _movieNameController,
+                  errorText: _movieNameError,
+                  onChanged: (value) => _onFieldChanged(
+                    value,
+                        (error) => _movieNameError = error,
+                    'Movie name',
+                  ),
+                ),
                 SizedBox(height: 15.h),
-                _buildLabel("Language"),
-                SizedBox(height: 10.h),
-                _buildTextField(),
+                MovieTextFieldLabel(
+                  label: "Language",
+                  controller: _languageController,
+                  errorText: _languageError,
+                  onChanged: (value) => _onFieldChanged(
+                    value,
+                        (error) => _languageError = error,
+                    'Language',
+                  ),
+                ),
               ],
             ),
           ),
@@ -56,81 +114,34 @@ class _MovieInfoScreenState extends State<MovieInfoScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildLabel("Movie Genre"),
-                SizedBox(height: 10.h),
-                _buildTextField(),
+                MovieTextFieldLabel(
+                  label: "Movie Genre",
+                  controller: _movieGenreController,
+                  errorText: _movieGenreError,
+                  onChanged: (value) => _onFieldChanged(
+                    value,
+                        (error) => _movieGenreError = error,
+                    'Movie genre',
+                  ),
+                ),
                 SizedBox(height: 15.h),
-                _buildLabel("Censorship"),
-                SizedBox(height: 10.h),
-                _buildTextField(),
+                MovieTextFieldLabel(
+                  label: "Censorship",
+                  controller: _censorshipController,
+                  errorText: _censorshipError,
+                  onChanged: (value) => _onFieldChanged(
+                    value,
+                        (error) => _censorshipError = error,
+                    'Censorship',
+                  ),
+                ),
               ],
             ),
           ),
           SizedBox(width: 20.w),
-          Expanded(
-            child: Column(
-              children: [
-                Image.asset(
-                  "assets/images/avatar_film.png",
-                  width: 50.w,
-                  height: 130.h,
-                ),
-                SizedBox(height: 25.h),
-                Row(
-                  children: [
-                    SizedBox(width: 5.w),
-                    ButtonBuilder(
-                      text: 'Upload',
-                      onTap: () {},
-                      width: 30.w,
-                      height: 51.h,
-                      buttonColor: Color(0xFF560B76),
-                      frameColor: Color(0xFF560B76),
-                      borderShape: BorderRadius.circular(15.r),
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 6.sp,
-                      ),
-                    ),
-                    SizedBox(width: 2.w),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text(
-                        'Delete',
-                        style: TextStyle(
-                          color: Color(0xFFFF0000),
-                          fontSize: 4.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
+          const Expanded(child: MovieImageSection()),
         ],
       ),
-    );
-  }
-
-  Widget _buildLabel(String text) {
-    return Text(
-      text,
-      style: TextStyle(
-        fontWeight: FontWeight.bold,
-        fontSize: 5.sp,
-        color: Colors.black,
-      ),
-    );
-  }
-
-  Widget _buildTextField() {
-    return SizedBox(
-      width: 140.w,
-      height: 45.h,
-      child: NewTextField(),
     );
   }
 }
