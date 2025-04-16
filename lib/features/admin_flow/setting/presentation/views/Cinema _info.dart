@@ -11,12 +11,8 @@ import '../widgets/cinema_info_text/country.dart';
 class CinemaInfo extends StatelessWidget {
   const CinemaInfo({super.key});
 
-
-
   @override
   Widget build(BuildContext context) {
-
-
     AppLogs.debugLog(SettingsCubit.get(context).cinemaId.toString());
     return BlocProvider(
       create: (context) => SettingsCubit()..getCinemaData(),

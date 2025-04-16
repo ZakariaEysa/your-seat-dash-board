@@ -131,7 +131,3 @@ class _MovieTablePageState extends State<MovieTablePage> {
   }
 }
 
-void main() => runApp(MaterialApp(
-    home: MovieTablePage(),
-    routes: {'/movieDetail': (context) => MovieDetail()}
-));

@@ -39,15 +39,15 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
-      designSize: const Size(360, 690), // اضبط الأبعاد حسب التصميم الخاص بك
-      minTextAdapt: true, // هذا يحل المشكلة المتعلقة بـ _minTextAdapt
+      designSize: const Size(360, 690), 
+      minTextAdapt: true, 
       splitScreenMode: true,
       builder: (context, child) {
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: "Admin Dashboard",
           theme: ThemeData.dark(),
-          home: NavigationList(),
+          home:  const SignIn(),
         );
       },
     );
