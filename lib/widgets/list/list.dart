@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../features/admin_flow/Rooming/presentation/views/rooming.dart';
 import '../../features/admin_flow/Ticket_details/presentation/views/ticket_details.dart';
 import '../../features/admin_flow/halls/view/halls.dart';
+import '../../features/admin_flow/halls2/view/halls2.dart';
 import '../../features/admin_flow/homepage/view/home.dart';
 import '../../features/admin_flow/moives/view/movies.dart';
 import '../../features/admin_flow/setting/presentation/widgets/App_move.dart';
@@ -19,6 +20,7 @@ import '../../features/admin_flow/moives/view/movies.dart';
 import '../../features/admin_flow/setting/presentation/widgets/App_move.dart';
 import '../../features/admin_flow/transactions/view/transactions.dart';
 
+
 class NavigationList extends StatefulWidget {
   @override
   State<NavigationList> createState() => _NavigationListState();
@@ -31,7 +33,7 @@ class _NavigationListState extends State<NavigationList> {
     // const Center(child: Text("Home Page", style: TextStyle(fontSize: 24))),
    Home(),
     Transactions(),
-    Halls(),
+    Halls2(),
     Movies(),
     TicketDetails(),
     Rooming(),
