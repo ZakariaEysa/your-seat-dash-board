@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../widgets/MoviStates.dart';
 import '../widgets/booking_states.dart';
-import '../widgets/sales_dashboard.dart';
+import '../widgets/sales-overview.dart';
 
 class Home extends StatelessWidget {
   const Home({super.key});
@@ -45,7 +45,7 @@ class Home extends StatelessWidget {
               SizedBox(
                 height: 40.h,
               ),
-              SalesDashboard(),
+              SalesOverview(),
               SizedBox(height: 30.h),
               BookingStates(),
               SizedBox(height: 30.h),

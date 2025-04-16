@@ -1,6 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
+import 'package:yourseatgraduationproject/features/admin_flow/homepage/widgets/status_cell.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/homepage/widgets/user_cell.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/moives/widgets/movie_photo.dart';
+
+import 'DetailsButton.dart';
+import 'movie_cell.dart';
 
 class MovieStates extends StatelessWidget {
   const MovieStates({super.key});
@@ -23,6 +29,7 @@ class MovieStates extends StatelessWidget {
               fontWeight: FontWeight.bold,
             ),
           ),
+          SizedBox(height: 6.h),
           Expanded(child: _buildTable()),
         ],
       ),
@@ -41,31 +48,28 @@ class MovieStates extends StatelessWidget {
           dataRowMaxHeight: 70.h,
           horizontalMargin: 6.w,
           columnSpacing: 6.w,
-          columns: [
-            _buildHeader('No.'),
-            _buildHeader('User no.'),
-            _buildHeader('         Movies'),
-            _buildHeader('      Status'),
-            _buildHeader('Earning'),
-            _buildHeader('Details'),
-          ],
+          columns: _buildHeaders(),
           rows: _buildRows(),
         ),
       ),
     );
   }
 
-  DataColumn _buildHeader(String title) {
-    return DataColumn(
-      label: Text(
-        title,
-        style: TextStyle(
-          fontWeight: FontWeight.bold,
-          color: Colors.grey,
-          fontSize: 5.sp,
+  List<DataColumn> _buildHeaders() {
+    final headers = ['No.', 'User no.', 'Movies', 'Status', 'Earning', 'Details'];
+
+    return headers.map((title) {
+      return DataColumn(
+        label: Text(
+          title,
+          style: TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Colors.grey,
+            fontSize: 5.sp,
+          ),
         ),
-      ),
-    );
+      );
+    }).toList();
   }
 
   List<DataRow> _buildRows() {
@@ -99,12 +103,12 @@ class MovieStates extends StatelessWidget {
     return data.map((item) {
       return DataRow(
         cells: [
-          DataCell(_buildText(item['no'] as String)),
-          DataCell(_buildUserCell(item['userNo'] as String)),
-          DataCell(_buildMovieCell(item['image'] as String, item['title'] as String)),
-          DataCell(_buildStatusCell(item['available'] as bool)),
-          DataCell(_buildText(item['earning'] as String)),
-          DataCell(_buildDetailsButton()),
+          DataCell(_buildText(item['no'])),
+          DataCell(UserCell(userNo: item['userNo'])),
+          DataCell(MovieCell(imagePath: item['image'], title: item['title'])),
+          DataCell(StatusCell(isAvailable: item['available'])),
+          DataCell(_buildText(item['earning'])),
+          const DataCell(DetailsButton()),
         ],
       );
     }).toList();
@@ -115,85 +119,9 @@ class MovieStates extends StatelessWidget {
       padding: EdgeInsets.symmetric(vertical: 2.h),
       child: Text(
         text,
-        style: TextStyle(color: const Color(0xFF656575), fontSize: 5.sp),
-      ),
-    );
-  }
-
-  Widget _buildUserCell(String userNo) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2.h),
-      child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 2.h),
-        decoration: BoxDecoration(
-          color: Colors.grey[200],
-          borderRadius: BorderRadius.circular(6.r),
-          border: Border.all(color: Colors.grey.shade300),
-        ),
-        child: Text(
-          userNo,
-          style: TextStyle(color: const Color(0xFF656575), fontSize: 5.sp),
-        ),
-      ),
-    );
-  }
-
-  Widget _buildMovieCell(String imagePath, String title) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2.h),
-      child: Row(
-        children: [
-          MoviePhoto(imagePath: imagePath),
-          SizedBox(width: 1.w),
-          Flexible(
-            child: Text(
-              title,
-              style: TextStyle(color: Colors.black87, fontSize: 5.sp),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildStatusCell(bool isAvailable) {
-    return Row(
-      children: [
-        Container(
-          width: 16.w,
-          height: 16.h,
-          decoration: BoxDecoration(
-            color: isAvailable ? Colors.green : Colors.red,
-            shape: BoxShape.circle,
-          ),
-        ),
-        SizedBox(width: 2.w),
-        Text(
-          isAvailable ? 'Available' : 'Unavailable',
-          style: TextStyle(
-            color: const Color(0xFF656575),
-            fontSize: 5.sp,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildDetailsButton() {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: 2.h),
-      child: Container(
-        decoration: BoxDecoration(
-          color: const Color(0xFF560B76),
-          borderRadius: BorderRadius.circular(8.r),
-        ),
-        child: TextButton(
-          onPressed: () {},
-          child: Text(
-            'Details',
-            style: TextStyle(color: Colors.white, fontSize: 5.sp),
-          ),
+        style: TextStyle(
+          color: const Color(0xFF656575),
+          fontSize: 5.sp,
         ),
       ),
     );

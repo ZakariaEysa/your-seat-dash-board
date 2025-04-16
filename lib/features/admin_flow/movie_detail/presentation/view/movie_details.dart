@@ -10,7 +10,7 @@ class MovieDetail extends StatelessWidget {
   const MovieDetail({super.key});
 
   static final GlobalKey<MovieInfoScreenState> _movieInfoKey =
-  GlobalKey<MovieInfoScreenState>();
+      GlobalKey<MovieInfoScreenState>();
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class MovieDetail extends StatelessWidget {
                     ),
                     child: IntrinsicHeight(
                       child: Padding(
-                        padding:  EdgeInsets.only(left: 30.w,right: 30.w),
+                        padding: EdgeInsets.only(left: 30.w, right: 30.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.stretch,
                           children: [
@@ -44,7 +44,8 @@ class MovieDetail extends StatelessWidget {
                             Align(
                               alignment: Alignment.topLeft,
                               child: IconButton(
-                                icon: Icon(Icons.arrow_back, color: Colors.black),
+                                icon:
+                                    Icon(Icons.arrow_back, color: Colors.black),
                                 onPressed: () => Navigator.pop(context),
                               ),
                             ),
@@ -53,7 +54,8 @@ class MovieDetail extends StatelessWidget {
                             MovieInfoScreen(key: _movieInfoKey),
 
                             Padding(
-                              padding: EdgeInsets.only(left: 30.w, top: 30.h, bottom: 10.h),
+                              padding: EdgeInsets.only(
+                                  left: 30.w, top: 30.h, bottom: 10.h),
                               child: Text(
                                 "Story Line",
                                 style: TextStyle(
@@ -67,7 +69,11 @@ class MovieDetail extends StatelessWidget {
                             StoryLine(),
 
                             Padding(
-                              padding: EdgeInsets.only(left: 8.w, right: 2.w,top: 20.h),
+                              padding: EdgeInsets.only(
+                                  left: 8.w,
+                                  right: 2.w,
+                                  top: 20.h,
+                                  bottom: 30.h),
                               child: Names(),
                             ),
 
@@ -78,12 +84,17 @@ class MovieDetail extends StatelessWidget {
                                 ButtonBuilder(
                                   text: 'Add Movie',
                                   onTap: () {
-                                    final isMovieInfoValid =
-                                        _movieInfoKey.currentState?.validateFields() ?? false;
+                                    final isMovieInfoValid = _movieInfoKey
+                                            .currentState
+                                            ?.validateFields() ??
+                                        false;
                                     final isNamesValid = Names.validate();
-                                    final isStoryLineValid = StoryLine.validate();
+                                    final isStoryLineValid =
+                                        StoryLine.validate();
 
-                                    if (isMovieInfoValid && isNamesValid && isStoryLineValid) {
+                                    if (isMovieInfoValid &&
+                                        isNamesValid &&
+                                        isStoryLineValid) {
                                       print('All fields are valid');
                                     } else {
                                       print('Validation failed');

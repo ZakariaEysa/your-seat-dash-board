@@ -69,18 +69,18 @@ class HallConfigPageState extends State<HallConfigPage> {
                   SizedBox(width: 4.w),
                   Expanded(
                     child: NewTextField(
-                      controller: _hallNameController,
-                      borderColor: _hasError ? Colors.red : Colors.black,
-                      errorText: _hasError ? _errorMessage : null,
-                      keyboardType: TextInputType.text,
-                      onChanged: (_) {
-                        if (_hasError) {
-                          setState(() {
-                            _hasError = false;
-                            _errorMessage = null;
-                          });
-                        }
-                      },
+                      // controller: _hallNameController,
+                      // borderColor: _hasError ? Colors.red : Colors.black,
+                      // errorText: _hasError ? _errorMessage : null,
+                      // keyboardType: TextInputType.text,
+                      // onChanged: (_) {
+                      //   if (_hasError) {
+                      //     setState(() {
+                      //       _hasError = false;
+                      //       _errorMessage = null;
+                      //     });
+                      //   }
+                      // },
                     ),
                   ),
                 ],
