@@ -18,6 +18,7 @@ import '../../features/admin_flow/moives/view/movies.dart';
 import '../../features/admin_flow/setting/presentation/widgets/App_move.dart';
 import '../../features/admin_flow/transactions/view/transactions.dart';
 
+
 class NavigationList extends StatefulWidget {
   @override
   State<NavigationList> createState() => _NavigationListState();
@@ -100,6 +101,7 @@ class _NavigationListState extends State<NavigationList> {
                 color: isSelected ? Colors.purple[300] : Colors.transparent,
                 borderRadius: BorderRadius.circular(8.r),
               ),
+
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
