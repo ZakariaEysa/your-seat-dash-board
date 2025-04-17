@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../movie_detail/presentation/view/movie_details.dart'; // تأكد من أن المسار صحيح
 
 class MovieTablePage extends StatefulWidget {
@@ -89,7 +90,7 @@ class _MovieTablePageState extends State<MovieTablePage> {
                         DataCell(Row(
                             children: [
                               CircleAvatar(backgroundImage: AssetImage(movie['image']!)),
-                              SizedBox(width: 8),
+                              SizedBox(width: 4.w),
                               Text(movie['name']!, style: TextStyle(color: Colors.black))
                             ]
                         )),
@@ -99,14 +100,14 @@ class _MovieTablePageState extends State<MovieTablePage> {
                         DataCell(Row(
                             children: [
                               Container(
-                                  width: 10,
-                                  height: 10,
+                                  width: 7.w,
+                                  height: 7.h,
                                   decoration: BoxDecoration(
                                       color: getStatusColor(movie['status']!),
                                       shape: BoxShape.circle
                                   )
                               ),
-                              SizedBox(width: 6),
+                              SizedBox(width: 4.w),
                               Text(movie['status']!, style: TextStyle(color: getStatusColor(movie['status']!)))
                             ]
                         )),

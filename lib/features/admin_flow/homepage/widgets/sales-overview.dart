@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/homepage/widgets/sales_dash.dart';
 
-class SalesDashboard extends StatelessWidget {
+class SalesOverview extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(

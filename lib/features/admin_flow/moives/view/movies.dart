@@ -20,12 +20,12 @@ class _MoviesState extends State<Movies> {
             Padding(
               padding:  EdgeInsets.only(top:15.h,left:270.w),
               child: SizedBox(
-                  width: 80,
-                  height: 33,
+                  width: 32.w,
+                  height: 44.h,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF560B76),
-                      padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                      padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 5.w),
                     ),
                     onPressed: () {
                       Navigator.push(
@@ -33,12 +33,12 @@ class _MoviesState extends State<Movies> {
                         MaterialPageRoute(builder: (context) => MovieDetail()),
                       );
                     },
-                    child: const Row(
+                    child:  Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.add_circle_outline, color: Colors.white, size: 20),
-                        SizedBox(width: 8),
-                        Text('Add', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
+                        Icon(Icons.add_circle_outline, color: Colors.white, size: 7.sp),
+                        SizedBox(width: 3.w),
+                        Text('Add', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontSize: 5.sp)),
                       ],
                     ),
                   ),
@@ -47,7 +47,10 @@ class _MoviesState extends State<Movies> {
             ),
             SizedBox(height: 20.h),
             Expanded(
-              child: MovieTablePage(),
+              child: Padding(
+                padding:  EdgeInsets.only(left: 10.w),
+                child: MovieTablePage(),
+              ),
             ),
           ],
         ),

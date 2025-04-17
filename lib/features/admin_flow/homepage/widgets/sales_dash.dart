@@ -34,7 +34,7 @@ class SalesDash extends StatelessWidget {
     return Container(
       color: getColorFromHex(colorHex),
       width: 55.w,
-      height: 175.h,
+   //   height: 175.h,
       child: Padding(
         padding: EdgeInsets.all(4.sp),
         child: Column(

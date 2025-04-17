@@ -86,21 +86,21 @@ class _Halls2State extends State<Halls2> {
                   ButtonBuilder(
                     text: 'Save',
                     onTap: () {
-                      bool allValid = true;
-                      for (var key in hallKeys) {
-                        if (key.currentState?.validate() != true) {
-                          allValid = false;
-                        }
-                      }
-
-                      if (allValid) {
-                        print("✅ All halls valid. Proceed to save.");
-                      } else {
-                        // ScaffoldMessenger.of(context).showSnackBar(
-                        //   const SnackBar(content: Text('Please fix all errors before saving')),
-                        // );
-                        print("❌ Some halls are invalid.");
-                      }
+                    //   bool allValid = true;
+                    //   for (var key in hallKeys) {
+                    //     if (key.currentState?.validate() != true) {
+                    //       allValid = false;
+                    //     }
+                    //   }
+                    //
+                    //   if (allValid) {
+                    //     print("✅ All halls valid. Proceed to save.");
+                    //   } else {
+                    //     // ScaffoldMessenger.of(context).showSnackBar(
+                    //     //   const SnackBar(content: Text('Please fix all errors before saving')),
+                    //     // );
+                    //     print("❌ Some halls are invalid.");
+                    //   }
                     },
                     width: 40.w,
                     height: 50.h,
