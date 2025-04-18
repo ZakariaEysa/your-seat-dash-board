@@ -13,6 +13,11 @@ class StoryLine extends StatefulWidget {
     return formKey.currentState?.validate() ?? false;
   }
 
+  static void clearFields() {
+    controller.clear();
+    formKey.currentState?.reset();
+  }
+
   @override
   State<StoryLine> createState() => _StoryLineState();
 }
@@ -26,7 +31,7 @@ class _StoryLineState extends State<StoryLine> {
       key: StoryLine.formKey,
       child: Center(
         child: Padding(
-          padding:  EdgeInsets.only(left: 30.w,right: 30.w,top:8.h,bottom: 28.h),
+          padding: EdgeInsets.only(left: 30.w, right: 30.w, top: 8.h, bottom: 28.h),
           child: NewTextField(
             controller: StoryLine.controller,
             hintText: '\n\n Write story line here ...',
@@ -37,20 +42,20 @@ class _StoryLineState extends State<StoryLine> {
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             errorStyle: TextStyle(fontSize: 12, color: Colors.red),
             isMultiline: true,
-            maxLines: 5, // عدد الأسطر الظاهرة بشكل مبدئي
+            maxLines: 5,
             validator: (value) {
-              final error = Validators.validateRequired(value, 'Story Line', maxLength: 50);
+              final error = Validators.validateRequired(
+                value,
+                'Story Line',
+                maxLength: 50,
+                lettersOnly: false,
+              );
               setState(() {
-                if (value != null && value.length > 50) {
-                  _errorText = 'Story line cannot exceed 50 characters';
-                } else {
-                  _errorText = error;
-                }
+                _errorText = error;
               });
               return _errorText;
             },
           ),
-
         ),
       ),
     );

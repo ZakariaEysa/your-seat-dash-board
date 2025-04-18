@@ -1,30 +1,51 @@
-import 'dart:ui';
-
-import 'package:flutter/cupertino.dart';
+import 'dart:typed_data';
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../../../../widgets/button/button_builder.dart';
 
 class MovieImageSection extends StatelessWidget {
-  const MovieImageSection({super.key});
+  final PlatformFile? pickedCover;
+  final Function(PlatformFile?) onPick;
+  final VoidCallback onDelete;
+
+  const MovieImageSection({
+    super.key,
+    required this.pickedCover,
+    required this.onPick,
+    required this.onDelete,
+  });
+
+  Future<void> pickCover() async {
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.image,
+      withData: true,
+    );
+
+    if (result != null && result.files.single.bytes != null) {
+      onPick(result.files.single);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Image.asset(
-          "assets/images/avatar_film.png",
+        Container(
           width: 50.w,
           height: 130.h,
+          color: Colors.grey[300],
+          child: pickedCover != null
+              ? Image.memory(pickedCover!.bytes!, fit: BoxFit.cover)
+              : Image.asset("assets/images/avatar_film.png", fit: BoxFit.cover),
         ),
         SizedBox(height: 25.h),
         Row(
           children: [
             SizedBox(width: 5.w),
             ButtonBuilder(
-              text: 'Upload',
-              onTap: () {},
+              text: pickedCover == null ? 'Upload' : 'Change',
+              onTap: () => pickCover(),
               width: 30.w,
               height: 51.h,
               buttonColor: const Color(0xFF560B76),
@@ -38,7 +59,7 @@ class MovieImageSection extends StatelessWidget {
             ),
             SizedBox(width: 2.w),
             TextButton(
-              onPressed: () {},
+              onPressed: onDelete,
               child: Text(
                 'Delete',
                 style: TextStyle(
@@ -50,6 +71,13 @@ class MovieImageSection extends StatelessWidget {
             ),
           ],
         ),
+        // if (pickedCover != null) ...[
+        //   SizedBox(height: 5.h),
+        //   Text("🖼 ${pickedCover!.name}",
+        //       style: TextStyle(fontSize: 4.sp, color: Colors.black), overflow: TextOverflow.ellipsis),
+        //   Text("Size: ${(pickedCover!.size / 1024).toStringAsFixed(2)} KB",
+        //       style: TextStyle(fontSize: 3.sp, color: Colors.black)),
+        // ]
       ],
     );
   }

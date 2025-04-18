@@ -15,6 +15,27 @@ class _Halls2State extends State<Halls2> {
     GlobalKey<HallConfigPageState>()
   ];
 
+  void _validateAndSave() {
+    bool allValid = true;
+
+    for (var key in hallKeys) {
+      if (key.currentState?.validate() != true) {
+        // Changed from validateAllFields() to validate()
+        allValid = false;
+      }
+    }
+
+    if (allValid) {
+      print("✅ All halls are valid. Proceed to save.");
+      // Proceed with saving logic
+    } else {
+      print("❌ Some halls are invalid.");
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fix all errors before saving')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,7 +65,8 @@ class _Halls2State extends State<Halls2> {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.add_circle_outline, color: Colors.white, size: 7.sp),
+                      Icon(Icons.add_circle_outline,
+                          color: Colors.white, size: 7.sp),
                       SizedBox(width: 2.w),
                       Text(
                         'Add Hall',
@@ -85,23 +107,7 @@ class _Halls2State extends State<Halls2> {
                 children: [
                   ButtonBuilder(
                     text: 'Save',
-                    onTap: () {
-                    //   bool allValid = true;
-                    //   for (var key in hallKeys) {
-                    //     if (key.currentState?.validate() != true) {
-                    //       allValid = false;
-                    //     }
-                    //   }
-                    //
-                    //   if (allValid) {
-                    //     print("✅ All halls valid. Proceed to save.");
-                    //   } else {
-                    //     // ScaffoldMessenger.of(context).showSnackBar(
-                    //     //   const SnackBar(content: Text('Please fix all errors before saving')),
-                    //     // );
-                    //     print("❌ Some halls are invalid.");
-                    //   }
-                    },
+                    onTap: _validateAndSave,
                     width: 40.w,
                     height: 50.h,
                     buttonColor: const Color(0xFF560B76),

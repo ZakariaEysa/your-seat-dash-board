@@ -41,8 +41,12 @@ class _NamesState extends State<Names> {
           imagePath: 'assets/images/director.png',
           onAdd: _addDirectorField,
           controller: controller,
-          validator: (value) =>
-              Validators.validateRequired(value, 'Director Name', maxLength: 20),
+          validator: (value) => Validators.validateRequired(
+            value,
+            'Director Name',
+            lettersOnly: true,
+            maxLength: 20,
+          ),
         ),
       );
     });
@@ -58,13 +62,16 @@ class _NamesState extends State<Names> {
           imagePath: 'assets/images/director.png',
           onAdd: _addActorField,
           controller: controller,
-          validator: (value) =>
-              Validators.validateRequired(value, 'Actor Name', maxLength: 20),
+          validator: (value) => Validators.validateRequired(
+            value,
+            'Actor Name',
+            lettersOnly: true,
+            maxLength: 20,
+          ),
         ),
       );
     });
   }
-
   @override
   Widget build(BuildContext context) {
     return Form(

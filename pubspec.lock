@@ -358,6 +358,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.1"
+  file_picker:
+    dependency: "direct main"
+    description:
+      name: file_picker
+      sha256: be325344c1f3070354a1d84a231a1ba75ea85d413774ec4bdf444c023342e030
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.5.0"
   firebase_app_check:
     dependency: "direct main"
     description:
@@ -536,6 +544,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_plugin_android_lifecycle:
+    dependency: transitive
+    description:
+      name: flutter_plugin_android_lifecycle
+      sha256: "1c2b787f99bdca1f3718543f81d38aa1b124817dfeb9fb196201bea85b6134bf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.26"
   flutter_screenutil:
     dependency: "direct main"
     description:
@@ -686,12 +702,12 @@ packages:
     dependency: "direct main"
     description:
       name: html
-      sha256: "1fc58edeaec4307368c60d59b7e15b9d658b57d7f3125098b6294153c75337ec"
+      sha256: "9475be233c437f0e3637af55e7702cbbe5c23a68bd56e8a5fa2d426297b7c6c8"
       url: "https://pub.dev"
     source: hosted
-    version: "0.15.5"
+    version: "0.15.5+1"
   http:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: http
       sha256: fe7ab022b76f3034adc518fb6ea04a82387620e19977665ea18d30a1cf43442f
@@ -854,10 +870,10 @@ packages:
     dependency: "direct main"
     description:
       name: otp_pin_field
-      sha256: "4ab1e6702fb06ba8402c6a12e6bfd398486d027b85d602e96b3fdc7a3dbb9876"
+      sha256: "263ec697964bb8a962e610435f92e112c6486aa785662309f54a1ac4901e859b"
       url: "https://pub.dev"
     source: hosted
-    version: "1.4.0"
+    version: "1.4.1"
   package_config:
     dependency: transitive
     description:
@@ -922,6 +938,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.0"
+  pdf_render:
+    dependency: "direct main"
+    description:
+      name: pdf_render
+      sha256: "0fdf8da394cc444b870ce43cebd0f66a7c1564ec45009861ee884058f31eba28"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.4.7"
   petitparser:
     dependency: transitive
     description:
@@ -1287,6 +1311,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
+  win32:
+    dependency: transitive
+    description:
+      name: win32
+      sha256: daf97c9d80197ed7b619040e86c8ab9a9dad285e7671ee7390f9180cc828a51e
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.10.1"
   xdg_directories:
     dependency: transitive
     description:
