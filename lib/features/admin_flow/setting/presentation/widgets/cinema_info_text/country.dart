@@ -10,15 +10,14 @@ class Country extends StatefulWidget {
 }
 
 class CountryState extends State<Country> {
-  
-
-  final List<String> countries = [
-    'Egypt',
-    'Saudi Arabia',
-    'United Arab Emirates',
-    'Kuwait',
-    'Qatar',
+  final List<String> egyptianProvinces = [
+    'Cairo',
+    'Alexandria',
+    'Giza',
+    'Port Said',
+    'Mansoura',
   ];
+
   bool validateCountry() {
     return SettingsCubit.get(context).selectedCountry != null;
   }
@@ -33,9 +32,9 @@ class CountryState extends State<Country> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               DropdownWidget(
-                hintText: 'Country',
+                hintText: 'city',
                 selectedValue: SettingsCubit.get(context).selectedCountry,
-                itemsList: countries,
+                itemsList: egyptianProvinces, // تغيير القائمة هنا
                 onChanged: (String? newValue) {
                   setState(() {
                     SettingsCubit.get(context).selectedCountry = newValue;
