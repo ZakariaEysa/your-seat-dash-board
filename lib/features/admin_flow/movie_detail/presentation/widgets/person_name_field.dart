@@ -55,12 +55,13 @@ class PersonNameField extends StatelessWidget {
           child: SizedBox(
             width: 350.w,
             height: 70.h,
-            child: NewTextField(
+            child:NewTextField(
               controller: controller,
+              keyboardType: TextInputType.text, // للأحرف
               borderColor: errorText != null ? Colors.red : Colors.black,
               errorText: errorText,
               onChanged: onChanged,
-              validator: validator, // Ensure the validator is applied
+              validator: validator,
             ),
           ),
         ),

@@ -20,29 +20,28 @@ class _MoviesState extends State<Movies> {
             Padding(
               padding:  EdgeInsets.only(top:15.h,left:270.w),
               child: SizedBox(
-                  width: 32.w,
-                  height: 44.h,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF560B76),
-                      padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 5.w),
-                    ),
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => MovieDetail()),
-                      );
-                    },
-                    child:  Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.add_circle_outline, color: Colors.white, size: 7.sp),
-                        SizedBox(width: 3.w),
-                        Text('Add', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontSize: 5.sp)),
-                      ],
-                    ),
+                width: 32.w,
+                height: 44.h,
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Color(0xFF560B76),
+                    padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 5.w),
                   ),
-
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MovieDetail()),
+                    );
+                  },
+                  child:  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Icon(Icons.add_circle_outline, color: Colors.white, size: 7.sp),
+                      SizedBox(width: 3.w),
+                      Text('Add', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold,fontSize: 5.sp)),
+                    ],
+                  ),
+                ),
               ),
             ),
             SizedBox(height: 20.h),
@@ -55,7 +54,6 @@ class _MoviesState extends State<Movies> {
           ],
         ),
       ),
-
     );
   }
 }

@@ -10,7 +10,6 @@ import '../../../../widgets/text_field/text_field/new_text_field_builder.dart';
 class SignIn extends StatefulWidget {
   const SignIn({super.key});
 
-  
   @override
   _SignInState createState() => _SignInState();
 }
@@ -64,13 +63,18 @@ class _SignInState extends State<SignIn> {
 
       // If all validations pass, navigate to NavigationList
       if (!_emailError && !_passwordError) {
-        _signIn(context, emailController.text, passwordController.text);      }
+        _signIn(context, emailController.text, passwordController.text);
+      }
     });
   }
-  Future<void> _signIn(BuildContext context, String email, String password) async {
+
+  Future<void> _signIn(
+      BuildContext context, String email, String password) async {
     try {
-      final adminUsersRef = FirebaseFirestore.instance.collection('admin_users');
-      final querySnapshot = await adminUsersRef.where('email', isEqualTo: email).get();
+      final adminUsersRef =
+          FirebaseFirestore.instance.collection('admin_users');
+      final querySnapshot =
+          await adminUsersRef.where('email', isEqualTo: email).get();
 
       if (querySnapshot.docs.isEmpty) {
         print('Email not found');
@@ -82,16 +86,14 @@ class _SignInState extends State<SignIn> {
       if (docData['password'] == password) {
         print('Login successful');
 
-
         LocalStorageService.saveUserData(email);
 
         print(LocalStorageService.getUserData());
-      Navigator.pushAndRemoveUntil(
-  context,
-  MaterialPageRoute(builder: (context) => NavigationList()),
-  (Route<dynamic> route) => false,
-);
-
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => NavigationList()),
+          (Route<dynamic> route) => false,
+        );
       } else {
         print('Incorrect password');
       }
@@ -119,7 +121,7 @@ class _SignInState extends State<SignIn> {
             child: Container(
               color: Colors.white,
               child: Padding(
-                padding:  EdgeInsets.only(left:50.w,right: 50.w),
+                padding: EdgeInsets.only(left: 50.w, right: 50.w),
                 child: Form(
                   key: _formKey,
                   child: Column(
@@ -150,22 +152,18 @@ class _SignInState extends State<SignIn> {
                               ),
                             ),
                             SizedBox(height: 5.h),
+                            NewTextField(
+                              textAlign: TextAlign.right, // إضافة هذا السطر
 
-                              NewTextField(
-                                textAlign: TextAlign.right, // إضافة هذا السطر
-
-                                controller: emailController,
-                                borderColor: _emailError
-                                    ? Colors.red
-                                    : Color(0xFFd7b6e1),
-                                hintText: "example@gmail.com",
-                                errorText:
-                                    _emailError ? _emailErrorMessage : null,
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 12.h,
-                                    horizontal: 10.w),
-                              ),
-
+                              controller: emailController,
+                              borderColor:
+                                  _emailError ? Colors.red : Color(0xFFd7b6e1),
+                              hintText: "example@gmail.com",
+                              errorText:
+                                  _emailError ? _emailErrorMessage : null,
+                              contentPadding: EdgeInsets.symmetric(
+                                  vertical: 12.h, horizontal: 10.w),
+                            ),
                             SizedBox(height: 35.h),
                             Text(
                               "Password :",
@@ -182,11 +180,10 @@ class _SignInState extends State<SignIn> {
                                   : Color(0xFFd7b6e1),
                               obscureText: true,
                               hintText: "1234Aa?*",
-                              errorText: _passwordError
-                                  ? _passwordErrorMessage
-                                  : null,
+                              errorText:
+                                  _passwordError ? _passwordErrorMessage : null,
                               contentPadding: EdgeInsets.symmetric(
-                                 // vertical: 12.h,
+                                  // vertical: 12.h,
                                   horizontal: 10.w), // إضافة هذا السطر
                             )
                           ],
