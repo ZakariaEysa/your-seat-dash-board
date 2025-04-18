@@ -1,5 +1,6 @@
 // movie_text_field_label.dart
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../widgets/text_field/text_field/new_text_field_builder.dart';
 
@@ -33,6 +34,12 @@ class MovieTextFieldLabel extends StatelessWidget {
         SizedBox(height: 5.h),
         NewTextField(
           controller: controller,
+          keyboardType: TextInputType.text,
+          // inputFormatters: [
+          //   FilteringTextInputFormatter.allow(
+          //     RegExp(r'[a-zA-Z؀-ۿ\s]'),
+          //   ),
+          // ],
           borderColor: errorText != null ? Colors.red : Colors.black,
           errorText: errorText,
           onChanged: onChanged,
@@ -41,3 +48,4 @@ class MovieTextFieldLabel extends StatelessWidget {
     );
   }
 }
+

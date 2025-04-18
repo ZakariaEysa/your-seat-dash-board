@@ -19,27 +19,29 @@ class SeatInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
+    return Flexible(
+      // استخدام Flexible بدلاً من Expanded
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
             label,
             style: TextStyle(
               color: color,
               fontWeight: FontWeight.bold,
-              fontSize: 4.sp,
+              fontSize: 3.sp, // تقليل حجم الخط
             ),
           ),
-          SizedBox(height: 5.h),
+          SizedBox(height: 2.h), // تقليل المسافة
           SizedBox(
-            width: 60.w,
-            height: 34.h,
+            width: 80.w, // تقليل العرض
             child: NewTextField(
               controller: controller,
               borderColor: errorText != null ? Colors.red : Colors.black,
               errorText: errorText,
               keyboardType: TextInputType.number,
               onChanged: onChanged,
+              contentPadding: EdgeInsets.all(4.sp), // تقليل padding للحقل
             ),
           ),
         ],

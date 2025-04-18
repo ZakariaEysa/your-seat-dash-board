@@ -1,5 +1,8 @@
+// MovieInfoScreen.dart
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:file_picker/file_picker.dart'; // ← مهم لإدارة الصور
 import '../../../../../widgets/validators/Validators.dart';
 import 'movie_text_field_label.dart';
 import 'movie_image.dart';
@@ -22,23 +25,45 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
   String? _languageError;
   String? _censorshipError;
 
+  PlatformFile? pickedCover; // ✅ الصورة المختارة
+
+  void handlePick(PlatformFile? file) {
+    setState(() {
+      pickedCover = file;
+    });
+  }
+
+  void handleDelete() {
+    setState(() {
+      pickedCover = null;
+    });
+  }
+
   bool validateFields() {
     setState(() {
       _movieNameError = Validators.validateRequired(
         _movieNameController.text,
         'Movie name',
+        lettersOnly: true,
+        allowSpaces: true,
       );
       _movieGenreError = Validators.validateRequired(
         _movieGenreController.text,
         'Movie genre',
+        lettersOnly: true,
+        allowSpaces: true,
       );
       _languageError = Validators.validateRequired(
         _languageController.text,
         'Language',
+        lettersOnly: true,
+        allowSpaces: true,
       );
       _censorshipError = Validators.validateRequired(
         _censorshipController.text,
         'Censorship',
+        lettersOnly: true,
+        allowSpaces: true,
       );
     });
 
@@ -50,14 +75,16 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
 
   void _onFieldChanged(
       String value, Function(String?) setError, String fieldName) {
-    if (_movieNameError != null ||
-        _movieGenreError != null ||
-        _languageError != null ||
-        _censorshipError != null) {
-      setState(() {
-        setError(Validators.validateRequired(value, fieldName));
-      });
-    }
+    setState(() {
+      setError(
+        Validators.validateRequired(
+          value,
+          fieldName,
+          lettersOnly: true,
+          allowSpaces: true,
+        ),
+      );
+    });
   }
 
   @override
@@ -139,7 +166,13 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
             ),
           ),
           SizedBox(width: 20.w),
-          const Expanded(child: MovieImageSection()),
+          Expanded(
+            child: MovieImageSection(
+              pickedCover: pickedCover,
+              onPick: handlePick,
+              onDelete: handleDelete,
+            ),
+          ),
         ],
       ),
     );
