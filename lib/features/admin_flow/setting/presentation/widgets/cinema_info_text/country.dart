@@ -30,7 +30,7 @@ class CountryState extends State<Country> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               DropdownWidget(
-                hintText: 'Country',
+                hintText: 'city',
                 selectedValue: SettingsCubit.get(context).selectedCountry,
                 itemsList: countries,
                 onChanged: (String? newValue) {

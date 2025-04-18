@@ -12,22 +12,37 @@ class RoomMovieSelectionPageState extends State<RoomMovie> {
   String? selectedRoom;
   String? selectedMovie;
 
+  String? savedRoom = 'ROOM 2';
+  String? savedMovie = 'Avengers: Infinity War';
+
   final List<String> rooms = ['ROOM 1', 'ROOM 2', 'ROOM 3', 'ROOM 4'];
   final List<String> movies = [
     'Avengers: Infinity War',
     'Guardians Of The Galaxy',
     'Shang chi: Legend of the Ten Rings'
   ];
+
   bool roomError = false;
   bool movieError = false;
 
+
+  /// ✅ Validate input fields
   bool validateSelection() {
     setState(() {
       roomError = selectedRoom == null;
       movieError = selectedMovie == null;
     });
-
     return !roomError && !movieError;
+  }
+
+  /// ✅ Reset للقيم المحفوظة
+  void resetToSaved() {
+    setState(() {
+      selectedRoom = savedRoom;
+      selectedMovie = savedMovie;
+      roomError = false;
+      movieError = false;
+    });
   }
 
   @override
