@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../widgets/button/button_builder.dart';
-import '../widgets/date.dart';
+import '../widgets/date_time/date_screen.dart';
 import '../widgets/room_Select.dart';
 
 class Rooming extends StatelessWidget {
@@ -73,7 +73,11 @@ class Rooming extends StatelessWidget {
 
                   ButtonBuilder(
                     text: 'Cancel',
-                    onTap: () => Navigator.pop(context),
+                    onTap: () {
+                      roomMovieKey.currentState?.resetToSaved();
+                      dateTimeKey.currentState?.resetToSaved();
+                      dateTimeKey.currentState?.resetToSaved();
+                    },
                     width: 40.w,
                     height: 50.h,
                     buttonColor: const Color(0xFF560B76),
@@ -83,15 +87,14 @@ class Rooming extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 7.sp,
                     ),
-                  ),
-                ],
-              ),
+                      ),
 
               SizedBox(height: screenHeight * 0.1),
             ],
           ),
-        ),
-      ),
-    );
+
+
+    ]),
+    )));
   }
 }
