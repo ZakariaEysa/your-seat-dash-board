@@ -10,14 +10,11 @@ class Country extends StatefulWidget {
 }
 
 class CountryState extends State<Country> {
-  
-
   final List<String> countries = [
-    'Egypt',
-    'Saudi Arabia',
-    'United Arab Emirates',
-    'Kuwait',
-    'Qatar',
+    "Fayoum",
+    "Cairo",
+    "Alex",
+    "Giza",
   ];
   bool validateCountry() {
     return SettingsCubit.get(context).selectedCountry != null;
