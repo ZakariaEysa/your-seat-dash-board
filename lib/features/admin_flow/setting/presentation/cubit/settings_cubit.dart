@@ -18,10 +18,13 @@ class SettingsCubit extends Cubit<SettingsState> {
   String? selectedCountry;
 
   String? cinemaId;
+  num? lat;
+  num? lng;
 
   static SettingsCubit get(context) => BlocProvider.of<SettingsCubit>(context);
   Future<void> getCinemaData() async {
     cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+    //  cinemaId = "Plaza Cinema";
     emit(SettingsLoading());
     try {
       final cinemaRef = FirebaseFirestore.instance.collection('Cinemas');
@@ -35,9 +38,13 @@ class SettingsCubit extends Cubit<SettingsState> {
         phoneController.text = data['phone'] ?? '';
         emailController.text = data['mail'] ?? '';
         managerController.text = data['manager'] ?? '';
-        selectedCountry = data['country'];
+        selectedCountry = data['country'] ?? "Cairo";
+
+        lat = data['lat'] ?? null;
+        lng = data['lng'] ?? null;
         emit(SettingsLoaded());
       } else {
+        selectedCountry = "Cairo";
         // إذا لم يتم العثور على السينما، قم بتحميل الصفحة بدون بيانات
         emit(SettingsLoaded());
       }
@@ -48,6 +55,7 @@ class SettingsCubit extends Cubit<SettingsState> {
 
   Future<void> addOrUpdateCinemaData() async {
     cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+    // cinemaId = "Plaza Cinema";
     emit(SettingsLoading());
     try {
       final cinemaRef = FirebaseFirestore.instance.collection('Cinemas');
@@ -68,6 +76,8 @@ class SettingsCubit extends Cubit<SettingsState> {
         'mail': emailController.text,
         'manager': managerController.text,
         'country': selectedCountry,
+        'lat': lat,
+        'lng': lng
       };
 
       if (querySnapshot.exists) {
