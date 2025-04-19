@@ -57,10 +57,7 @@ class _AppState extends State<App> {
         ),
         body: TabBarView(
           children: [
-            BlocProvider(
-              create: (context) => SettingsCubit(),
-              child: CinemaInfo(),
-            ),
+            const CinemaInfo(),
             const CinemaDesign(),
             const PaymentInfo(),
             const Contract(),
