@@ -1,5 +1,5 @@
 class Validators {
-  /// التحقق الأساسي من الحقول المطلوبة
+  /// Basic validation for required fields
   static String? validateRequired(
       String? value,
       String fieldName, {
@@ -18,7 +18,7 @@ class Validators {
     }
 
     if (value.length > maxLength) {
-      return '$fieldName cannot exceed $maxLength characters';
+      return '$fieldName at most $maxLength characters';
     }
 
     if (lettersOnly) {
@@ -32,17 +32,16 @@ class Validators {
     return null;
   }
 
-
-  /// للتحقق من أن المدخل أرقام فقط
+  /// Validate numbers only
   static String? _validateNumbersOnly(String value, String fieldName) {
     final numericRegex = RegExp(r'^[0-9]+$');
     if (!numericRegex.hasMatch(value)) {
-      return 'contain numbers';
+      return '$fieldName must contain numbers only';
     }
     return null;
   }
 
-  /// للتحقق من أن المدخل أحرف فقط
+  /// Validate letters only
   static String? _validateLettersOnly(
       String value,
       String fieldName, {
@@ -57,7 +56,7 @@ class Validators {
     return null;
   }
 
-  /// للتحقق من البريد الإلكتروني
+  /// Validate email format
   static String? validateEmail(String? value) {
     if (value == null || value.isEmpty) {
       return 'Email is required';
@@ -74,7 +73,7 @@ class Validators {
     return null;
   }
 
-  /// للتحقق من كلمة المرور
+  /// Validate password
   static String? validatePassword(String? value, {int minLength = 6}) {
     if (value == null || value.isEmpty) {
       return 'Password is required';
@@ -87,7 +86,7 @@ class Validators {
     return null;
   }
 
-  /// للتحقق من رقم الهاتف
+  /// Validate phone number
   static String? validatePhoneNumber(String? value) {
     if (value == null || value.isEmpty) {
       return 'Phone number is required';
@@ -96,6 +95,24 @@ class Validators {
     final phoneRegex = RegExp(r'^[0-9]{10,15}$');
     if (!phoneRegex.hasMatch(value)) {
       return 'Please enter a valid phone number';
+    }
+
+    return null;
+  }
+
+  /// Validate YouTube URL
+  static String? validateYouTubeLink(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'YouTube link is required';
+    }
+
+    final youtubeRegex = RegExp(
+      r'^(https?\:\/\/)?(www\.)?(youtube\.com|youtu\.?be)\/.+$',
+      caseSensitive: false,
+    );
+
+    if (!youtubeRegex.hasMatch(value)) {
+      return 'Please enter a valid YouTube URL';
     }
 
     return null;

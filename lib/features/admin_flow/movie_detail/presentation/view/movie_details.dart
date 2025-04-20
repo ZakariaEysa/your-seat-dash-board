@@ -10,13 +10,13 @@ import '../widgets/story_line.dart';
 class MovieDetail extends StatelessWidget {
   const MovieDetail({super.key});
 
-  static final GlobalKey<MovieInfoScreenState> _movieInfoKey =
-  GlobalKey<MovieInfoScreenState>();
+  static final GlobalKey<MovieInfoScreenState> _movieInfoKey = GlobalKey<MovieInfoScreenState>();
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
+        StoryLine.clearFields();
         StoryLine.clearFields();
         return true;
       },
@@ -24,40 +24,46 @@ class MovieDetail extends StatelessWidget {
         backgroundColor: Colors.white,
         body: Row(
           children: [
-            Container(
-              width: 45.w,
-              color: const Color(0xFF5A2D82),
-              child: NavigationList(),
-            ),
             Expanded(
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   return SingleChildScrollView(
                     child: ConstrainedBox(
-                      constraints: BoxConstraints(
-                        minHeight: constraints.maxHeight,
-                      ),
+                      constraints: BoxConstraints(minHeight: constraints.maxHeight),
                       child: IntrinsicHeight(
                         child: Padding(
-                          padding: EdgeInsets.only(left: 30.w, right: 30.w),
+                          padding: EdgeInsets.symmetric(horizontal: 30.w),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Align(
-                                alignment: Alignment.topLeft,
-                                child: IconButton(
-                                  icon: Icon(Icons.arrow_back, color: Colors.black),
-                                  onPressed: () {
-                                    StoryLine.clearFields();
-                                    Navigator.pop(context);
-                                  },
+                              Padding(
+                                padding: EdgeInsets.only(top: 20.h, right: 120.w),
+                                child: Row(
+                                  children: [
+                                    ButtonBuilder(
+                                      onTap: () {
+                                        StoryLine.clearFields();
+                                        Navigator.pop(context);
+                                      },
+                                      width: 30.w,
+                                      height: 51.h,
+                                      buttonColor: const Color(0xFF560B76),
+                                      frameColor: const Color(0xFF560B76),
+                                      borderShape: BorderRadius.circular(15.r),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 6.sp,
+                                      ),
+                                      text: 'Back',
+                                    ),
+                                  ],
                                 ),
                               ),
                               SizedBox(height: 20.h),
                               MovieInfoScreen(key: _movieInfoKey),
                               Padding(
-                                padding: EdgeInsets.only(
-                                    left: 30.w, top: 30.h, bottom: 10.h),
+                                padding: EdgeInsets.only(left: 30.w, top: 30.h, bottom: 10.h),
                                 child: Text(
                                   "Story Line",
                                   style: TextStyle(
@@ -69,11 +75,7 @@ class MovieDetail extends StatelessWidget {
                               ),
                               StoryLine(),
                               Padding(
-                                padding: EdgeInsets.only(
-                                    left: 8.w,
-                                    right: 2.w,
-                                    top: 20.h,
-                                    bottom: 30.h),
+                                padding: EdgeInsets.only(left: 8.w, right: 2.w, top: 20.h, bottom: 30.h),
                                 child: Names(),
                               ),
                               SizedBox(height: 35.h),
@@ -83,26 +85,19 @@ class MovieDetail extends StatelessWidget {
                                   ButtonBuilder(
                                     text: 'Add Movie',
                                     onTap: () {
-                                      final isMovieInfoValid = _movieInfoKey
-                                          .currentState
-                                          ?.validateFields() ??
-                                          false;
+                                      final isMovieInfoValid = _movieInfoKey.currentState?.validateFields() ?? false;
                                       final isNamesValid = Names.validate();
-                                      final isStoryLineValid =
-                                      StoryLine.validate();
+                                      final isStoryLineValid = StoryLine.validate();
 
-                                      if (isMovieInfoValid &&
-                                          isNamesValid &&
-                                          isStoryLineValid) {
+                                      if (isMovieInfoValid && isNamesValid && isStoryLineValid) {
                                         print('All fields are valid');
-                                        // Save data here
                                       } else {
                                         print('Validation failed');
                                       }
                                     },
                                     width: 40.w,
                                     height: 50.h,
-                                    buttonColor: Color(0xFF560B76),
+                                    buttonColor: const Color(0xFF560B76),
                                     borderShape: BorderRadius.circular(10.r),
                                     style: TextStyle(
                                       color: Colors.white,
@@ -119,7 +114,7 @@ class MovieDetail extends StatelessWidget {
                                     },
                                     width: 40.w,
                                     height: 50.h,
-                                    buttonColor: Color(0xFF560B76),
+                                    buttonColor: const Color(0xFF560B76),
                                     borderShape: BorderRadius.circular(10.r),
                                     style: TextStyle(
                                       color: Colors.white,

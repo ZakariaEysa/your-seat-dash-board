@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../../movie_detail/presentation/view/movie_details.dart'; // تأكد من أن المسار صحيح
+import '../../movie_detail/presentation/view/movie_details.dart';
+import '../../movie_detail/presentation/widgets/movie_info.dart'; // تأكد من أن المسار صحيح
 
 class MovieTablePage extends StatefulWidget {
   @override
@@ -9,17 +10,17 @@ class MovieTablePage extends StatefulWidget {
 
 class _MovieTablePageState extends State<MovieTablePage> {
   final List<Map<String, String>> movies = [
-    {"name": "Natali Craig", "date": "20-2-2025", "time": "6:55PM", "rooms": "Room 1, Room 2", "status": "Coming soon", "image": "assets/images/NataliCraig.png"},
-    {"name": "Kate Morrison", "date": "20-2-2025", "time": "7:40PM", "rooms": "Room 7", "status": "Playing now", "image": "assets/images/KateMorrison.png"},
-    {"name": "Drew Cano", "date": "20-2-2025", "time": "8:55PM", "rooms": "Room 1", "status": "Playing now", "image": "assets/images/DrewCano.png"},
-    {"name": "Orlando Diggs", "date": "21-5-2024", "time": "4:50PM", "rooms": "Room 2", "status": "Playing now", "image": "assets/images/OrlandoDiggs.png"},
-    {"name": "Andi Lane", "date": "6-9-2023", "time": "2:55PM", "rooms": "Room 8", "status": "Not show", "image": "assets/images/AndiLane.png"},
+    {"name": "Natali Craig", "date": "3h 19m", "time": "Drama", "rooms": "Turkish", "status": "Coming soon", "image": "assets/images/NataliCraig.png"},
+    {"name": "Kate Morrison", "date": "2h 10", "time": "Comedy", "rooms": "Chinese", "status": "Playing now", "image": "assets/images/KateMorrison.png"},
+    {"name": "Drew Cano", "date": "1h 30", "time": "Action", "rooms": "Korean", "status": "Playing now", "image": "assets/images/DrewCano.png"},
+    {"name": "Orlando Diggs", "date": "2h 15h", "time": "Musical", "rooms": "Japanese", "status": "Playing now", "image": "assets/images/OrlandoDiggs.png"},
+    {"name": "Andi Lane", "date": "3h", "time": "Biography", "rooms": "Hindi", "status": "Not show", "image": "assets/images/AndiLane.png"},
 
-    {"name": "Natali Craig", "date": "15-6-2024", "time": "6:55PM", "rooms": "room 2", "status": "Playing now", "image": "assets/images/NataliCraig.png"},
-    {"name": "Kate Morrison", "date": "6-9-2023", "time": "7:40PM", "rooms": "Room 4", "status": "Coming soon", "image": "assets/images/KateMorrison.png"},
-    {"name": "Drew Cano", "date": "8-6-2023", "time": "8:55PM", "rooms": "Room 3", "status": "Coming soon", "image": "assets/images/DrewCano.png"},
-    {"name": "Orlando Diggs", "date": "25-9-2023", "time": "4:50PM", "rooms": "Room 4", "status": "Playing now", "image": "assets/images/OrlandoDiggs.png"},
-    {"name": "Andi Lane", "date": "26-8-2024", "time": "2:55PM", "rooms": "Room 2", "status": "Not show", "image": "assets/images/AndiLane.png"}
+    {"name": "Natali Craig", "date": "2h 30m", "time": "Mystery", "rooms": "German", "status": "Playing now", "image": "assets/images/NataliCraig.png"},
+    {"name": "Kate Morrison", "date": "1h 47m", "time": "Crime", "rooms": "German", "status": "Coming soon", "image": "assets/images/KateMorrison.png"},
+    {"name": "Drew Cano", "date": "2h", "time": "Documentary", "rooms": "Spanish", "status": "Coming soon", "image": "assets/images/DrewCano.png"},
+    {"name": "Orlando Diggs", "date": "2h 30m", "time": "Documentary", "rooms": "French", "status": "Playing now", "image": "assets/images/OrlandoDiggs.png"},
+    {"name": "Andi Lane", "date": "1h 50m", "time": "Animation", "rooms": "Arabic", "status": "Not show", "image": "assets/images/AndiLane.png"}
   ];
 
   int? _selectedRowIndex;
@@ -70,12 +71,12 @@ class _MovieTablePageState extends State<MovieTablePage> {
                 }),
                 columns: const [
                   DataColumn(label: Text('Movie name', style: TextStyle(color: Colors.grey))),
-                  DataColumn(label: Text('Date', style: TextStyle(color: Colors.grey))),
-                  DataColumn(label: Text('Time', style: TextStyle(color: Colors.grey))),
-                  DataColumn(label: Text('Rooms', style: TextStyle(color: Colors.grey))),
+                  DataColumn(label: Text('Duration', style: TextStyle(color: Colors.grey))),
+                  DataColumn(label: Text('Movie Genre', style: TextStyle(color: Colors.grey))),
+                  DataColumn(label: Text('Language', style: TextStyle(color: Colors.grey))),
                   DataColumn(label: Text('Status', style: TextStyle(color: Colors.grey))),
                   DataColumn(label: Text('Action', style: TextStyle(color: Colors.grey)))
-                ],
+                ],//Censorship
                 rows: movies.map((movie) {
                   final int index = movies.indexOf(movie);
                   final bool isSelected = _selectedRowIndex == index;
@@ -114,13 +115,77 @@ class _MovieTablePageState extends State<MovieTablePage> {
                         DataCell(Row(
                             children: [
                               IconButton(
-                                  icon: Icon(Icons.edit, color: Colors.green),
-                                  onPressed: isSelected ? () => navigateToMovieDetail(context) : null
+                                icon: Icon(Icons.remove_red_eye, color: Colors.purple),
+                                onPressed: isSelected
+                                    ? () => showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text("View Movie"),
+                                    content: Text("Do you want to view movie details?"),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () => Navigator.pop(context),
+                                          child: Text("Cancel")),
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            navigateToMovieDetail(context);
+                                          },
+                                          child: Text("OK")),
+                                    ],
+                                  ),
+                                )
+                                    : null,
                               ),
+
                               IconButton(
-                                  icon: Icon(Icons.delete, color: Colors.red),
-                                  onPressed: isSelected ? () => deleteMovie(index) : null
-                              )
+                                icon: Icon(Icons.edit, color: Colors.green),
+                                onPressed: isSelected
+                                    ? () => showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text("Edit Movie"),
+                                    content: Text("Do you want to edit this movie?"),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () => Navigator.pop(context),
+                                          child: Text("Cancel")),
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            navigateToMovieDetail(context);
+                                          },
+                                          child: Text("OK")),
+                                    ],
+                                  ),
+                                )
+                                    : null,
+                              ),
+
+                              IconButton(
+                                icon: Icon(Icons.delete, color: Colors.red),
+                                onPressed: isSelected
+                                    ? () => showDialog(
+                                  context: context,
+                                  builder: (context) => AlertDialog(
+                                    title: Text("Delete Movie"),
+                                    content: Text("Are you sure you want to delete this movie?"),
+                                    actions: [
+                                      TextButton(
+                                          onPressed: () => Navigator.pop(context),
+                                          child: Text("Cancel")),
+                                      TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                            deleteMovie(index);
+                                          },
+                                          child: Text("OK")),
+                                    ],
+                                  ),
+                                )
+                                    : null,
+                              ),
+
                             ]
                         ))
                       ]
@@ -131,4 +196,3 @@ class _MovieTablePageState extends State<MovieTablePage> {
     );
   }
 }
-

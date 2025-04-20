@@ -34,7 +34,7 @@ class SeatInput extends StatelessWidget {
           ),
           SizedBox(height: 2.h), // تقليل المسافة
           SizedBox(
-            width: 80.w, // تقليل العرض
+          //  width: 90.w, // تقليل العرض
             child: NewTextField(
               controller: controller,
               borderColor: errorText != null ? Colors.red : Colors.black,
