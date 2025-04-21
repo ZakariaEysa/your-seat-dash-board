@@ -78,6 +78,7 @@ class _MovieDetailState extends State<MovieDetail> {
                                   child: ButtonBuilder(
                                     text: 'Back',
                                     onTap: () {
+
                                       // Cancel logic
                                       StoryLine.clearFields();
                                       Navigator.pop(context);
