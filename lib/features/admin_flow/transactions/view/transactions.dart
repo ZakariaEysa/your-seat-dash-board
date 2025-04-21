@@ -10,15 +10,15 @@ class Transactions extends StatelessWidget {
       backgroundColor: Colors.white,
       body: Container(
         color: Colors.white,
-        child:  Padding(
-          padding:  EdgeInsets.all(18.sp),
+        child: Padding(
+          padding: EdgeInsets.all(18.sp),
           child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 SalesContainer(),
                 SizedBox(height: 20.h),
-                PaymentTable(),
+                SizedBox(width: 860.w, child: PaymentTable()),
               ],
             ),
           ),
