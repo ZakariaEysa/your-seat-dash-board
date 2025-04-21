@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/movie_detail/presentation/widgets/person_name_field.dart';
-import '../../../../../widgets/text_field/text_field/new_text_field_builder.dart';
 import '../../../../../widgets/validators/Validators.dart';
 
 class Names extends StatefulWidget {
-  const Names({super.key});
+  const Names({
+    super.key,
+    required this.directors,
+    required this.actors,
+    this.isViewOnly = false, // ✅ إضافة المتغير
+  });
+
+  final List<String> directors;
+  final List<String> actors;
+  final bool isViewOnly; // ✅
 
   static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -18,60 +26,83 @@ class Names extends StatefulWidget {
 }
 
 class _NamesState extends State<Names> {
-  List<Widget> directorTextFields = [];
-  List<Widget> actorTextFields = [];
-
-  final List<TextEditingController> _directorControllers = [];
-  final List<TextEditingController> _actorControllers = [];
+  late List<TextEditingController> _directorControllers;
+  late List<TextEditingController> _actorControllers;
 
   @override
   void initState() {
     super.initState();
-    _addDirectorField();
-    _addActorField();
+    _directorControllers = widget.directors.map((name) => TextEditingController(text: name)).toList();
+    _actorControllers = widget.actors.map((name) => TextEditingController(text: name)).toList();
+
+    if (_directorControllers.isEmpty) _addDirectorField();
+    if (_actorControllers.isEmpty) _addActorField();
   }
 
   void _addDirectorField() {
-    final controller = TextEditingController();
-    _directorControllers.add(controller);
-    setState(() {
-      directorTextFields.add(
-        PersonNameField(
-          label: 'Director Name',
-          imagePath: 'assets/images/director.png',
-          onAdd: _addDirectorField,
-          controller: controller,
-          validator: (value) => Validators.validateRequired(
-            value,
-            'Director Name',
-            lettersOnly: true,
-            maxLength: 20,
-          ),
-        ),
-      );
-    });
+    _directorControllers.add(TextEditingController());
+    setState(() {});
+  }
+
+  void _removeDirectorField(int index) {
+    if (_directorControllers.length > 1) {
+      _directorControllers.removeAt(index);
+      setState(() {});
+    }
   }
 
   void _addActorField() {
-    final controller = TextEditingController();
-    _actorControllers.add(controller);
-    setState(() {
-      actorTextFields.add(
-        PersonNameField(
-          label: 'Actor Name',
-          imagePath: 'assets/images/director.png',
-          onAdd: _addActorField,
-          controller: controller,
+    _actorControllers.add(TextEditingController());
+    setState(() {});
+  }
+
+  void _removeActorField(int index) {
+    if (_actorControllers.length > 1) {
+      _actorControllers.removeAt(index);
+      setState(() {});
+    }
+  }
+
+  @override
+  void dispose() {
+    for (var controller in _directorControllers) {
+      controller.dispose();
+    }
+    for (var controller in _actorControllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  Widget _buildFields(
+      List<TextEditingController> controllers,
+      String label,
+      String imagePath, {
+        VoidCallback? onAdd,
+        void Function(int)? onDelete,
+      }) {
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: List.generate(controllers.length, (index) {
+        return PersonNameField(
+          label: label,
+          imagePath: imagePath,
+          controller: controllers[index],
+          onAdd: widget.isViewOnly ? null : onAdd,
+          onDelete: widget.isViewOnly || index == 0 ? null : () => onDelete?.call(index),
           validator: (value) => Validators.validateRequired(
             value,
-            'Actor Name',
+            label,
             lettersOnly: true,
             maxLength: 20,
           ),
-        ),
-      );
-    });
+          isViewOnly: widget.isViewOnly,
+        );
+      }),
+    );
   }
+
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -89,16 +120,22 @@ class _NamesState extends State<Names> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [...directorTextFields],
+                child: _buildFields(
+                  _directorControllers,
+                  'Director Name',
+                  'assets/images/director.png',
+                  onAdd: _addDirectorField,
+                  onDelete: _removeDirectorField,
                 ),
               ),
-              SizedBox(width: 20.h),
+              SizedBox(width: 10.w),
               Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [...actorTextFields],
+                child: _buildFields(
+                  _actorControllers,
+                  'Actor Name',
+                  'assets/images/director.png',
+                  onAdd: _addActorField,
+                  onDelete: _removeActorField,
                 ),
               ),
             ],

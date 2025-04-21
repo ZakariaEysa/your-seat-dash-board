@@ -15,12 +15,19 @@ class _Halls2State extends State<Halls2> {
     GlobalKey<HallConfigPageState>()
   ];
 
+  final Set<int> selectedHalls = {};
+
+  @override
+  void initState() {
+    super.initState();
+    selectedHalls.clear(); // تأكيد عدم تحديد أي قاعة تلقائياً
+  }
+
   void _validateAndSave() {
     bool allValid = true;
 
     for (var key in hallKeys) {
       if (key.currentState?.validate() != true) {
-        // Changed from validateAllFields() to validate()
         allValid = false;
       }
     }
@@ -36,6 +43,66 @@ class _Halls2State extends State<Halls2> {
     }
   }
 
+  void _confirmDeleteSelected() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Delete'),
+        content: const Text('Are you sure you want to delete selected halls?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                final sorted = selectedHalls.toList()
+                  ..sort((a, b) => b.compareTo(a));
+                for (var index in sorted) {
+                  hallKeys.removeAt(index);
+                }
+                selectedHalls.clear();
+              });
+              Navigator.pop(context);
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _confirmAddHall() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Confirm Add'),
+        content: const Text('Are you sure you want to add a new hall?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              setState(() {
+                hallKeys.add(GlobalKey<HallConfigPageState>());
+              });
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('New hall added successfully')),
+              );
+            },
+            style: ElevatedButton.styleFrom(backgroundColor: Colors.green),
+            child: const Text('Confirm'),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -47,14 +114,10 @@ class _Halls2State extends State<Halls2> {
             Padding(
               padding: EdgeInsets.only(top: 15.h, left: 270.w),
               child: SizedBox(
-                width: 120,
-                height: 40,
+                width: 90.w,
+                height: 40.h,
                 child: ElevatedButton(
-                  onPressed: () {
-                    setState(() {
-                      hallKeys.add(GlobalKey<HallConfigPageState>());
-                    });
-                  },
+                  onPressed: _confirmAddHall,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF560B76),
                     shape: RoundedRectangleBorder(
@@ -72,7 +135,7 @@ class _Halls2State extends State<Halls2> {
                         'Add Hall',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 4.sp,
+                          fontSize: 6.sp,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -94,8 +157,30 @@ class _Halls2State extends State<Halls2> {
                 ),
                 itemCount: hallKeys.length,
                 itemBuilder: (context, index) {
-                  return HallConfigPage(key: hallKeys[index]);
+                  return Stack(
+                    children: [
+                      HallConfigPage(key: hallKeys[index]),
+                      if (index != 0)
+                        Positioned(
+                          top: 0,
+                          left: 0,
+                          child: Checkbox(
+                            value: selectedHalls.contains(index),
+                            onChanged: (bool? selected) {
+                              setState(() {
+                                if (selected == true) {
+                                  selectedHalls.add(index);
+                                } else {
+                                  selectedHalls.remove(index);
+                                }
+                              });
+                            },
+                          ),
+                        ),
+                    ],
+                  );
                 },
+
               ),
             ),
 
@@ -137,6 +222,24 @@ class _Halls2State extends State<Halls2> {
                 ],
               ),
             ),
+
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: ElevatedButton.icon(
+                onPressed: _confirmDeleteSelected ,
+                icon: const Icon(Icons.delete, color: Colors.white),
+                label: const Text('Delete Selected'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                   Colors.red ,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                ),
+              ),
+            ),
+
           ],
         ),
       ),
