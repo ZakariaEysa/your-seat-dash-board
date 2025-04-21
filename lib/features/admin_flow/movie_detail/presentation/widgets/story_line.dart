@@ -4,10 +4,16 @@ import '../../../../../widgets/text_field/text_field/new_text_field_builder.dart
 import '../../../../../widgets/validators/Validators.dart';
 
 class StoryLine extends StatefulWidget {
-  const StoryLine({super.key});
+  const StoryLine({
+    super.key,
+    this.initialValue = '',
+    this.readOnly = false,
+  });
 
   static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   static final TextEditingController controller = TextEditingController();
+  final String initialValue;
+  final bool readOnly;
 
   static bool validate() {
     return formKey.currentState?.validate() ?? false;
@@ -23,7 +29,11 @@ class StoryLine extends StatefulWidget {
 }
 
 class _StoryLineState extends State<StoryLine> {
-  String? _errorText;
+  @override
+  void initState() {
+    super.initState();
+    StoryLine.controller.text = widget.initialValue;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -35,25 +45,25 @@ class _StoryLineState extends State<StoryLine> {
           child: NewTextField(
             controller: StoryLine.controller,
             hintText: '\n\n Write story line here ...',
-            borderColor: _errorText != null ? Colors.red : Colors.black,
-            errorText: _errorText,
+            borderColor: Colors.black,
+            errorText: null,
             keyboardType: TextInputType.multiline,
             obscureText: false,
-            contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 12),
-            errorStyle: TextStyle(fontSize: 12, color: Colors.red),
+
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            errorStyle: const TextStyle(fontSize: 12, color: Colors.red),
             isMultiline: true,
             maxLines: 5,
+            readOnly: widget.readOnly,
+            onChanged: (_) {},
             validator: (value) {
-              final error = Validators.validateRequired(
-                value,
+              if (widget.readOnly) return null;
+              return Validators.validateRequired(
+                value ?? '',
                 'Story Line',
                 maxLength: 50,
                 lettersOnly: false,
               );
-              setState(() {
-                _errorText = error;
-              });
-              return _errorText;
             },
           ),
         ),

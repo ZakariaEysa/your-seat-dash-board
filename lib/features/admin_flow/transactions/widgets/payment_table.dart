@@ -49,7 +49,7 @@ class _PaymentTableState extends State<PaymentTable> {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text('Filter', style: TextStyle(color: Colors.black)),
-                SizedBox(width: 5),
+                SizedBox(width: 3.w),
                 PopupMenuButton<String>(
                   icon: Icon(Icons.filter_list, color: Colors.black),
                   onSelected: (value) {
@@ -85,6 +85,7 @@ class _PaymentTableState extends State<PaymentTable> {
             SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: DataTable(
+                  columnSpacing: 80.w,
                 columns: const [
                   DataColumn(label: Text('Transaction ID')),
                   DataColumn(label: Text('Date')),
@@ -118,7 +119,7 @@ class _PaymentTableState extends State<PaymentTable> {
                     /// Date
                     DataCell(Row(
                       children: [
-                        Icon(Icons.calendar_today, color: Colors.black, size: 16),
+                        Icon(Icons.calendar_today, color: Colors.black, size: 3.sp),
                         SizedBox(width: 5.w),
                         Text(
                           transaction['date']!,
