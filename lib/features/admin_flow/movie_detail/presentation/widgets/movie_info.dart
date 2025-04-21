@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../../../../widgets/validators/Validators.dart';
 import 'NewDropdownField.dart';
-import 'movie_image.dart';
+import 'logo&promo.dart';
 import 'movie_text_field_label.dart';
 
 class MovieInfoScreen extends StatefulWidget {
@@ -281,7 +281,7 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                   ),
                   SizedBox(width: 10.w),
                   Expanded(
-                    child: MovieImageSection(
+                    child: LogoandPromo(
                       pickedCover: pickedCover,
                       onPick: handlePick,
                       onDelete: handleDelete,

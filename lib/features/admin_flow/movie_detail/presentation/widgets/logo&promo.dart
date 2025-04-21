@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yourseatgraduationproject/widgets/text_field/text_field/new_text_field_builder.dart';
 import '../../../../../widgets/button/button_builder.dart';
 
-class MovieImageSection extends StatelessWidget {
+class LogoandPromo extends StatelessWidget {
   final PlatformFile? pickedCover;
   final Function(PlatformFile?) onPick;
   final VoidCallback onDelete;
@@ -15,7 +15,7 @@ class MovieImageSection extends StatelessWidget {
   final ValueChanged<String> onLinkChanged;
   final bool isViewOnly; // Added view-only mode support
 
-  const MovieImageSection({
+  const LogoandPromo({
     super.key,
     required this.pickedCover,
     required this.onPick,

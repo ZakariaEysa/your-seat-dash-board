@@ -76,7 +76,7 @@ class NewDropdownField extends StatelessWidget {
           color: Colors.black,
         ),
       ),
-      icon: const SizedBox(), // Removes the default dropdown icon
+      icon: const SizedBox(),
     );
   }
 }

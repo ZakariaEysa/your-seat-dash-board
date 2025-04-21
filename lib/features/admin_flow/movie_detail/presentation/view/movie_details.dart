@@ -74,7 +74,7 @@ class _MovieDetailState extends State<MovieDetail> {
                               Align(
                                 alignment: Alignment.topLeft,
                                 child: Padding(
-                                  padding: EdgeInsets.only(right: 260.w, top: 20.h),
+                                  padding: EdgeInsets.only(right: 270.w, top: 20.h),
                                   child: ButtonBuilder(
                                     text: 'Back',
                                     onTap: () {

@@ -6,13 +6,13 @@ import '../../../../../widgets/validators/Validators.dart';
 class PersonNameField extends StatelessWidget {
   final String label;
   final String imagePath;
-  final VoidCallback? onAdd; // ✅ جعله اختياري (nullable)
+  final VoidCallback? onAdd;
   final VoidCallback? onDelete;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final String? errorText;
   final ValueChanged<String>? onChanged;
-  final bool isViewOnly; // ✅ دعم العرض فقط
+  final bool isViewOnly;
 
   const PersonNameField({
     Key? key,
@@ -81,8 +81,8 @@ class PersonNameField extends StatelessWidget {
                 errorText: isViewOnly ? null : errorText,
                 onChanged: onChanged,
                 validator: isViewOnly ? null : validator,
-                enabled: true, // ✅ خليه true علشان يحتفظ بالـ border
-                readOnly: isViewOnly, // ✅ مجرد readOnly بدون تعطيل كامل
+                enabled: true,
+                readOnly: isViewOnly,
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(

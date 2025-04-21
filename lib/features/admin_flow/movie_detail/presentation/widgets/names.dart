@@ -78,7 +78,7 @@ class _NamesState extends State<Names> {
       List<TextEditingController> controllers,
       String label,
       String imagePath, {
-        VoidCallback? onAdd, // ✅ بقت اختيارية
+        VoidCallback? onAdd,
         void Function(int)? onDelete,
       }) {
 
@@ -97,7 +97,7 @@ class _NamesState extends State<Names> {
             lettersOnly: true,
             maxLength: 20,
           ),
-          isViewOnly: widget.isViewOnly, // ✅ ده أهم سطر
+          isViewOnly: widget.isViewOnly,
         );
       }),
     );
