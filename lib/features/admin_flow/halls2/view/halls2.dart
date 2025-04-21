@@ -223,23 +223,23 @@ class _Halls2State extends State<Halls2> {
               ),
             ),
 
-            if (selectedHalls.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 10.0),
-                child: ElevatedButton.icon(
-                  onPressed: _confirmDeleteSelected,
-                  icon: const Icon(Icons.delete, color: Colors.white),
-                  label: const Text('Delete Selected'),
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.red,
-                    padding:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 10.0),
+              child: ElevatedButton.icon(
+                onPressed: _confirmDeleteSelected ,
+                icon: const Icon(Icons.delete, color: Colors.white),
+                label: const Text('Delete Selected'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor:
+                   Colors.red ,
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
+            ),
+
           ],
         ),
       ),

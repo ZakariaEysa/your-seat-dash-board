@@ -3,20 +3,22 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NewDropdownField extends StatelessWidget {
   final String? value;
+  final bool isEnabled;
   final List<String> items;
   final String? errorText;
   final String hintText;
   final ValueChanged<String?>? onChanged;
-  final Color errorColor; // Added error color parameter
+  final Color errorColor;
 
   const NewDropdownField({
     Key? key,
-    required this.value,
+    this.value,
+    this.isEnabled = true,
     required this.items,
     required this.hintText,
     this.errorText,
     this.onChanged,
-    this.errorColor = Colors.red, // Default to red
+    this.errorColor = Colors.red,
   }) : super(key: key);
 
   @override
@@ -28,29 +30,20 @@ class NewDropdownField extends StatelessWidget {
         value: item,
         child: Text(
           item,
-          style: TextStyle(
-            fontSize: 5.sp,
-            color: Colors.black,
-          ),
+          style: TextStyle(fontSize: 5.sp, color: Colors.black),
           overflow: TextOverflow.ellipsis,
         ),
       ))
           .toList(),
-      onChanged: onChanged,
+      onChanged: isEnabled ? onChanged : null,
       dropdownColor: Colors.white,
-      style: TextStyle(
-        fontSize: 5.sp,
-        color: Colors.black,
-      ),
+      style: TextStyle(fontSize: 5.sp, color: Colors.black),
       decoration: InputDecoration(
         hintText: hintText,
         hintStyle: TextStyle(fontSize: 5.sp, color: Colors.grey),
         filled: true,
         fillColor: Colors.white,
-        contentPadding: EdgeInsets.symmetric(
-          horizontal: 12.w,
-          vertical: 10.h,
-        ),
+        contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 10.h),
         border: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.black),
           borderRadius: BorderRadius.circular(8.r),
@@ -75,15 +68,15 @@ class NewDropdownField extends StatelessWidget {
         errorStyle: TextStyle(
           fontSize: 4.sp,
           height: 0.5,
-          color: errorColor, // Set error text color
+          color: errorColor,
         ),
         suffixIcon: Icon(
-            Icons.arrow_drop_down,
-            size: 10.sp,
-            color: Colors.black
+          Icons.arrow_drop_down,
+          size: 10.sp,
+          color: Colors.black,
         ),
       ),
-      icon: const SizedBox(), // Remove default icon
+      icon: const SizedBox(), // Removes the default dropdown icon
     );
   }
 }

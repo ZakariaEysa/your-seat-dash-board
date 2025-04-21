@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../movie_detail/presentation/view/movie_details.dart';
-import '../../movie_detail/presentation/widgets/movie_info.dart'; // تأكد من أن المسار صحيح
 
 class MovieTablePage extends StatefulWidget {
   @override
@@ -10,25 +9,146 @@ class MovieTablePage extends StatefulWidget {
 
 class _MovieTablePageState extends State<MovieTablePage> {
   final List<Map<String, String>> movies = [
-    {"name": "Natali Craig", "date": "3h 19m", "time": "Drama", "rooms": "Turkish", "status": "Coming soon", "image": "assets/images/NataliCraig.png"},
-    {"name": "Kate Morrison", "date": "2h 10", "time": "Comedy", "rooms": "Chinese", "status": "Playing now", "image": "assets/images/KateMorrison.png"},
-    {"name": "Drew Cano", "date": "1h 30", "time": "Action", "rooms": "Korean", "status": "Playing now", "image": "assets/images/DrewCano.png"},
-    {"name": "Orlando Diggs", "date": "2h 15h", "time": "Musical", "rooms": "Japanese", "status": "Playing now", "image": "assets/images/OrlandoDiggs.png"},
-    {"name": "Andi Lane", "date": "3h", "time": "Biography", "rooms": "Hindi", "status": "Not show", "image": "assets/images/AndiLane.png"},
-
-    {"name": "Natali Craig", "date": "2h 30m", "time": "Mystery", "rooms": "German", "status": "Playing now", "image": "assets/images/NataliCraig.png"},
-    {"name": "Kate Morrison", "date": "1h 47m", "time": "Crime", "rooms": "German", "status": "Coming soon", "image": "assets/images/KateMorrison.png"},
-    {"name": "Drew Cano", "date": "2h", "time": "Documentary", "rooms": "Spanish", "status": "Coming soon", "image": "assets/images/DrewCano.png"},
-    {"name": "Orlando Diggs", "date": "2h 30m", "time": "Documentary", "rooms": "French", "status": "Playing now", "image": "assets/images/OrlandoDiggs.png"},
-    {"name": "Andi Lane", "date": "1h 50m", "time": "Animation", "rooms": "Arabic", "status": "Not show", "image": "assets/images/AndiLane.png"}
+    {
+      "name": "Natali Craig",
+      "date": "3h 19m",
+      "genre": "Drama",
+      "rooms": "Turkish",
+      "status": "Coming soon",
+      "image": "assets/images/NataliCraig.png",
+      "censorship": "R",
+      "storyLine": "A dramatic story about love and choices.",
+      "directors": "John Doe",
+      "actors": "Jane Smith, Alex Brown",
+      "promoUrl": "https://youtu.be/natali_craig_trailer"
+    }, {
+      "name": "Kate Morrison",
+      "date": "2h 10m",
+      "genre": "Comedy",
+      "rooms": "Chinese",
+      "status": "Playing now",
+      "image": "assets/images/KateMorrison.png",
+      "censorship": "PG-13",
+      "storyLine": "As the Avengers and their allies have continued to protect the world...",
+      "directors": "Paul Walker",
+      "actors": "Emma Stone, Jack White",
+      "promoUrl": "https://youtu.be/kate_morrison_trailer"
+    }, {
+      "name": "Drew Cano",
+      "date": "1h 30",
+      "genre": "Action",
+      "rooms": "Korean",
+      "status": "Playing now",
+      "image": "assets/images/DrewCano.png",
+      "censorship": "TV-14",
+      "storyLine": "As the Avengers and their allies have continued to protect the world...",
+      "directors": "Anthony Russo",
+      "actors": "Joe Russo, Christopher Robert",
+      "promoUrl": "https://youtu.be/drew_cano_trailer"
+    }, {
+      "name": "Orlando Diggs",
+      "date": "2h 15m",
+      "genre": "Musical",
+      "rooms": "Japanese",
+      "status": "Playing now",
+      "image": "assets/images/OrlandoDiggs.png",
+      "censorship": "TV-PG",
+      "storyLine": "A dramatic story about love and choices.",
+      "directors": "John Doe, Christopher Robert",
+      "actors": "Jane Smith, Alex Brown",
+      "promoUrl": "https://youtu.be/orlando_diggs_trailer"
+    },
+    {
+      "name": "Andi Lane",
+      "date": "3h",
+      "genre": "Biography",
+      "rooms": "Hindi",
+      "status": "Coming soon",
+      "image": "assets/images/AndiLane.png",
+      "censorship": "NC-17",
+      "storyLine": "A dramatic story about love and choices.",
+      "directors": "John Doe",
+      "actors": "Jane Smith, Alex Brown",
+      "promoUrl": "https://youtu.be/andi_lane_trailer"
+    },
+    {
+      "name": "Natali Craig",
+      "date": "2h 30m",
+      "genre": "Mystery",
+      "rooms": "German",
+      "status": "Playing now",
+      "image": "assets/images/NataliCraig.png",
+      "censorship": "PG",
+      "storyLine": "As the Avengers and their allies have continued to protect the world...",
+      "directors": "John Doe",
+      "actors": "Jane Smith, Alex Brown",
+      "promoUrl": "https://youtu.be/natali_craig_trailer_2"
+    },
+    {
+      "name": "Kate Morrison",
+      "date": "1h 47m",
+      "genre": "Crime",
+      "rooms": "German",
+      "status": "Coming soon",
+      "image": "assets/images/KateMorrison.png",
+      "censorship": "TV-Y7",
+      "storyLine": "A dramatic story about love and choices.",
+      "directors": "John Doe",
+      "actors": "Jane Smith, Alex Brown",
+      "promoUrl": "https://youtu.be/kate_morrison_trailer_2"
+    },
+    {
+      "name": "Drew Cano",
+      "date": "2h",
+      "genre": "Documentary",
+      "rooms": "Spanish",
+      "status": "Coming soon",
+      "image": "assets/images/DrewCano.png",
+      "censorship": "TV-G",
+      "storyLine": "As the Avengers and their allies have continued to protect the world...",
+      "directors": "John Doe",
+      "actors": "Jane Smith, Alex Brown",
+      "promoUrl": "https://youtu.be/drew_cano_trailer_2"
+    },
+    {
+      "name": "Orlando Diggs",
+      "date": "2h 30m",
+      "genre": "Documentary",
+      "rooms": "French",
+      "status": "Playing now",
+      "image": "assets/images/OrlandoDiggs.png",
+      "censorship": "G",
+      "storyLine": "A dramatic story about love and choices.",
+      "directors": "John Doe",
+      "actors": "Jane Smith, Alex Brown",
+      "promoUrl": "https://youtu.be/orlando_diggs_trailer_2"
+    },
+    {
+      "name": "Andi Lane",
+      "date": "1h 50m",
+      "genre": "Animation",
+      "rooms": "Arabic",
+      "status": "Coming soon",
+      "image": "assets/images/AndiLane.png",
+      "censorship": "TV-14",
+      "storyLine": "As the Avengers and their allies have continued to protect the world...",
+      "directors": "John Doe",
+      "actors": "Jane Smith, Alex Brown",
+      "promoUrl": "https://youtu.be/andi_lane_trailer_2"
+    }
   ];
 
   int? _selectedRowIndex;
 
-  void navigateToMovieDetail(BuildContext context) {
+  void navigateToMovieDetail(BuildContext context, Map<String, String> movie, {bool isViewOnly = false}) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => MovieDetail()),
+      MaterialPageRoute(
+        builder: (context) => MovieDetail(
+          movieData: movie,
+          isViewOnly: isViewOnly,
+        ),
+      ),
     );
   }
 
@@ -45,8 +165,6 @@ class _MovieTablePageState extends State<MovieTablePage> {
         return Color(0xFF8A8CD9);
       case 'Playing now':
         return Color(0xFF4AA785);
-      case 'Not show':
-        return Colors.grey;
       default:
         return Colors.black;
     }
@@ -60,7 +178,7 @@ class _MovieTablePageState extends State<MovieTablePage> {
             scrollDirection: Axis.horizontal,
             child: DataTable(
                 showCheckboxColumn: false,
-                columnSpacing: 100,
+                columnSpacing: 70,
                 headingRowColor: MaterialStateProperty.all(Colors.white),
                 dividerThickness: 1.0,
                 dataRowColor: MaterialStateProperty.resolveWith<Color?>((Set<MaterialState> states) {
@@ -75,8 +193,10 @@ class _MovieTablePageState extends State<MovieTablePage> {
                   DataColumn(label: Text('Movie Genre', style: TextStyle(color: Colors.grey))),
                   DataColumn(label: Text('Language', style: TextStyle(color: Colors.grey))),
                   DataColumn(label: Text('Status', style: TextStyle(color: Colors.grey))),
+                  DataColumn(label: Text('Censorship', style: TextStyle(color: Colors.grey))),
+                  // Removed Directors and Actors columns
                   DataColumn(label: Text('Action', style: TextStyle(color: Colors.grey)))
-                ],//Censorship
+                ],
                 rows: movies.map((movie) {
                   final int index = movies.indexOf(movie);
                   final bool isSelected = _selectedRowIndex == index;
@@ -96,7 +216,7 @@ class _MovieTablePageState extends State<MovieTablePage> {
                             ]
                         )),
                         DataCell(Text(movie['date']!, style: TextStyle(color: Colors.black))),
-                        DataCell(Text(movie['time']!, style: TextStyle(color: Colors.black))),
+                        DataCell(Text(movie['genre']!, style: TextStyle(color: Colors.black))),
                         DataCell(Text(movie['rooms']!, style: TextStyle(color: Colors.black))),
                         DataCell(Row(
                             children: [
@@ -112,30 +232,18 @@ class _MovieTablePageState extends State<MovieTablePage> {
                               Text(movie['status']!, style: TextStyle(color: getStatusColor(movie['status']!)))
                             ]
                         )),
+                        DataCell(Text(movie['censorship']!, style: TextStyle(color: Colors.black))),
                         DataCell(Row(
                             children: [
                               IconButton(
                                 icon: Icon(Icons.remove_red_eye, color: Colors.purple),
                                 onPressed: isSelected
-                                    ? () => showDialog(
-                                  context: context,
-                                  builder: (context) => AlertDialog(
-                                    title: Text("View Movie"),
-                                    content: Text("Do you want to view movie details?"),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () => Navigator.pop(context),
-                                          child: Text("Cancel")),
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            navigateToMovieDetail(context);
-                                          },
-                                          child: Text("OK")),
-                                    ],
-                                  ),
-                                )
+                                    ? () {
+
+                                  navigateToMovieDetail(context, movie, isViewOnly: true);
+                                }
                                     : null,
+                                tooltip: 'View Only (No Editing)',
                               ),
 
                               IconButton(
@@ -148,20 +256,22 @@ class _MovieTablePageState extends State<MovieTablePage> {
                                     content: Text("Do you want to edit this movie?"),
                                     actions: [
                                       TextButton(
-                                          onPressed: () => Navigator.pop(context),
-                                          child: Text("Cancel")),
+                                        onPressed: () => Navigator.pop(context),
+                                        child: Text("Cancel"),
+                                      ),
                                       TextButton(
-                                          onPressed: () {
-                                            Navigator.pop(context);
-                                            navigateToMovieDetail(context);
-                                          },
-                                          child: Text("OK")),
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                          navigateToMovieDetail(context, movie);
+                                        },
+                                        child: Text("Edit"),
+                                      ),
                                     ],
                                   ),
                                 )
                                     : null,
+                                tooltip: 'Edit Movie Details',
                               ),
-
                               IconButton(
                                 icon: Icon(Icons.delete, color: Colors.red),
                                 onPressed: isSelected
@@ -180,12 +290,13 @@ class _MovieTablePageState extends State<MovieTablePage> {
                                             deleteMovie(index);
                                           },
                                           child: Text("OK")),
+
                                     ],
                                   ),
                                 )
                                     : null,
+                                  tooltip: 'Delete Movie Details'
                               ),
-
                             ]
                         ))
                       ]

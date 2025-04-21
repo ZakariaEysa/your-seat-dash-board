@@ -6,21 +6,21 @@ class MovieTextFieldLabel extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final String? errorText;
+  final Color errorColor;
+  final String? hintText;
   final ValueChanged<String>? onChanged;
-  final String hintText;
-  final TextStyle? hintStyle;
-  final Color errorColor; // Added error color parameter
+  final bool readOnly;
 
   const MovieTextFieldLabel({
-    super.key,
+    Key? key,
     required this.label,
     required this.controller,
     this.errorText,
+    this.errorColor = Colors.red,
+    this.hintText,
     this.onChanged,
-    this.hintText = '',
-    this.hintStyle,
-    this.errorColor = Colors.red, // Default to red
-  });
+    this.readOnly = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,16 +39,11 @@ class MovieTextFieldLabel extends StatelessWidget {
         NewTextField(
           controller: controller,
           keyboardType: TextInputType.text,
+          hintText: hintText,
           borderColor: errorText != null ? errorColor : Colors.black,
           errorText: errorText,
-          errorColor: errorColor, // Pass error color to NewTextField
+          readOnly: readOnly,
           onChanged: onChanged,
-          hintText: hintText,
-          hintStyle: hintStyle,
-          contentPadding: EdgeInsets.symmetric(
-            horizontal: 12.w,
-            vertical: 10.h,
-          ),
         ),
       ],
     );

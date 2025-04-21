@@ -1,22 +1,57 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../widgets/button/button_builder.dart';
-import '../../../../../widgets/list/list.dart';
-import '../../../moives/view/movies.dart';
 import '../widgets/movie_info.dart';
 import '../widgets/names.dart';
 import '../widgets/story_line.dart';
 
-class MovieDetail extends StatelessWidget {
-  const MovieDetail({super.key});
+class MovieDetail extends StatefulWidget {
+  final Map<String, String> movieData;
+  final bool isViewOnly;
+
+  const MovieDetail({super.key, required this.movieData, this.isViewOnly = false});
 
   static final GlobalKey<MovieInfoScreenState> _movieInfoKey = GlobalKey<MovieInfoScreenState>();
 
   @override
+  State<MovieDetail> createState() => _MovieDetailState();
+}
+
+class _MovieDetailState extends State<MovieDetail> {
+  final TextEditingController promoLinkController = TextEditingController();
+  String? promoLinkError;
+
+  @override
+  void initState() {
+    super.initState();
+    promoLinkController.text = widget.movieData['promoUrl'] ?? '';
+  }
+
+  @override
+  void dispose() {
+    promoLinkController.dispose();
+    super.dispose();
+  }
+
+  void onLinkChanged(String value) {
+    setState(() {
+      if (value.isEmpty) {
+        promoLinkError = 'Promo link cannot be empty';
+      } else if (!(Uri.tryParse(value)?.hasAbsolutePath ?? false)) {
+        promoLinkError = 'Invalid URL format';
+      } else {
+        promoLinkError = null;
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final directors = widget.movieData['directors']?.split(',').map((e) => e.trim()).toList() ?? [];
+    final actors = widget.movieData['actors']?.split(',').map((e) => e.trim()).toList() ?? [];
+
     return WillPopScope(
       onWillPop: () async {
-        StoryLine.clearFields();
         StoryLine.clearFields();
         return true;
       },
@@ -36,32 +71,37 @@ class MovieDetail extends StatelessWidget {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              Padding(
-                                padding: EdgeInsets.only(top: 20.h, right: 120.w),
-                                child: Row(
-                                  children: [
-                                    ButtonBuilder(
-                                      onTap: () {
-                                        StoryLine.clearFields();
-                                        Navigator.pop(context);
-                                      },
-                                      width: 30.w,
-                                      height: 51.h,
-                                      buttonColor: const Color(0xFF560B76),
-                                      frameColor: const Color(0xFF560B76),
-                                      borderShape: BorderRadius.circular(15.r),
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 6.sp,
-                                      ),
-                                      text: 'Back',
+                              Align(
+                                alignment: Alignment.topLeft,
+                                child: Padding(
+                                  padding: EdgeInsets.only(right: 260.w, top: 20.h),
+                                  child: ButtonBuilder(
+                                    text: 'Back',
+                                    onTap: () {
+                                      // Cancel logic
+                                      StoryLine.clearFields();
+                                      Navigator.pop(context);
+                                    },
+                                    width: 30.w,
+                                    height: 40.h,
+                                    buttonColor: const Color(0xFF560B76),
+                                    borderShape: BorderRadius.circular(10.r),
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 7.sp,
                                     ),
-                                  ],
+                                  ),
                                 ),
                               ),
                               SizedBox(height: 20.h),
-                              MovieInfoScreen(key: _movieInfoKey),
+
+                              MovieInfoScreen(
+                                key: MovieDetail._movieInfoKey,
+                                movieData: widget.movieData,
+                                isViewOnly: widget.isViewOnly,
+                              ),
+
                               Padding(
                                 padding: EdgeInsets.only(left: 30.w, top: 30.h, bottom: 10.h),
                                 child: Text(
@@ -73,57 +113,70 @@ class MovieDetail extends StatelessWidget {
                                   ),
                                 ),
                               ),
-                              StoryLine(),
+
+                              StoryLine(
+                                initialValue: widget.movieData['storyLine'] ?? '',
+                                readOnly: widget.isViewOnly, // هذا سيجعل الحقل للعرض فقط إذا كان isViewOnly = true
+                              ),
                               Padding(
                                 padding: EdgeInsets.only(left: 8.w, right: 2.w, top: 20.h, bottom: 30.h),
-                                child: Names(),
+                                child: Names(
+                                  directors: directors,
+                                  actors: actors,
+                                  isViewOnly: widget.isViewOnly,
+                                ),
                               ),
-                              SizedBox(height: 35.h),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  ButtonBuilder(
-                                    text: 'Add Movie',
-                                    onTap: () {
-                                      final isMovieInfoValid = _movieInfoKey.currentState?.validateFields() ?? false;
-                                      final isNamesValid = Names.validate();
-                                      final isStoryLineValid = StoryLine.validate();
 
-                                      if (isMovieInfoValid && isNamesValid && isStoryLineValid) {
-                                        print('All fields are valid');
-                                      } else {
-                                        print('Validation failed');
-                                      }
-                                    },
-                                    width: 40.w,
-                                    height: 50.h,
-                                    buttonColor: const Color(0xFF560B76),
-                                    borderShape: BorderRadius.circular(10.r),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 7.sp,
+                              SizedBox(height: 35.h),
+
+                              if (!widget.isViewOnly)
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    ButtonBuilder(
+                                      text: 'Add Movie',
+                                      onTap: () {
+                                        final isMovieInfoValid = MovieDetail._movieInfoKey.currentState?.validateFields() ?? false;
+                                        final isNamesValid = Names.validate();
+                                        final isStoryLineValid = StoryLine.validate();
+
+                                        if (isMovieInfoValid && isNamesValid && isStoryLineValid && promoLinkError == null) {
+                                          print('All fields are valid');
+                                          print('Final Promo Link: ${promoLinkController.text}');
+                                          // Save or update movie logic here
+                                        } else {
+                                          print('Validation failed');
+                                        }
+                                      },
+                                      width: 40.w,
+                                      height: 50.h,
+                                      buttonColor: Color(0xFF560B76),
+                                      borderShape: BorderRadius.circular(10.r),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 7.sp,
+                                      ),
                                     ),
-                                  ),
-                                  SizedBox(width: 10.w),
-                                  ButtonBuilder(
-                                    text: 'Cancel',
-                                    onTap: () {
-                                      StoryLine.clearFields();
-                                      Navigator.pop(context);
-                                    },
-                                    width: 40.w,
-                                    height: 50.h,
-                                    buttonColor: const Color(0xFF560B76),
-                                    borderShape: BorderRadius.circular(10.r),
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 7.sp,
+                                    SizedBox(width: 10.w),
+                                    ButtonBuilder(
+                                      text: 'Cancel',
+                                      onTap: () {
+                                        StoryLine.clearFields();
+                                        Navigator.pop(context);
+                                      },
+                                      width: 40.w,
+                                      height: 50.h,
+                                      buttonColor: Color(0xFF560B76),
+                                      borderShape: BorderRadius.circular(10.r),
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 7.sp,
+                                      ),
                                     ),
-                                  ),
-                                ],
-                              ),
+                                  ],
+                                ),
                               SizedBox(height: 10),
                             ],
                           ),
