@@ -124,21 +124,21 @@ class _CinemaInfoState extends State<CinemaInfo> {
                                         ),
                                       ),
                                     ),
-                                    SizedBox(width: 10.w),
-                                    TextButton(
-                                      onPressed: () {
-                                        navigateTo(
-                                            context: context,
-                                            screen: MapPickerPage());
-                                      },
-                                      child: Text(
-                                        "Specify location manually",
-                                        style: TextStyle(
-                                          fontSize: 5.sp,
-                                          color: const Color(0XFF6F6F6F),
-                                        ),
-                                      ),
-                                    ),
+                                    // SizedBox(width: 10.w),
+                                    // TextButton(
+                                    //   onPressed: () {
+                                    //     navigateTo(
+                                    //         context: context,
+                                    //         screen: MapPickerPage());
+                                    //   },
+                                    //   child: Text(
+                                    //     "Specify location manually",
+                                    //     style: TextStyle(
+                                    //       fontSize: 5.sp,
+                                    //       color: const Color(0XFF6F6F6F),
+                                    //     ),
+                                    //   ),
+                                    // ),
                                   ],
                                 )
                               ],
