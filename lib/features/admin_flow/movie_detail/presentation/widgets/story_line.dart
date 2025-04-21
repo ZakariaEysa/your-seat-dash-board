@@ -49,6 +49,7 @@ class _StoryLineState extends State<StoryLine> {
             errorText: null,
             keyboardType: TextInputType.multiline,
             obscureText: false,
+
             contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             errorStyle: const TextStyle(fontSize: 12, color: Colors.red),
             isMultiline: true,
