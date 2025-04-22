@@ -101,7 +101,7 @@ class HallConfigPageState extends State<HallConfigPage> {
     return Padding(
       padding: EdgeInsets.all(2.sp),
       child: Container(
-        width: 110.w,
+        width: 210.w,
         decoration: BoxDecoration(
           color: Colors.grey[200],
           borderRadius: BorderRadius.circular(8.r),

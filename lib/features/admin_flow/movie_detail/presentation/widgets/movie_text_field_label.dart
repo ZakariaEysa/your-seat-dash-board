@@ -1,6 +1,4 @@
-// movie_text_field_label.dart
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../widgets/text_field/text_field/new_text_field_builder.dart';
 
@@ -8,15 +6,21 @@ class MovieTextFieldLabel extends StatelessWidget {
   final String label;
   final TextEditingController controller;
   final String? errorText;
+  final Color errorColor;
+  final String? hintText;
   final ValueChanged<String>? onChanged;
+  final bool readOnly;
 
   const MovieTextFieldLabel({
-    super.key,
+    Key? key,
     required this.label,
     required this.controller,
     this.errorText,
+    this.errorColor = Colors.red,
+    this.hintText,
     this.onChanged,
-  });
+    this.readOnly = false,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,17 +39,13 @@ class MovieTextFieldLabel extends StatelessWidget {
         NewTextField(
           controller: controller,
           keyboardType: TextInputType.text,
-          // inputFormatters: [
-          //   FilteringTextInputFormatter.allow(
-          //     RegExp(r'[a-zA-Z؀-ۿ\s]'),
-          //   ),
-          // ],
-          borderColor: errorText != null ? Colors.red : Colors.black,
+          hintText: hintText,
+          borderColor: errorText != null ? errorColor : Colors.black,
           errorText: errorText,
+          readOnly: readOnly,
           onChanged: onChanged,
         ),
       ],
     );
   }
 }
-
