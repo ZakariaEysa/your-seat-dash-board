@@ -153,11 +153,11 @@ class _SignInState extends State<SignIn> {
                             ),
                             SizedBox(height: 5.h),
                             NewTextField(
-                              textAlign: TextAlign.right, // إضافة هذا السطر
-
+                              textAlign: TextAlign.left, // إضافة هذا السطر
                               controller: emailController,
-                              borderColor:
-                                  _emailError ? Colors.red : Color(0xFFd7b6e1),
+                              borderColor: _emailError
+                                  ? Colors.red
+                                  : const Color(0xFFd7b6e1),
                               hintText: "example@gmail.com",
                               errorText:
                                   _emailError ? _emailErrorMessage : null,
@@ -177,13 +177,13 @@ class _SignInState extends State<SignIn> {
                               controller: passwordController,
                               borderColor: _passwordError
                                   ? Colors.red
-                                  : Color(0xFFd7b6e1),
+                                  : const Color(0xFFd7b6e1),
                               obscureText: true,
                               hintText: "1234Aa?*",
                               errorText:
-                                  _passwordError ? _passwordErrorMessage : null,
+                                  _passwordError ?  _passwordErrorMessage : null,
                               contentPadding: EdgeInsets.symmetric(
-                                  // vertical: 12.h,
+                                  vertical: 12.h,
                                   horizontal: 10.w), // إضافة هذا السطر
                             )
                           ],
@@ -196,7 +196,7 @@ class _SignInState extends State<SignIn> {
                           onTap: _validateFields,
                           width: 40.w,
                           height: 50.h,
-                          buttonColor: Color(0xFF560B76),
+                          buttonColor: const Color(0xFF560B76),
                           borderShape: BorderRadius.circular(10.r),
                           style: TextStyle(
                             color: Colors.white,
