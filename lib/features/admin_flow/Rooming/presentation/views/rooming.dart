@@ -2,18 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../widgets/button/button_builder.dart';
 import '../widgets/date_time/date_screen.dart';
-import '../widgets/room_Select.dart';
+import '../widgets/movie_room/movie_select.dart';
+import '../widgets/movie_room/room_Select.dart';
 
-class Rooming extends StatelessWidget {
+class Rooming extends StatefulWidget {
   const Rooming({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final screenHeight = mediaQuery.size.height;
+  State<Rooming> createState() => _RoomingState();
+}
 
-    final roomMovieKey = GlobalKey<RoomMovieSelectionPageState>();
-    final dateTimeKey = GlobalKey<DateTimeFieldsState>();
+class _RoomingState extends State<Rooming> {
+  final GlobalKey<RoomDropdownWidgetState> roomKey = GlobalKey();
+  final GlobalKey<MovieDropdownWidgetState> movieKey = GlobalKey();
+  final GlobalKey<DateTimeFieldsState> dateTimeKey = GlobalKey();
+
+  bool validateSelection() {
+    final roomValid = roomKey.currentState?.validate() ?? false;
+    final movieValid = movieKey.currentState?.validate() ?? false;
+    return roomValid && movieValid;
+  }
+
+  void resetAll() {
+    roomKey.currentState?.resetToSaved();
+    movieKey.currentState?.resetToSaved();
+    dateTimeKey.currentState?.resetFields();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -21,26 +39,36 @@ class Rooming extends StatelessWidget {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              IntrinsicHeight(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding:EdgeInsets.only(top: 65.h),
+                      child: Row(
+                        children: [
+                          RoomDropdownWidget(key: roomKey),
+                          SizedBox(width: 5.w),
+                          MovieDropdownWidget(key: movieKey),
+                        ],
+                      ),
+                    ),
 
-              Row(
-                children: [
-                  Flexible(child: RoomMovie(key: roomMovieKey)),
-                  Flexible(child: DateTimeFields(key: dateTimeKey)),
-                ],
+                    SizedBox(width: 5.w),
+                    Expanded(child: DateTimeFields(key: dateTimeKey)),
+                  ],
+                ),
               ),
 
               SizedBox(height: screenHeight * 0.25),
-
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ButtonBuilder(
                     text: 'Add',
                     onTap: () {
-                      final isRoomMovieValid =
-                          roomMovieKey.currentState?.validateSelection() ?? false;
-                      final isDateTimeValid =
-                          dateTimeKey.currentState?.validateDateTime() ?? false;
+                      final isRoomMovieValid = validateSelection();
+                      final isDateTimeValid = dateTimeKey.currentState?.validateDateTime() ?? false;
 
                       if (isRoomMovieValid && isDateTimeValid) {
                         ScaffoldMessenger.of(context).showSnackBar(
@@ -52,8 +80,7 @@ class Rooming extends StatelessWidget {
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(
-                            content:
-                            Text('Please complete Room, Movie, Date, and Time!'),
+                            content: Text('Please complete Room,Movie,Date,and Time!'),
                             backgroundColor: Colors.red,
                           ),
                         );
@@ -70,14 +97,9 @@ class Rooming extends StatelessWidget {
                     ),
                   ),
                   SizedBox(width: 10.w),
-
                   ButtonBuilder(
                     text: 'Cancel',
-                    onTap: () {
-                      roomMovieKey.currentState?.resetToSaved();
-                      dateTimeKey.currentState?.resetToSaved();
-                      dateTimeKey.currentState?.resetToSaved();
-                    },
+                    onTap: resetAll,
                     width: 40.w,
                     height: 50.h,
                     buttonColor: const Color(0xFF560B76),
@@ -87,14 +109,14 @@ class Rooming extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       fontSize: 7.sp,
                     ),
-                      ),
-
+                  ),
+                ],
+              ),
               SizedBox(height: screenHeight * 0.1),
             ],
           ),
-
-
-    ]),
-    )));
+        ),
+      ),
+    );
   }
 }

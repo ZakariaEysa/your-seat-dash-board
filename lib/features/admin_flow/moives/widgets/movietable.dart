@@ -114,11 +114,11 @@ class _MovieTablePageState extends State<MovieTablePage> {
                         DataCell(Row(
                             children: [
                               IconButton(
-                                  icon: Icon(Icons.edit, color: Colors.green),
+                                  icon: const Icon(Icons.edit, color: Colors.green),
                                   onPressed: isSelected ? () => navigateToMovieDetail(context) : null
                               ),
                               IconButton(
-                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  icon: const Icon(Icons.delete, color: Colors.red),
                                   onPressed: isSelected ? () => deleteMovie(index) : null
                               )
                             ]
