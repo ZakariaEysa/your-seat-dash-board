@@ -1,52 +1,134 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'formatters.dart';
 
-class TimeField extends StatelessWidget {
-  final bool hasError;
+class TimeField extends StatefulWidget {
+  final String? errorText;
   final Function(String) onChanged;
+  final String placeholder;
+  final String? initialValue;
+  final DateTime? selectedDate;
 
-  const TimeField({super.key, required this.hasError, required this.onChanged});
+  const TimeField({
+    super.key,
+    required this.errorText,
+    required this.onChanged,
+    required this.placeholder,
+    this.initialValue,
+    this.selectedDate,
+  });
+
+  @override
+  State<TimeField> createState() => _TimeFieldState();
+}
+
+class _TimeFieldState extends State<TimeField> {
+  TimeOfDay? selectedTime;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialValue != null && widget.initialValue!.isNotEmpty) {
+      selectedTime = _parseTime(widget.initialValue!);
+    }
+  }
+
+  TimeOfDay? _parseTime(String value) {
+    try {
+      final timePart = value.toLowerCase().replaceAll(' ', '');
+      final isPM = timePart.contains('pm');
+      final cleaned = timePart.replaceAll(RegExp(r'[^\d:]'), '');
+      final parts = cleaned.split(':');
+      int hour = int.parse(parts[0]);
+      int minute = int.parse(parts[1]);
+
+      if (isPM && hour < 12) hour += 12;
+      if (!isPM && hour == 12) hour = 0;
+
+      return TimeOfDay(hour: hour, minute: minute);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> _selectTime(BuildContext context) async {
+    final TimeOfDay nowTime = TimeOfDay.now();
+    final DateTime now = DateTime.now();
+
+    final picked = await showTimePicker(
+      context: context,
+      initialTime: selectedTime ?? nowTime,
+    );
+
+    if (picked != null) {
+      // Check if selected date is today
+      final isToday = widget.selectedDate != null &&
+          widget.selectedDate!.year == now.year &&
+          widget.selectedDate!.month == now.month &&
+          widget.selectedDate!.day == now.day;
+
+      // If today, block past times
+      if (isToday) {
+        final pickedDateTime = DateTime(
+          now.year,
+          now.month,
+          now.day,
+          picked.hour,
+          picked.minute,
+        );
+
+        if (pickedDateTime.isBefore(now)) {
+          // Show error message
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('You can’t select a past time')),
+          );
+          return; // Don’t proceed
+        }
+      }
+
+      setState(() {
+        selectedTime = picked;
+      });
+      widget.onChanged(picked.format(context));
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
+    final bool hasError = widget.errorText != null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 45.w,
-          height: 50.h,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(
-              color: hasError ? Colors.red : Colors.black,
+        GestureDetector(
+          onTap: () => _selectTime(context),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 4.w),
+            height: 51.h,
+            width: 60.w,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: hasError ? Colors.red : Colors.black,
+              ),
+              borderRadius: BorderRadius.circular(8.r),
             ),
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: TextField(
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.black, fontSize: 6.sp),
-            keyboardType: TextInputType.text,
-            inputFormatters: [
-              FilteringTextInputFormatter.allow(RegExp(r'[0-9apmAPM]')),
-              LengthLimitingTextInputFormatter(8),
-              TimeFormatter(),
-            ],
-            decoration: InputDecoration(
-              hintText: 'Time',
-              hintStyle: TextStyle(color: Colors.black, fontSize: 5.sp),
-              border: InputBorder.none,
+            alignment: Alignment.center,
+            child: Text(
+              selectedTime?.format(context) ?? widget.placeholder,
+              style: TextStyle(
+                color: selectedTime != null ? Colors.black : Colors.grey,
+                fontSize: 5.sp,
+              ),
             ),
-            onChanged: onChanged,
           ),
         ),
         if (hasError)
           Padding(
             padding: EdgeInsets.only(top: 4.h),
             child: Text(
-              'Please enter the correct hour and minute.',
-              style: TextStyle(color: Colors.red, fontSize: 3.sp),
+              widget.errorText!,
+              style: TextStyle(color: Colors.red, fontSize: 2.sp),
             ),
           ),
       ],

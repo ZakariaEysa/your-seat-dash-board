@@ -8,15 +8,7 @@ import '../../features/admin_flow/homepage/view/home.dart';
 import '../../features/admin_flow/moives/view/movies.dart';
 import '../../features/admin_flow/setting/presentation/widgets/App_move.dart';
 import '../../features/admin_flow/transactions/view/transactions.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../features/admin_flow/Rooming/presentation/views/rooming.dart';
-import '../../features/admin_flow/Ticket_details/presentation/views/ticket_details.dart';
-import '../../features/admin_flow/homepage/view/home.dart';
-import '../../features/admin_flow/moives/view/movies.dart';
-import '../../features/admin_flow/setting/presentation/widgets/App_move.dart';
-import '../../features/admin_flow/transactions/view/transactions.dart';
 
 
 class NavigationList extends StatefulWidget {
@@ -35,6 +27,7 @@ class _NavigationListState extends State<NavigationList> {
     Movies(),
     TicketDetails(),
     Rooming(),
+    //RoomingScheduling(),
     App(),
     const Center(child: Text("Logging Out...", style: TextStyle(fontSize: 24))),
   ];
@@ -46,9 +39,11 @@ class _NavigationListState extends State<NavigationList> {
     {'icon': Icons.movie, 'title': 'Movies'},
     {'icon': Icons.confirmation_number, 'title': 'Ticket details'},
     {'icon': Icons.meeting_room, 'title': 'Rooming'},
+    //{'icon': Icons.schedule, 'title': 'Rooming Scheduling'},
     {'icon': Icons.settings, 'title': 'Setting'},
     {'icon': Icons.logout, 'title': 'LogOut'},
   ];
+
 
   @override
   Widget build(BuildContext context) {
