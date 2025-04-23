@@ -124,6 +124,7 @@ class _CinemaInfoState extends State<CinemaInfo> {
                                         ),
                                       ),
                                     ),
+
                                     // SizedBox(width: 10.w),
                                     // TextButton(
                                     //   onPressed: () {
@@ -139,6 +140,7 @@ class _CinemaInfoState extends State<CinemaInfo> {
                                     //     ),
                                     //   ),
                                     // ),
+
                                   ],
                                 )
                               ],
