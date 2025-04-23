@@ -1,4 +1,3 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/payment/data/model/order.dart';
 
@@ -34,8 +33,12 @@ class TransactionModel extends Equatable {
   final num capturedAmount;
   final num refundedAmountCents;
   final DateTime? updatedAt;
+  final String date;
+  final String status;
 
   const TransactionModel({
+    required this.status,
+    required this.date,
     required this.id,
     required this.pending,
     required this.amountCents,
@@ -69,7 +72,13 @@ class TransactionModel extends Equatable {
 
   factory TransactionModel.fromJson(Map<String, dynamic> json) {
     return TransactionModel(
-      id: json['id'],
+      date: json['created_at'] ?? 0,
+      status: json['is_refunded'] == true
+          ? 'Refund'
+          : json['success'] == true
+              ? 'Complete'
+              : 'Rejected',
+      id: json['id'] ?? "",
       pending: json['pending'],
       amountCents: json['amount_cents'],
       success: json['success'],
@@ -107,6 +116,8 @@ class TransactionModel extends Equatable {
 
   @override
   List<Object?> get props => [
+        date,
+        status,
         id,
         pending,
         amountCents,
@@ -138,4 +149,3 @@ class TransactionModel extends Equatable {
         updatedAt,
       ];
 }
-

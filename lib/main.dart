@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:yourseatgraduationproject/features/admin_flow/payment/data/repos
 import 'package:yourseatgraduationproject/features/admin_flow/payment/presentation/cubit/payment_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/cubit/settings_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/signin/view/signin.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/transactions/view/transactions.dart';
 import 'package:yourseatgraduationproject/widgets/list/list.dart';
 import 'features/admin_flow/homepage/widgets/MoviStates.dart';
 import 'features/admin_flow/homepage/widgets/booking_states.dart';

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/payment/presentation/cubit/payment_cubit.dart';
 import '../widgets/sales_container.dart';
@@ -30,9 +31,25 @@ class _TransactionsState extends State<Transactions> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                SalesContainer(),
-                SizedBox(height: 20.h),
-                SizedBox(width: 860.w, child: PaymentTable()),
+                BlocBuilder<PaymentCubit, PaymentState>(
+                  builder: (context, state) {
+                    if (state is TransactionSuccess) {
+                      return Column(
+                        children: [
+                          SalesContainer(),
+                          SizedBox(height: 20.h),
+                          SizedBox(
+                              width: 860.w,
+                              child: PaymentTable(
+                                  transactions: state.transactions)),
+                        ],
+                      );
+                    } else if (state is PaymentError) {
+                      return Center(child: Text(state.error));
+                    } else
+                      return const Center(child: CircularProgressIndicator());
+                  },
+                ),
               ],
             ),
           ),
@@ -40,36 +57,4 @@ class _TransactionsState extends State<Transactions> {
       ),
     );
   }
-}
-
-Map<String, dynamic> parseDate(String createdAt) {
-  DateTime date = DateTime.parse(createdAt);
-
-  String month = _getMonthName(date.month); // February مثلاً
-  int day = date.day; // 19
-  int year = date.year; // 2025
-
-  return {
-    'month': month,
-    'day': day,
-    'year': year,
-  };
-}
-
-String _getMonthName(int monthNumber) {
-  const months = [
-    'January',
-    'Feb',
-    'Mar',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
-  ];
-  return months[monthNumber - 1];
 }
