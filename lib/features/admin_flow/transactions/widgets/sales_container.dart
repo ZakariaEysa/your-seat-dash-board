@@ -1,9 +1,24 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/payment/presentation/cubit/payment_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/transactions/widgets/sales_card.dart';
 
-class SalesContainer extends StatelessWidget {
+class SalesContainer extends StatefulWidget {
+  const SalesContainer({super.key});
+
+  @override
+  State<SalesContainer> createState() => _SalesContainerState();
+}
+
+class _SalesContainerState extends State<SalesContainer> {
+  Map<String, int> status = {};
+  @override
+  void initState() {
+    super.initState();
+    status = PaymentCubit.get(context).getTransactionStats();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -33,19 +48,19 @@ class SalesContainer extends StatelessWidget {
                     children: [
                       SalesCard(
                         title: 'Complete Transactions',
-                        value: '15',
+                        value: status["completed"].toString(),
                         color: Color(0xFFFFE2E5),
                         imagePath: 'assets/images/sale1.png',
                       ),
                       SalesCard(
                         title: 'Refund Transactions',
-                        value: '23',
+                        value: status["refunded"].toString(),
                         color: Color(0xFFFFF4DE),
                         imagePath: 'assets/images/sale2.png',
                       ),
                       SalesCard(
                         title: 'Total Amount',
-                        value: '50',
+                        value: status["total"].toString(),
                         color: Color(0xFFDCFCE7),
                         imagePath: 'assets/images/sale3.png',
                       ),

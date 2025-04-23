@@ -1,51 +1,127 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'formatters.dart';
 
-class DateField extends StatelessWidget {
-  final bool hasError;
+class DateField extends StatefulWidget {
+  final String? errorText;
   final Function(String) onChanged;
+  final String placeholder;
+  final String? initialValue;
 
-  const DateField({super.key, required this.hasError, required this.onChanged});
+  const DateField({
+    super.key,
+    required this.errorText,
+    required this.onChanged,
+    required this.placeholder,
+    this.initialValue,
+  });
+
+  @override
+  State<DateField> createState() => _DateFieldState();
+}
+
+class _DateFieldState extends State<DateField> {
+  DateTime? selectedDate;
+  String? displayText;
+
+  @override
+  void initState() {
+    super.initState();
+    _updateDisplayFromInitial(widget.initialValue);
+  }
+
+  @override
+  void didUpdateWidget(covariant DateField oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.initialValue != oldWidget.initialValue) {
+      _updateDisplayFromInitial(widget.initialValue);
+    }
+  }
+
+  void _updateDisplayFromInitial(String? value) {
+    if (value != null && value.isNotEmpty) {
+      displayText = value;
+      selectedDate = _parseDate(value);
+    } else {
+      displayText = null;
+      selectedDate = null;
+    }
+    setState(() {});
+  }
+
+  DateTime? _parseDate(String value) {
+    try {
+      final parts = value.split('/');
+      final day = int.parse(parts[0]);
+      final month = int.parse(parts[1]);
+      final year = int.parse(parts[2]);
+      return DateTime(year, month, day);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<void> _selectDate(BuildContext context) async {
+    final DateTime now = DateTime.now();
+    final DateTime oneMonthLater = now.add(const Duration(days: 30));
+
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate: selectedDate ?? now,
+      firstDate: now,
+      lastDate: oneMonthLater,
+    );
+
+    if (picked != null) {
+      setState(() {
+        selectedDate = picked;
+        displayText = _formatDate(picked);
+      });
+      widget.onChanged(displayText!);
+    }
+  }
+
+  String _formatDate(DateTime date) {
+    return '${date.day.toString().padLeft(2, '0')}/'
+        '${date.month.toString().padLeft(2, '0')}/'
+        '${date.year}';
+  }
 
   @override
   Widget build(BuildContext context) {
+    final bool hasError = widget.errorText != null;
+
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
-          width: 45.w,
-          height: 50.h,
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border.all(
-              color: hasError ? Colors.red : Colors.black,
+        GestureDetector(
+          onTap: () => _selectDate(context),
+          child: Container(
+            padding: EdgeInsets.symmetric(horizontal: 4.w),
+            height: 51.h,
+            width: 60.w,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(
+                color: hasError ? Colors.red : Colors.black,
+              ),
+              borderRadius: BorderRadius.circular(8.r),
             ),
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: TextField(
-            textAlign: TextAlign.center,
-            style: TextStyle(color: Colors.black, fontSize: 6.sp),
-            keyboardType: TextInputType.number,
-            inputFormatters: [
-              FilteringTextInputFormatter.digitsOnly,
-              LengthLimitingTextInputFormatter(8),
-              DateFormatter(),
-            ],
-            decoration: InputDecoration(
-              hintText: 'Date',
-              hintStyle: TextStyle(color: Colors.black, fontSize: 5.sp),
-              border: InputBorder.none,
+            alignment: Alignment.center,
+            child: Text(
+              displayText ?? widget.placeholder,
+              style: TextStyle(
+                color: displayText != null ? Colors.black : Colors.grey,
+                fontSize: 5.sp,
+              ),
             ),
-            onChanged: onChanged,
           ),
         ),
         if (hasError)
           Padding(
             padding: EdgeInsets.only(top: 4.h),
             child: Text(
-              'Please enter the correct day, month and year.',
-              style: TextStyle(color: Colors.red, fontSize: 3.sp),
+              widget.errorText!,
+              style: TextStyle(color: Colors.red, fontSize: 2.sp),
             ),
           ),
       ],

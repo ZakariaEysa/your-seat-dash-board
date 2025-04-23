@@ -71,9 +71,12 @@ class _TicketIdState extends State<TicketId> {
                           obscureText: false,
                           style: TextStyle(fontSize: 4.sp, color: Colors.black),
                           textAlign: TextAlign.start,
-                          keyboardType: TextInputType.number,
-                          inputFormatters: [FilteringTextInputFormatter.digitsOnly],
-
+                          keyboardType: TextInputType.text,
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(
+                              RegExp(r'^#?\d{0,9}'),
+                            ),
+                          ],
                           decoration: InputDecoration(
                             filled: true,
                             fillColor: const Color(0xFFDBD9D9),
@@ -106,12 +109,12 @@ class _TicketIdState extends State<TicketId> {
                               ),
                             ),
                           ),
-
                           autovalidateMode: AutovalidateMode.onUserInteraction,
-
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your ticket number';
+                            } else if (!RegExp(r'^#\d{9}$').hasMatch(value)) {
+                              return 'Format must be like #123456789';
                             }
                             return null;
                           },

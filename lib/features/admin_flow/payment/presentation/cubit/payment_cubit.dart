@@ -2,6 +2,7 @@ import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../data/model/transaction_model.dart';
 import '../../domain/repos/payment_repo.dart';
 
 part 'payment_state.dart';
@@ -17,9 +18,13 @@ class PaymentCubit extends Cubit<PaymentState> {
     emit(TransactionLoading());
     final result =
         await paymentRepo.getAllTransactions(limit: limit, page: page);
+
     result.fold(
       (failure) => emit(TransactionError(failure.errorMsg)),
-      (transactions) => emit(TransactionSuccess(transactions)),
+      (transactions) {
+        print(transactions[0]);
+        emit(TransactionSuccess(transactions));
+      },
     );
   }
 
@@ -119,4 +124,6 @@ class PaymentCubit extends Cubit<PaymentState> {
       (paymentKey) => emit(PaymentKeySuccess(paymentKey)),
     );
   }
+
+  Map<String, int> getTransactionStats() => paymentRepo.getTransactionStats();
 }

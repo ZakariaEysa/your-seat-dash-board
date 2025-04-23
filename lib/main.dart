@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -5,13 +6,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/home/presentation/views/home_screen.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/payment/data/repos_impl/payment_repo_impl.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/payment/presentation/cubit/payment_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/cubit/settings_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/signin/view/signin.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/transactions/view/transactions.dart';
 import 'package:yourseatgraduationproject/widgets/list/list.dart';
 import 'features/admin_flow/homepage/widgets/MoviStates.dart';
 import 'features/admin_flow/homepage/widgets/booking_states.dart';
 import 'features/admin_flow/homepage/widgets/sales-overview.dart';
 
+import 'features/admin_flow/payment/data/remote_data_source/payment_remote_data_source.dart';
 import 'firebase_options.dart';
 import 'services/simple_bloc_observer_service.dart';
 
@@ -46,8 +51,16 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return BlocProvider(
-          create: (context) => SettingsCubit(),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(
+              create: (context) => SettingsCubit(),
+            ),
+            BlocProvider(
+              create: (context) =>
+                  PaymentCubit(PaymentRepoImpl(PaymentRemoteDataSourceImpl())),
+            ),
+          ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             title: "Admin Dashboard",

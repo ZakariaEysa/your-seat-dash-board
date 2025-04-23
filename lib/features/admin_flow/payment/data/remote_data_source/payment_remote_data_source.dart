@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 
 import 'package:yourseatgraduationproject/core/Network/end_points.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/payment/data/model/transaction_model.dart';
 
 import '../../../../../utils/app_logs.dart';
-
 
 abstract class PaymentRemoteDataSource {
   Future<String?> payWithPayMob(num amount);
   Future<String?> getAuthToken();
-
+  Map<String, int> getTransactionStats();
   Future<int> getOrderId({required String token, required String amount});
 
   Future<String> getPaymentKey(
@@ -19,11 +19,15 @@ abstract class PaymentRemoteDataSource {
   Future<void> refundPayment(
       {required String transactionId, required int amount});
 
-  Future<List<dynamic>> getAllTransactions({int limit = 10, int page = 1});
+  Future<List<TransactionModel>> getAllTransactions(
+      {int limit = 10, int page = 1});
 }
 
 class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
   PaymentRemoteDataSourceImpl();
+  int total = 0;
+  int completed = 0;
+  int refunded = 0;
   Dio dio = Dio(BaseOptions(
     validateStatus: (status) => true, // يقبل أي status code
   ));
@@ -163,37 +167,76 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
     }
   }
 
-  Future<List<dynamic>> getAllTransactions(
+  Future<List<TransactionModel>> getAllTransactions(
       {int limit = 10, int page = 1}) async {
+    List<TransactionModel> allTransactions = [];
+    int page = 1;
+    int limit = 2;
+    bool hasMore = true;
+
     try {
       final token = await getAuthToken(); // جلب التوكن
 
-      final response = await dio.get(
-        "https://accept.paymob.com/api/acceptance/transactions",
-        queryParameters: {
-          "page": page, // تحديد رقم الصفحة
-          "limit": limit, // عدد النتائج في كل صفحة
-        },
-        options: Options(
-          headers: {
-            "Authorization": "Bearer $token",
-            "Content-Type": "application/json",
+      while (hasMore) {
+        final response = await dio.get(
+          "https://accept.paymob.com/api/acceptance/transactions",
+          queryParameters: {
+            "page": page,
+            "limit": limit,
           },
-        ),
-      );
-      AppLogs.scussessLog("Transactions: ${response.data["results"].length}");
-      AppLogs.scussessLog("Transactions: ${response.data["results"][0]}");
+          options: Options(
+            headers: {
+              "Authorization": "Bearer $token",
+              "Content-Type": "application/json",
+            },
+          ),
+        );
 
-      if (response.statusCode == 200) {
-        AppLogs.scussessLog("Transactions: ${response.data["results"].length}");
-        return response.data["results"] ?? []; // إرجاع المعاملات
-      } else {
-        AppLogs.errorLog("Error fetching transactions: ${response.data}");
-        return [];
+        if (response.statusCode == 200) {
+          final results = response.data["results"] as List;
+          AppLogs.scussessLog(
+              "Page $page - Fetched ${results.length} transactions");
+
+          if (results.isEmpty) {
+            hasMore = false;
+          } else {
+            final transactions =
+                results.map((item) => TransactionModel.fromJson(item)).toList();
+
+            for (var tx in transactions) {
+              if (tx.success == true) completed++;
+              if (tx.isRefund == true || tx.isRefunded == true) refunded++;
+            }
+
+            allTransactions.addAll(transactions);
+            AppLogs.errorLog(results.length.toString());
+            AppLogs.errorLog(limit.toString());
+            if (page > limit) {
+              hasMore = false;
+            } else {
+              page++;
+            }
+          }
+        } else {
+          AppLogs.errorLog("Error fetching transactions: ${response.data}");
+          hasMore = false;
+        }
       }
+
+      AppLogs.scussessLog(
+          "✅ Total transactions fetched: ${allTransactions.length}");
+      AppLogs.scussessLog("✔️ Successful transactions: $completed");
+      AppLogs.scussessLog("↩️ Refunded transactions: $refunded");
+
+      total = allTransactions.length;
     } catch (e) {
-      AppLogs.errorLog("Failed to fetch transactions: ${e.toString()}");
-      return [];
+      AppLogs.errorLog("❌ Failed to fetch transactions: ${e.toString()}");
     }
+
+    return allTransactions;
+  }
+
+  Map<String, int> getTransactionStats() {
+    return {"total": total, "completed": completed, "refunded": refunded};
   }
 }
