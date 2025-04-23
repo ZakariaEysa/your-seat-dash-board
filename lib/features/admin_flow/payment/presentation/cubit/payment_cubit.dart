@@ -17,9 +17,13 @@ class PaymentCubit extends Cubit<PaymentState> {
     emit(TransactionLoading());
     final result =
         await paymentRepo.getAllTransactions(limit: limit, page: page);
+
     result.fold(
       (failure) => emit(TransactionError(failure.errorMsg)),
-      (transactions) => emit(TransactionSuccess(transactions)),
+      (transactions) {
+        print(transactions[0]);
+        emit(TransactionSuccess(transactions));
+      },
     );
   }
 
