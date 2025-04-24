@@ -12,6 +12,7 @@ import 'features/admin_flow/homepage/widgets/MoviStates.dart';
 import 'features/admin_flow/homepage/widgets/booking_states.dart';
 import 'features/admin_flow/homepage/widgets/sales-overview.dart';
 
+import 'features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
 import 'firebase_options.dart';
 import 'services/simple_bloc_observer_service.dart';
 
@@ -46,13 +47,16 @@ class MyApp extends StatelessWidget {
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
-        return BlocProvider(
-          create: (context) => SettingsCubit(),
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(create:(context) => SettingsCubit(),),
+            BlocProvider(create:(context) => MovieCubit(),)
+          ],
           child: MaterialApp(
             debugShowCheckedModeBanner: false,
             title: "Admin Dashboard",
             theme: ThemeData.dark(),
-            home: SignIn(),
+            home: NavigationList(),
           ),
         );
       },

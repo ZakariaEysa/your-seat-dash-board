@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
 import '../../../../../widgets/button/button_builder.dart';
 import '../widgets/movie_info.dart';
 import '../widgets/names.dart';
@@ -52,7 +53,7 @@ class _MovieDetailState extends State<MovieDetail> {
 
     return WillPopScope(
       onWillPop: () async {
-        StoryLine.clearFields();
+        StoryLine.clearFields(context);
         return true;
       },
       child: Scaffold(
@@ -80,7 +81,7 @@ class _MovieDetailState extends State<MovieDetail> {
                                     onTap: () {
 
                                       // Cancel logic
-                                      StoryLine.clearFields();
+                                      StoryLine.clearFields(context);
                                       Navigator.pop(context);
                                     },
                                     width: 30.w,
@@ -134,24 +135,60 @@ class _MovieDetailState extends State<MovieDetail> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
+                                    // ButtonBuilder(
+                                    //   text: 'Add Movie',
+                                    //   onTap: () {
+                                    //     MovieCubit.get(context).printControllers();
+                                    //     final isMovieInfoValid = MovieDetail._movieInfoKey.currentState?.validateFields() ?? false;
+                                    //     final isNamesValid = Names.validate();
+                                    //     final isStoryLineValid = StoryLine.validate();
+                                    //
+                                    //     if (isMovieInfoValid && isNamesValid && isStoryLineValid && promoLinkError == null) {
+                                    //       print('All fields are valid');
+                                    //       print('Final Promo Link: ${promoLinkController.text}');
+                                    //       // Save or update movie logic here
+                                    //     } else {
+                                    //       print('Validation failed');
+                                    //     }
+                                    //   },
+                                    //   width: 40.w,
+                                    //   height: 50.h,
+                                    //   buttonColor: const Color(0xFF560B76),
+                                    //   borderShape: BorderRadius.circular(10.r),
+                                    //   style: TextStyle(
+                                    //     color: Colors.white,
+                                    //     fontWeight: FontWeight.bold,
+                                    //     fontSize: 7.sp,
+                                    //   ),
+                                    // ),
                                     ButtonBuilder(
                                       text: 'Add Movie',
                                       onTap: () {
+
+                                        // التحقق من صحة البيانات
                                         final isMovieInfoValid = MovieDetail._movieInfoKey.currentState?.validateFields() ?? false;
                                         final isNamesValid = Names.validate();
                                         final isStoryLineValid = StoryLine.validate();
 
                                         if (isMovieInfoValid && isNamesValid && isStoryLineValid && promoLinkError == null) {
+                                          MovieCubit.get(context).uploadMovieToFirestore();
+
                                           print('All fields are valid');
+
+                                          MovieCubit.get(context).printControllers();
+
                                           print('Final Promo Link: ${promoLinkController.text}');
-                                          // Save or update movie logic here
+
+                                          // بعد الفاليديشن الصحيح، استدعاء دالة رفع الفيلم
+                                          MovieCubit.get(context).uploadMovieToFirestore();
                                         } else {
                                           print('Validation failed');
                                         }
+                                        MovieCubit.get(context).uploadMovieToFirestore();
                                       },
                                       width: 40.w,
                                       height: 50.h,
-                                      buttonColor: Color(0xFF560B76),
+                                      buttonColor: const Color(0xFF560B76),
                                       borderShape: BorderRadius.circular(10.r),
                                       style: TextStyle(
                                         color: Colors.white,
@@ -159,16 +196,17 @@ class _MovieDetailState extends State<MovieDetail> {
                                         fontSize: 7.sp,
                                       ),
                                     ),
+
                                     SizedBox(width: 10.w),
                                     ButtonBuilder(
                                       text: 'Cancel',
                                       onTap: () {
-                                        StoryLine.clearFields();
+                                        StoryLine.clearFields(context);
                                         Navigator.pop(context);
                                       },
                                       width: 40.w,
                                       height: 50.h,
-                                      buttonColor: Color(0xFF560B76),
+                                      buttonColor: const Color(0xFF560B76),
                                       borderShape: BorderRadius.circular(10.r),
                                       style: TextStyle(
                                         color: Colors.white,
@@ -178,7 +216,7 @@ class _MovieDetailState extends State<MovieDetail> {
                                     ),
                                   ],
                                 ),
-                              SizedBox(height: 10),
+                              const SizedBox(height: 10),
                             ],
                           ),
                         ),
