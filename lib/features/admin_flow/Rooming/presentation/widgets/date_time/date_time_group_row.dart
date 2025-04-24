@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'date_time_row.dart';
+import '../movie_room/movie_select.dart';
+import '../movie_room/room_Select.dart';
+import 'Date_Time_Row_Wrapper.dart';
+import 'Delete_Button.dart';
 
 class DateTimeGroupRow extends StatelessWidget {
   final int startIndex;
@@ -23,48 +26,68 @@ class DateTimeGroupRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final int endIndex = startIndex + 1;
+
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
-      child: Row(
+      child: Stack(
         children: [
-          Expanded(
-            child: DateTimeRow(
-              index: startIndex,
-              dateTimePairs: dateTimePairs,
-              dateErrors: dateErrors,
-              timeErrors: timeErrors,
-              onUpdate: onUpdate, datePlaceholder: 'Start Date', timePlaceholder: 'Start Time',
-            ),
-          ),
-          SizedBox(width: 8.w),
-          if (endIndex < dateTimePairs.length)
-            Expanded(
-              child: Stack(
-                alignment: Alignment.centerRight,
-                children: [
-                  DateTimeRow(
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 2,
+                child: RoomDropdownWidget(
+                  initialValue: dateTimePairs[startIndex]['room'],
+                  onChanged: (value) {
+                    dateTimePairs[startIndex]['room'] = value ?? '';
+                    onUpdate();
+                  },
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                flex: 2,
+                child: MovieDropdownWidget(
+                  initialValue: dateTimePairs[startIndex]['movie'],
+                  onChanged: (value) {
+                    dateTimePairs[startIndex]['movie'] = value ?? '';
+                    onUpdate();
+                  },
+                ),
+              ),
+              SizedBox(width: 8.w),
+              Expanded(
+                flex: 3,
+                child: DateTimeRowWrapper(
+                  index: startIndex,
+                  dateTimePairs: dateTimePairs,
+                  dateErrors: dateErrors,
+                  timeErrors: timeErrors,
+                  onUpdate: onUpdate,
+                  label: 'Start',
+                ),
+              ),
+              SizedBox(width: 8.w),
+              if (endIndex < dateTimePairs.length)
+                Expanded(
+                  flex: 3,
+                  child: DateTimeRowWrapper(
                     index: endIndex,
                     dateTimePairs: dateTimePairs,
                     dateErrors: dateErrors,
                     timeErrors: timeErrors,
-                    onUpdate: onUpdate, datePlaceholder: 'End Date', timePlaceholder: 'End Time',
+                    onUpdate: onUpdate,
+                    label: 'End',
                   ),
-                  if (dateTimePairs.length > 2 && startIndex >= 2)
-                    Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 90.h),
-                        child: IconButton(
-                          icon: Icon(Icons.delete, color: Colors.red, size: 5.sp),
-                          onPressed: () => onRemove(startIndex),
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-            )
-          else
-            const Spacer(),
+                )
+              else
+                const Spacer(),
+            ],
+          ),
+          if (dateTimePairs.length > 2 && startIndex >= 2)
+            DeleteButton(
+              onPressed: () => onRemove(startIndex),
+            ),
         ],
       ),
     );

@@ -14,7 +14,7 @@ class TimeField extends StatefulWidget {
     required this.onChanged,
     required this.placeholder,
     this.initialValue,
-    this.selectedDate,
+    this.selectedDate, required String label,
   });
 
   @override
@@ -60,7 +60,6 @@ class _TimeFieldState extends State<TimeField> {
     );
 
     if (picked != null) {
-      // Check if selected date is today
       final isToday = widget.selectedDate != null &&
           widget.selectedDate!.year == now.year &&
           widget.selectedDate!.month == now.month &&
@@ -77,7 +76,6 @@ class _TimeFieldState extends State<TimeField> {
         );
 
         if (pickedDateTime.isBefore(now)) {
-          // Show error message
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('You can’t select a past time')),
           );
@@ -109,7 +107,7 @@ class _TimeFieldState extends State<TimeField> {
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border.all(
-                color: hasError ? Colors.red : Colors.black,
+                color:  Colors.black,
               ),
               borderRadius: BorderRadius.circular(8.r),
             ),

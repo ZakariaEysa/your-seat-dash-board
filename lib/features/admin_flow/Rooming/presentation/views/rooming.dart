@@ -1,32 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../../../widgets/button/button_builder.dart';
+import '../../../rooming_sechduling/presentation/widgets/schedule_item.dart';
 import '../widgets/date_time/date_screen.dart';
-import '../widgets/movie_room/movie_select.dart';
-import '../widgets/movie_room/room_Select.dart';
+import '../widgets/rooming_validator.dart';
 
 class Rooming extends StatefulWidget {
-  const Rooming({super.key});
+  final List<ScheduleItem> scheduleItems;
+
+  const Rooming({super.key, required this.scheduleItems});
 
   @override
   State<Rooming> createState() => _RoomingState();
 }
 
 class _RoomingState extends State<Rooming> {
-  final GlobalKey<RoomDropdownWidgetState> roomKey = GlobalKey();
-  final GlobalKey<MovieDropdownWidgetState> movieKey = GlobalKey();
   final GlobalKey<DateTimeFieldsState> dateTimeKey = GlobalKey();
 
-  bool validateSelection() {
-    final roomValid = roomKey.currentState?.validate() ?? false;
-    final movieValid = movieKey.currentState?.validate() ?? false;
-    return roomValid && movieValid;
-  }
+  void addSchedule() {
+    final dateTimeFieldsState = dateTimeKey.currentState;
+    if (dateTimeFieldsState == null) return;
 
-  void resetAll() {
-    roomKey.currentState?.resetToSaved();
-    movieKey.currentState?.resetToSaved();
-    dateTimeKey.currentState?.resetFields();
+    final items = dateTimeFieldsState.getAllSchedules();
+
+    if (items.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill in all information correctly.'),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final validationMessage = RoomingValidator.validateScheduleItems(items);
+    if (validationMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(validationMessage),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    final existingKeys = widget.scheduleItems.map((item) =>
+    '${item.room}|${item.movie}|${item.startDate}|${item.startTime}|${item.endDate}|${item.endTime}'
+    ).toSet();
+
+    final newItems = items.where((item) {
+      final key = '${item.room}|${item.movie}|${item.startDate}|${item.startTime}|${item.endDate}|${item.endTime}';
+      return !existingKeys.contains(key);
+    }).toList();
+
+    if (newItems.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('This schedule already exists.'),
+          backgroundColor: Colors.orange,
+        ),
+      );
+      return;
+    }
+
+    setState(() {
+      widget.scheduleItems.insertAll(0, newItems);
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Tables added successfully!'),
+        backgroundColor: Colors.green,
+      ),
+    );
   }
 
   @override
@@ -39,76 +86,24 @@ class _RoomingState extends State<Rooming> {
         child: SingleChildScrollView(
           child: Column(
             children: [
-              IntrinsicHeight(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding:EdgeInsets.only(top: 65.h),
-                      child: Row(
-                        children: [
-                          RoomDropdownWidget(key: roomKey),
-                          SizedBox(width: 5.w),
-                          MovieDropdownWidget(key: movieKey),
-                        ],
-                      ),
-                    ),
-
-                    SizedBox(width: 5.w),
-                    Expanded(child: DateTimeFields(key: dateTimeKey)),
-                  ],
-                ),
+              DateTimeFields(
+                key: dateTimeKey,
               ),
-
-              SizedBox(height: screenHeight * 0.25),
+              SizedBox(height: screenHeight * 0.1),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ButtonBuilder(
                     text: 'Add',
-                    onTap: () {
-                      final isRoomMovieValid = validateSelection();
-                      final isDateTimeValid = dateTimeKey.currentState?.validateDateTime() ?? false;
-
-                      if (isRoomMovieValid && isDateTimeValid) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Booking added successfully!'),
-                            backgroundColor: Colors.green,
-                          ),
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text('Please complete Room,Movie,Date,and Time!'),
-                            backgroundColor: Colors.red,
-                          ),
-                        );
-                      }
-                    },
+                    onTap: addSchedule,
                     width: 40.w,
                     height: 50.h,
                     buttonColor: const Color(0xFF560B76),
                     borderShape: BorderRadius.circular(10.r),
                     style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 7.sp,
-                    ),
-                  ),
-                  SizedBox(width: 10.w),
-                  ButtonBuilder(
-                    text: 'Cancel',
-                    onTap: resetAll,
-                    width: 40.w,
-                    height: 50.h,
-                    buttonColor: const Color(0xFF560B76),
-                    borderShape: BorderRadius.circular(10.r),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 7.sp,
-                    ),
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 7.sp),
                   ),
                 ],
               ),

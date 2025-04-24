@@ -33,7 +33,7 @@ class DateTimeRow extends StatelessWidget {
     entry.key != index &&
         '${entry.value['date']}|${entry.value['time']}' == key);
 
-    final selectedDate = _parseDate(date); // 🟡 تحويل النص لتاريخ
+    final selectedDate = _parseDate(date);
 
     return Row(
       children: [
@@ -52,7 +52,7 @@ class DateTimeRow extends StatelessWidget {
               onChanged: (value) {
                 dateTimePairs[index]['date'] = value;
                 onUpdate();
-              },
+              }, label: '',
             ),
           ),
         ),
@@ -64,7 +64,7 @@ class DateTimeRow extends StatelessWidget {
               key: ValueKey('time-$index-$time'),
               placeholder: timePlaceholder,
               initialValue: time,
-              selectedDate: selectedDate ?? DateTime.now(), // 🟢 هنا التعديل المهم
+              selectedDate: selectedDate ?? DateTime.now(),
               errorText: timeErrors[index]
                   ? (time.isEmpty
                   ? 'Please enter the timing'
@@ -73,7 +73,7 @@ class DateTimeRow extends StatelessWidget {
               onChanged: (value) {
                 dateTimePairs[index]['time'] = value;
                 onUpdate();
-              },
+              }, label: '',
             ),
           ),
         ),
