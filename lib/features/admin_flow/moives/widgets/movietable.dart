@@ -162,9 +162,9 @@ class _MovieTablePageState extends State<MovieTablePage> {
   Color getStatusColor(String status) {
     switch (status) {
       case 'Coming soon':
-        return Color(0xFF8A8CD9);
+        return const Color(0xFF8A8CD9);
       case 'Playing now':
-        return Color(0xFF4AA785);
+        return const Color(0xFF4AA785);
       default:
         return Colors.black;
     }
@@ -212,12 +212,12 @@ class _MovieTablePageState extends State<MovieTablePage> {
                             children: [
                               CircleAvatar(backgroundImage: AssetImage(movie['image']!)),
                               SizedBox(width: 4.w),
-                              Text(movie['name']!, style: TextStyle(color: Colors.black))
+                              Text(movie['name']!, style: const TextStyle(color: Colors.black))
                             ]
                         )),
-                        DataCell(Text(movie['date']!, style: TextStyle(color: Colors.black))),
-                        DataCell(Text(movie['genre']!, style: TextStyle(color: Colors.black))),
-                        DataCell(Text(movie['rooms']!, style: TextStyle(color: Colors.black))),
+                        DataCell(Text(movie['date']!, style: const TextStyle(color: Colors.black))),
+                        DataCell(Text(movie['genre']!, style: const TextStyle(color: Colors.black))),
+                        DataCell(Text(movie['rooms']!, style: const TextStyle(color: Colors.black))),
                         DataCell(Row(
                             children: [
                               Container(
@@ -232,11 +232,11 @@ class _MovieTablePageState extends State<MovieTablePage> {
                               Text(movie['status']!, style: TextStyle(color: getStatusColor(movie['status']!)))
                             ]
                         )),
-                        DataCell(Text(movie['censorship']!, style: TextStyle(color: Colors.black))),
+                        DataCell(Text(movie['censorship']!, style: const TextStyle(color: Colors.black))),
                         DataCell(Row(
                             children: [
                               IconButton(
-                                icon: Icon(Icons.remove_red_eye, color: Colors.purple),
+                                icon: const Icon(Icons.remove_red_eye, color: Colors.purple),
                                 onPressed: isSelected
                                     ? () {
 
@@ -247,24 +247,24 @@ class _MovieTablePageState extends State<MovieTablePage> {
                               ),
 
                               IconButton(
-                                icon: Icon(Icons.edit, color: Colors.green),
+                                icon: const Icon(Icons.edit, color: Colors.green),
                                 onPressed: isSelected
                                     ? () => showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
-                                    title: Text("Edit Movie"),
-                                    content: Text("Do you want to edit this movie?"),
+                                    title: const Text("Edit Movie"),
+                                    content: const Text("Do you want to edit this movie?"),
                                     actions: [
                                       TextButton(
                                         onPressed: () => Navigator.pop(context),
-                                        child: Text("Cancel"),
+                                        child: const Text("Cancel"),
                                       ),
                                       TextButton(
                                         onPressed: () {
                                           Navigator.pop(context);
                                           navigateToMovieDetail(context, movie);
                                         },
-                                        child: Text("Edit"),
+                                        child: const Text("Edit"),
                                       ),
                                     ],
                                   ),
@@ -273,23 +273,23 @@ class _MovieTablePageState extends State<MovieTablePage> {
                                 tooltip: 'Edit Movie Details',
                               ),
                               IconButton(
-                                icon: Icon(Icons.delete, color: Colors.red),
+                                icon: const Icon(Icons.delete, color: Colors.red),
                                 onPressed: isSelected
                                     ? () => showDialog(
                                   context: context,
                                   builder: (context) => AlertDialog(
-                                    title: Text("Delete Movie"),
-                                    content: Text("Are you sure you want to delete this movie?"),
+                                    title: const Text("Delete Movie"),
+                                    content: const Text("Are you sure you want to delete this movie?"),
                                     actions: [
                                       TextButton(
                                           onPressed: () => Navigator.pop(context),
-                                          child: Text("Cancel")),
+                                          child: const Text("Cancel")),
                                       TextButton(
                                           onPressed: () {
                                             Navigator.pop(context);
                                             deleteMovie(index);
                                           },
-                                          child: Text("OK")),
+                                          child: const Text("OK")),
 
                                     ],
                                   ),
