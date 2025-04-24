@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class RoomDropdownWidget extends StatefulWidget {
-  const RoomDropdownWidget({super.key});
+  final String? initialValue;
+  final void Function(String?) onChanged;
+
+  const RoomDropdownWidget({
+    super.key,
+    required this.initialValue,
+    required this.onChanged,
+  });
 
   @override
   State<RoomDropdownWidget> createState() => RoomDropdownWidgetState();
@@ -12,14 +19,24 @@ class RoomDropdownWidgetState extends State<RoomDropdownWidget> {
   final List<String> rooms = ['ROOM 1', 'ROOM 2', 'ROOM 3', 'ROOM 4'];
 
   String? selectedRoom;
-  String? lastSavedRoom; // بدل savedRoom الثابتة
+  String? lastSavedRoom;
   bool roomError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialValue != null && rooms.contains(widget.initialValue)) {
+      selectedRoom = widget.initialValue;
+    } else {
+      selectedRoom = null;
+    }
+  }
 
   bool validate() {
     setState(() {
       roomError = selectedRoom == null;
       if (!roomError) {
-        lastSavedRoom = selectedRoom; // حفظ آخر اختيار صحيح
+        lastSavedRoom = selectedRoom;
       }
     });
     return !roomError;
@@ -27,7 +44,7 @@ class RoomDropdownWidgetState extends State<RoomDropdownWidget> {
 
   void resetToSaved() {
     setState(() {
-      selectedRoom = lastSavedRoom; // رجع آخر قيمة محفوظة
+      selectedRoom = lastSavedRoom;
       roomError = false;
     });
   }
@@ -48,9 +65,9 @@ class RoomDropdownWidgetState extends State<RoomDropdownWidget> {
         alignment: Alignment.center,
         child: DropdownButton<String>(
           value: selectedRoom,
-          hint:  Text(
+          hint: Text(
             'Room',
-            style: TextStyle(color: Colors.black,fontSize:4.sp),
+            style: TextStyle(color: Colors.black, fontSize: 4.sp),
           ),
           icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
           items: rooms.map((String room) {
@@ -64,6 +81,7 @@ class RoomDropdownWidgetState extends State<RoomDropdownWidget> {
               selectedRoom = value;
               roomError = false;
             });
+            widget.onChanged(value);
           },
           isExpanded: true,
           underline: const SizedBox.shrink(),

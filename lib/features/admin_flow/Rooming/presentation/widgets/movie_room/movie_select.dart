@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MovieDropdownWidget extends StatefulWidget {
-  const MovieDropdownWidget({super.key});
+  final String? initialValue;
+  final void Function(String?) onChanged;
+
+  const MovieDropdownWidget({
+    super.key,
+    required this.initialValue,
+    required this.onChanged,
+  });
 
   @override
   State<MovieDropdownWidget> createState() => MovieDropdownWidgetState();
@@ -16,14 +23,25 @@ class MovieDropdownWidgetState extends State<MovieDropdownWidget> {
   ];
 
   String? selectedMovie;
-  String? lastSavedMovie; // <== دي اللي بنخزن فيها آخر اختيار
+  String? lastSavedMovie;
   bool movieError = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // تأكد من أن القيمة الابتدائية موجودة في الليست قبل تعيينها
+    if (widget.initialValue != null && movies.contains(widget.initialValue)) {
+      selectedMovie = widget.initialValue;
+    } else {
+      selectedMovie = null;
+    }
+  }
 
   bool validate() {
     setState(() {
       movieError = selectedMovie == null;
       if (!movieError) {
-        lastSavedMovie = selectedMovie; // حفظ آخر اختيار بعد الفاليديشن
+        lastSavedMovie = selectedMovie;
       }
     });
     return !movieError;
@@ -31,7 +49,7 @@ class MovieDropdownWidgetState extends State<MovieDropdownWidget> {
 
   void resetToSaved() {
     setState(() {
-      selectedMovie = lastSavedMovie; // رجع آخر قيمة مختارة
+      selectedMovie = lastSavedMovie;
       movieError = false;
     });
   }
@@ -62,6 +80,7 @@ class MovieDropdownWidgetState extends State<MovieDropdownWidget> {
             selectedMovie = value;
             movieError = false;
           });
+          widget.onChanged(value);
         },
         isExpanded: true,
         underline: const SizedBox.shrink(),

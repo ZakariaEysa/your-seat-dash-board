@@ -6,6 +6,8 @@ class DateField extends StatefulWidget {
   final Function(String) onChanged;
   final String placeholder;
   final String? initialValue;
+  final DateTime? compareWithDate;
+  final bool isStartDate;
 
   const DateField({
     super.key,
@@ -13,6 +15,9 @@ class DateField extends StatefulWidget {
     required this.onChanged,
     required this.placeholder,
     this.initialValue,
+    required String label,
+    this.compareWithDate,
+    this.isStartDate = true,
   });
 
   @override
@@ -72,6 +77,21 @@ class _DateFieldState extends State<DateField> {
     );
 
     if (picked != null) {
+      if (widget.compareWithDate != null) {
+        if (widget.isStartDate && picked.isAfter(widget.compareWithDate!)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Start date must be before end date 📅")),
+          );
+          return;
+        }
+        if (!widget.isStartDate && picked.isBefore(widget.compareWithDate!)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("End date must be after start date 📅")),
+          );
+          return;
+        }
+      }
+
       setState(() {
         selectedDate = picked;
         displayText = _formatDate(picked);
@@ -102,7 +122,7 @@ class _DateFieldState extends State<DateField> {
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border.all(
-                color: hasError ? Colors.red : Colors.black,
+                color: Colors.black,
               ),
               borderRadius: BorderRadius.circular(8.r),
             ),
@@ -111,7 +131,7 @@ class _DateFieldState extends State<DateField> {
               displayText ?? widget.placeholder,
               style: TextStyle(
                 color: displayText != null ? Colors.black : Colors.grey,
-                fontSize: 5.sp,
+                fontSize: 4.sp,
               ),
             ),
           ),
