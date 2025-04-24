@@ -16,7 +16,6 @@ import 'features/admin_flow/homepage/widgets/MoviStates.dart';
 import 'features/admin_flow/homepage/widgets/booking_states.dart';
 import 'features/admin_flow/homepage/widgets/sales-overview.dart';
 
-import 'features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
 import 'features/admin_flow/payment/data/remote_data_source/payment_remote_data_source.dart';
 import 'firebase_options.dart';
 import 'services/simple_bloc_observer_service.dart';
@@ -54,8 +53,6 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider(create:(context) => MovieCubit(),),
-
             BlocProvider(
               create: (context) => SettingsCubit(),
             ),

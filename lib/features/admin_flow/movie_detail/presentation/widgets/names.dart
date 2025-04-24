@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/movie_detail/presentation/widgets/person_name_field.dart';
 import '../../../../../widgets/validators/Validators.dart';
 
@@ -26,56 +27,60 @@ class Names extends StatefulWidget {
 }
 
 class _NamesState extends State<Names> {
-  late List<TextEditingController> _directorControllers;
-  late List<TextEditingController> _actorControllers;
+
 
   @override
   void initState() {
     super.initState();
-    _directorControllers = widget.directors.map((name) => TextEditingController(text: name)).toList();
-    _actorControllers = widget.actors.map((name) => TextEditingController(text: name)).toList();
+    MovieCubit.get(context).directorControllers = widget.directors.map((name) => TextEditingController(text: name)).toList();
+    MovieCubit.get(context).actorControllers = widget.actors.map((name) => TextEditingController(text: name)).toList();
 
-    if (_directorControllers.isEmpty) _addDirectorField();
-    if (_actorControllers.isEmpty) _addActorField();
+    if (MovieCubit.get(context)
+    .directorControllers!.isEmpty) _addDirectorField();
+    if (    MovieCubit.get(context).actorControllers!.isEmpty) _addActorField();
   }
 
   void _addDirectorField() {
-    _directorControllers.add(TextEditingController());
+    MovieCubit.get(context)
+    .directorControllers?.add(TextEditingController());
     setState(() {});
   }
 
   void _removeDirectorField(int index) {
-    if (_directorControllers.length > 1) {
-      _directorControllers.removeAt(index);
+    if (    MovieCubit.get(context).directorControllers!.length > 1) {
+      MovieCubit.get(context)
+      .directorControllers?.removeAt(index);
       setState(() {});
     }
   }
 
   void _addActorField() {
-    _actorControllers.add(TextEditingController());
+    MovieCubit.get(context)
+    .actorControllers?.add(TextEditingController());
     setState(() {});
   }
 
   void _removeActorField(int index) {
-    if (_actorControllers.length > 1) {
-      _actorControllers.removeAt(index);
+    if (    MovieCubit.get(context).actorControllers!.length > 1) {
+      MovieCubit.get(context).
+      actorControllers?.removeAt(index);
       setState(() {});
     }
   }
 
   @override
-  void dispose() {
-    for (var controller in _directorControllers) {
-      controller.dispose();
-    }
-    for (var controller in _actorControllers) {
-      controller.dispose();
-    }
-    super.dispose();
-  }
+  // void dispose() {
+  //   for (var controller in _directorControllers) {
+  //     controller.dispose();
+  //   }
+  //   for (var controller in _actorControllers) {
+  //     controller.dispose();
+  //   }
+  //   super.dispose();
+  // }
 
   Widget _buildFields(
-      List<TextEditingController> controllers,
+      List<TextEditingController>? controllers,
       String label,
       String imagePath, {
         VoidCallback? onAdd,
@@ -84,7 +89,7 @@ class _NamesState extends State<Names> {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: List.generate(controllers.length, (index) {
+      children: List.generate(controllers!.length, (index) {
         return PersonNameField(
           label: label,
           imagePath: imagePath,
@@ -121,7 +126,8 @@ class _NamesState extends State<Names> {
             children: [
               Expanded(
                 child: _buildFields(
-                  _directorControllers,
+                  MovieCubit.get(context)
+                  .directorControllers,
                   'Director Name',
                   'assets/images/director.png',
                   onAdd: _addDirectorField,
@@ -131,7 +137,8 @@ class _NamesState extends State<Names> {
               SizedBox(width: 10.w),
               Expanded(
                 child: _buildFields(
-                  _actorControllers,
+                  MovieCubit.get(context)
+                  .actorControllers,
                   'Actor Name',
                   'assets/images/director.png',
                   onAdd: _addActorField,
