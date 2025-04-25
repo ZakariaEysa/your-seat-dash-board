@@ -27,13 +27,13 @@ class NewDropdownField extends StatelessWidget {
       value: value,
       items: items
           .map((item) => DropdownMenuItem(
-        value: item,
-        child: Text(
-          item,
-          style: TextStyle(fontSize: 5.sp, color: Colors.black),
-          overflow: TextOverflow.ellipsis,
-        ),
-      ))
+                value: item,
+                child: Text(
+                  item,
+                  style: TextStyle(fontSize: 5.sp, color: Colors.black),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ))
           .toList(),
       onChanged: isEnabled ? onChanged : null,
       dropdownColor: Colors.white,

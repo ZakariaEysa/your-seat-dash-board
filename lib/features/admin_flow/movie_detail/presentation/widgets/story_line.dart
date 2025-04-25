@@ -41,7 +41,8 @@ class _StoryLineState extends State<StoryLine> {
       key: StoryLine.formKey,
       child: Center(
         child: Padding(
-          padding: EdgeInsets.only(left: 30.w, right: 30.w, top: 8.h, bottom: 28.h),
+          padding:
+              EdgeInsets.only(left: 30.w, right: 30.w, top: 8.h, bottom: 28.h),
           child: NewTextField(
             controller: StoryLine.controller,
             hintText: '\n\n Write story line here ...',
@@ -49,8 +50,8 @@ class _StoryLineState extends State<StoryLine> {
             errorText: null,
             keyboardType: TextInputType.multiline,
             obscureText: false,
-
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             errorStyle: const TextStyle(fontSize: 12, color: Colors.red),
             isMultiline: true,
             maxLines: 5,
@@ -58,11 +59,11 @@ class _StoryLineState extends State<StoryLine> {
             onChanged: (_) {},
             validator: (value) {
               if (widget.readOnly) return null;
-              return Validators.validateRequired(
+              return Validators.validateAnyText(
                 value ?? '',
                 'Story Line',
-                maxLength: 50,
-                lettersOnly: false,
+                maxLength: 1000,
+                //lettersOnly: false,
               );
             },
           ),
