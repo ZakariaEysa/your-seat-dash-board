@@ -156,30 +156,35 @@ class PaymentTextState extends State<PaymentText> {
       children: [
         Row(
           children: [
-            Expanded(child: _buildTextField("Beneficiary Name*", _beneficiaryController, _beneficiaryError)),
-            Expanded(child: _buildTextField("Country*", _countryController, _countryError)),
+            Expanded(child: _buildTextField("Beneficiary Name*", _beneficiaryController, _beneficiaryError,hint: "Mohamed Ahmed ")),
+            Expanded(child: _buildTextField("Country*", _countryController, _countryError,hint: "Egypt")),
           ],
         ),
         SizedBox(height: 10.h),
         Row(
           children: [
-            Expanded(child: _buildTextField("Bank Name*", _bankNameController, _bankNameError)),
-            Expanded(child: _buildTextField("Account Number", _accountNumberController, _accountNumberError)),
+            Expanded(child: _buildTextField("Bank Name*", _bankNameController, _bankNameError,hint: "Banque Misr")),
+            Expanded(child: _buildTextField("Account Number", _accountNumberController, _accountNumberError,hint: "1234567890123456")),
           ],
         ),
         SizedBox(height: 10.h),
         Row(
           children: [
-            Expanded(child: _buildTextField("IBAN", _ibanController, _ibanError)),
-            Expanded(child: _buildTextField("Swift Code", _swiftCodeController, _swiftCodeError)),
+            Expanded(child: _buildTextField("IBAN", _ibanController, _ibanError,hint:"EG380019000500000000263180002")),
+            Expanded(child: _buildTextField("Swift Code", _swiftCodeController, _swiftCodeError,hint: "BMISEGCX")),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, String? error) {
-    return TextFiled(label: label, controller: controller, errorText: error, hintText: "");
+  Widget _buildTextField(String label, TextEditingController controller, String? error,{String hint = ""}) {
+    return TextFiled(
+      label: label,
+      controller: controller,
+      errorText: error,
+      hintText: hint,
+    );
   }
 
   @override

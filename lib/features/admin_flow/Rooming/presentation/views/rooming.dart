@@ -34,6 +34,7 @@ class _RoomingState extends State<Rooming> {
       return;
     }
 
+    // ✅ Validate time correctness
     final validationMessage = RoomingValidator.validateScheduleItems(items);
     if (validationMessage != null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -45,6 +46,20 @@ class _RoomingState extends State<Rooming> {
       return;
     }
 
+    // ✅ Check for conflict with existing schedules
+    final conflictMessage = RoomingValidator.checkConflictWithExisting(
+        widget.scheduleItems, items);
+    if (conflictMessage != null) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(conflictMessage),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
+    // ✅ Check for exact duplicates
     final existingKeys = widget.scheduleItems.map((item) =>
     '${item.room}|${item.movie}|${item.startDate}|${item.startTime}|${item.endDate}|${item.endTime}'
     ).toSet();
@@ -64,6 +79,7 @@ class _RoomingState extends State<Rooming> {
       return;
     }
 
+    // ✅ Add to schedule
     setState(() {
       widget.scheduleItems.insertAll(0, newItems);
     });

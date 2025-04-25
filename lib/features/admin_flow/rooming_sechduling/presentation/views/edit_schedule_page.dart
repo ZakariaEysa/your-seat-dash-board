@@ -10,8 +10,9 @@ import '../widgets/schedule_item.dart';
 class EditSchedulePage extends StatefulWidget {
   final ScheduleItem item;
   final Function(ScheduleItem updatedItem) onSave;
+  final List<ScheduleItem> existingItems;
 
-  const EditSchedulePage({super.key, required this.item, required this.onSave});
+  const EditSchedulePage({super.key, required this.item, required this.onSave, required this.existingItems});
 
   @override
   State<EditSchedulePage> createState() => _EditSchedulePageState();
@@ -45,7 +46,9 @@ class _EditSchedulePageState extends State<EditSchedulePage> {
       endDate: endDate,
       endTime: endTime,
       originalItem: widget.item,
+      existingItems: widget.existingItems,
     );
+
 
     if (validationMessage != null) {
       ScaffoldMessenger.of(context).showSnackBar(
