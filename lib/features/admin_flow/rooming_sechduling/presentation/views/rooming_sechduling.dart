@@ -38,7 +38,6 @@ class _RoomingSchedulingState extends State<RoomingScheduling> {
     );
   }void _editItem(ScheduleItem item) async {
     final index = widget.scheduleItems.indexOf(item);
-
     if (index == -1) return;
 
     await Navigator.push(
@@ -46,6 +45,7 @@ class _RoomingSchedulingState extends State<RoomingScheduling> {
       MaterialPageRoute(
         builder: (context) => EditSchedulePage(
           item: item,
+          existingItems: widget.scheduleItems.where((i) => i != item).toList(),
           onSave: (updatedItem) {
             setState(() {
               widget.scheduleItems.removeAt(index);
@@ -56,9 +56,6 @@ class _RoomingSchedulingState extends State<RoomingScheduling> {
       ),
     );
   }
-
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

@@ -10,6 +10,7 @@ class ScheduleValidator {
     required String? endDate,
     required String? endTime,
     required ScheduleItem originalItem,
+    required List<ScheduleItem> existingItems,
   }) {
     if (room == null || movie == null || startDate == null || startTime == null || endDate == null || endTime == null) {
       return "Please fill in all fields ❗";
@@ -35,6 +36,30 @@ class ScheduleValidator {
       return "Start time must be before end time ⏱️";
     }
 
+    for (final item in existingItems) {
+      // Check if exact duplicate exists
+      if (item.room == room &&
+          item.movie == movie &&
+          item.startDate == startDate &&
+          item.startTime == startTime &&
+          item.endDate == endDate &&
+          item.endTime == endTime) {
+        return "This schedule already exists ❌";
+      }
+
+      // Check for overlapping in same room
+      final itemStart = combineDateTime(item.startDate, item.startTime);
+      final itemEnd = combineDateTime(item.endDate, item.endTime);
+
+      if (item.room == room &&
+          itemStart != null &&
+          itemEnd != null &&
+          startDateTime.isBefore(itemEnd) &&
+          endDateTime.isAfter(itemStart)) {
+        return "Room $room already has another schedule at the same time ❌";
+      }
+    }
+
     if (room == originalItem.room &&
         movie == originalItem.movie &&
         startDate == originalItem.startDate &&
@@ -46,6 +71,8 @@ class ScheduleValidator {
 
     return null;
   }
+
+
 
   static DateTime? combineDateTime(String? date, String? time) {
     if (date == null || time == null) return null;
