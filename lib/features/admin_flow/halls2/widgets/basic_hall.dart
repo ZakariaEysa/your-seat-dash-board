@@ -31,11 +31,9 @@ class HallConfigPageState extends State<HallConfigPage> {
 
   bool validate() {
     setState(() {
-      _hallNameError = Validators.validateRequired(
+      _hallNameError = Validators.validateAnyText(
         _hallNameController.text,
         'Hall Name',
-        lettersOnly: true,
-        allowSpaces: true,
       );
 
       _vipSeatCountError = Validators.validateRequired(
@@ -124,6 +122,7 @@ class HallConfigPageState extends State<HallConfigPage> {
                 ),
                 Expanded(
                   child: NewTextField(
+
                     controller: _hallNameController,
                     errorText: _hallNameError,
                   ),

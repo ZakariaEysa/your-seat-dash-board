@@ -1,78 +1,111 @@
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../widgets/text_field/text_field/new_text_field_builder.dart';
-import '../../../../../widgets/validators/Validators.dart';
 
 class PersonNameField extends StatelessWidget {
   final String label;
-  final String imagePath;
-  final VoidCallback? onAdd;
-  final VoidCallback? onDelete;
+  final Uint8List? imageBytes;
+  final VoidCallback? onUpload;
+  final VoidCallback? onDeleteImage;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final String? errorText;
   final ValueChanged<String>? onChanged;
   final bool isViewOnly;
+  final VoidCallback? onAdd;
+  final VoidCallback? onDelete;
+
+
+  final bool isFirst;
 
   const PersonNameField({
     Key? key,
     required this.label,
-    required this.imagePath,
-    this.onAdd,
-    this.onDelete,
+    this.imageBytes,
+    this.onUpload,
+    this.onDeleteImage,
     this.controller,
     this.validator,
     this.errorText,
     this.onChanged,
     this.isViewOnly = false,
+    this.onAdd,
+    this.onDelete,
+    this.isFirst = false,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
+    return Container(
+      padding: EdgeInsets.all(2.sp),
+      decoration: BoxDecoration(
+        color: Colors.grey[200],
+        borderRadius: BorderRadius.circular(12.r),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Header Row (Image + Label + Actions)
           Row(
             children: [
               CircleAvatar(
-                backgroundImage: AssetImage(imagePath),
-                radius: 14.r,
+                backgroundImage:
+                    imageBytes != null ? MemoryImage(imageBytes!) : null,
+                radius: 24.r,
+                backgroundColor: Colors.grey[400],
+                child: imageBytes == null
+                    ? Icon(Icons.person, size: 34.r, color: Colors.white)
+                    : null,
               ),
-              SizedBox(width: 6.w),
-              Text(
-                label,
-                style: TextStyle(
-                  fontSize: 6.sp,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+              SizedBox(width: 5.w),
+
+              Expanded(
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 6.sp,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
                 ),
               ),
-              Spacer(),
-              if (!isViewOnly && onAdd != null)
-                IconButton(
-                  icon: Icon(Icons.add_circle_outline, color: Colors.black),
-                  onPressed: onAdd,
-                  tooltip: 'Add $label',
-                ),
+
+              if (!isViewOnly) ...[
+                if (onUpload != null)
+                  IconButton(
+                    icon: Icon(Icons.upload, color: Colors.black),
+                    tooltip: 'Upload Image',
+                    onPressed: onUpload,
+                  ),
+                if (imageBytes != null && onDeleteImage != null)
+                  IconButton(
+                    icon: Icon(Icons.delete, color: Colors.red),
+                    tooltip: 'Delete Image',
+                    onPressed: onDeleteImage,
+                  ),
+              ],
+
               if (!isViewOnly && onDelete != null)
                 IconButton(
                   icon: Icon(Icons.remove_circle_outline, color: Colors.red),
+                  tooltip: 'Remove',
                   onPressed: onDelete,
-                  tooltip: 'Remove $label',
+                ),
+
+
+              if (!isViewOnly && isFirst && onAdd != null)
+                IconButton(
+                  icon: Icon(Icons.add_circle_outline, color: Colors.green),
+                  tooltip: 'Add',
+                  onPressed: onAdd,
                 ),
             ],
           ),
-
-          // Text Field
-          Padding(
-            padding: EdgeInsets.symmetric(vertical: 8.w, horizontal: 5.h),
-            child: SizedBox(
-              width: double.infinity,
+          SizedBox(height: 20.h),
+          SizedBox(
+              width: 120.w,
               height: 70.h,
-              child:NewTextField(
+              child: NewTextField(
                 controller: controller,
                 keyboardType: TextInputType.text,
                 borderColor: isViewOnly
@@ -86,22 +119,22 @@ class PersonNameField extends StatelessWidget {
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(
-                    color: isViewOnly ?Colors.black : (errorText != null ? Colors.red : Colors.black),
+                    color: isViewOnly
+                        ? Colors.black
+                        : (errorText != null ? Colors.red : Colors.black),
                     width: 1,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8),
                   borderSide: BorderSide(
-                    color: isViewOnly ?Colors.black : (errorText != null ? Colors.red : Colors.black),
+                    color: isViewOnly
+                        ? Colors.black
+                        : (errorText != null ? Colors.red : Colors.black),
                     width: 1.5,
                   ),
                 ),
-              )
-
-
-            ),
-          ),
+              )),
         ],
       ),
     );
