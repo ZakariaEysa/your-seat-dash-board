@@ -29,8 +29,10 @@ final nameRegex = RegExp(r'^[A-Za-z]{3,20}(?: [A-Za-z]{3,20})*\s*$');
   }
 
   // ✅ التحقق من الرقم
-  String? validatePhone(String value) {
-    if (value.isEmpty) return "⚠️ This field is required!";
-    if (!phoneRegExp.hasMatch(value)) return "⚠️ Must be 11 digits!";
-    return null;
+String? validatePhone(String value) {
+  if (value.isEmpty) return "⚠️ This field is required!";
+  if (!RegExp(r'^(010|011|012|015)[0-9]{8}$').hasMatch(value)) {
+    return "⚠️ Must start with 010, 011, 012, or 015 and be 11 digits total!";
   }
+  return null;
+}
