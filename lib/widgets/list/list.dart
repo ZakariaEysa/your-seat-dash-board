@@ -1,17 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-
 import '../../features/admin_flow/Rooming/presentation/views/rooming.dart';
 import '../../features/admin_flow/Ticket_details/presentation/views/ticket_details.dart';
 import '../../features/admin_flow/halls2/view/halls2.dart';
 import '../../features/admin_flow/homepage/view/home.dart';
 import '../../features/admin_flow/moives/view/movies.dart';
+import '../../features/admin_flow/rooming_sechduling/presentation/views/rooming_sechduling.dart';
+import '../../features/admin_flow/rooming_sechduling/presentation/widgets/schedule_item.dart';
 import '../../features/admin_flow/setting/presentation/widgets/App_move.dart';
 import '../../features/admin_flow/transactions/view/transactions.dart';
-
-
-
 class NavigationList extends StatefulWidget {
+  const NavigationList({super.key});
+
   @override
   State<NavigationList> createState() => _NavigationListState();
 }
@@ -19,35 +20,38 @@ class NavigationList extends StatefulWidget {
 class _NavigationListState extends State<NavigationList> {
   int _currentIndex = 0;
 
-  final List<Widget> _pages = [
-    // const Center(child: Text("Home Page", style: TextStyle(fontSize: 24))),
-   Home(),
-    Transactions(),
-    Halls2(),
-    Movies(),
-    TicketDetails(),
-    Rooming(),
-    //RoomingScheduling(),
-    App(),
-    const Center(child: Text("Logging Out...", style: TextStyle(fontSize: 24))),
-  ];
 
-  final List<Map<String, dynamic>> _menuItems = [
-    {'icon': Icons.grid_view, 'title': 'Home'},
-    {'icon': Icons.receipt, 'title': 'Transactions'},
-    {'icon': Icons.apartment, 'title': 'Halls'},
-    {'icon': Icons.movie, 'title': 'Movies'},
-    {'icon': Icons.confirmation_number, 'title': 'Ticket details'},
-    {'icon': Icons.meeting_room, 'title': 'Rooming'},
-    //{'icon': Icons.schedule, 'title': 'Rooming Scheduling'},
-    {'icon': Icons.settings, 'title': 'Setting'},
-    {'icon': Icons.logout, 'title': 'LogOut'},
-  ];
 
+
+  final List<ScheduleItem> _scheduleItems = [];
 
   @override
   Widget build(BuildContext context) {
     double sideBarWidth = 45.w;
+
+    final List<Widget> _pages = [
+      Home(),
+      Transactions(),
+      Halls2(),
+      Movies(),
+      TicketDetails(),
+      Rooming(scheduleItems: _scheduleItems),
+      RoomingScheduling(scheduleItems: _scheduleItems),
+      App(),
+      const Center(child: Text("Logging Out...", style: TextStyle(fontSize: 24))),
+    ];
+
+    final List<Map<String, dynamic>> _menuItems = [
+      {'icon': Icons.grid_view, 'title': 'Home'},
+      {'icon': Icons.receipt, 'title': 'Transactions'},
+      {'icon': Icons.apartment, 'title': 'Halls'},
+      {'icon': Icons.movie, 'title': 'Movies'},
+      {'icon': Icons.confirmation_number, 'title': 'Ticket details'},
+      {'icon': Icons.meeting_room, 'title': 'Rooming'},
+      {'icon': Icons.schedule, 'title': 'Rooming Scheduling'},
+      {'icon': Icons.settings, 'title': 'Setting'},
+      {'icon': Icons.logout, 'title': 'LogOut'},
+    ];
 
     return Scaffold(
       body: Row(
@@ -60,13 +64,10 @@ class _NavigationListState extends State<NavigationList> {
               children: [
                 Image.asset("assets/images/yourseat.png", width: 80.w),
                 SizedBox(height: 15.h),
-                // ✅ بناء عناصر القائمة
-                for (int i = 0; i < _menuItems.length; i++) buildNavItem(i),
+                for (int i = 0; i < _menuItems.length; i++) buildNavItem(i, _menuItems, _pages),
               ],
             ),
           ),
-
-          // ✅ منطقة عرض الصفحة
           Expanded(
             child: _pages[_currentIndex],
           ),
@@ -75,8 +76,7 @@ class _NavigationListState extends State<NavigationList> {
     );
   }
 
-  /// ✅ **بناء عنصر القائمة (الأيقونة والنص) مع المسافات**
-  Widget buildNavItem(int index) {
+  Widget buildNavItem(int index, List<Map<String, dynamic>> menuItems, List<Widget> pages) {
     bool isSelected = index == _currentIndex;
 
     return Padding(
@@ -96,12 +96,11 @@ class _NavigationListState extends State<NavigationList> {
                 color: isSelected ? Colors.purple[300] : Colors.transparent,
                 borderRadius: BorderRadius.circular(8.r),
               ),
-
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Icon(
-                    _menuItems[index]['icon'],
+                    menuItems[index]['icon'],
                     color: Colors.white,
                     size: 6.sp,
                   ),
@@ -110,7 +109,7 @@ class _NavigationListState extends State<NavigationList> {
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: Text(
-                        _menuItems[index]['title'],
+                        menuItems[index]['title'],
                         style: TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,

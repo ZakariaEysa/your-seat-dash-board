@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../widgets/text_field/text_field/new_text_field_builder.dart';
 import '../../../../../widgets/validators/Validators.dart';
+import '../../../moives/data/movies_cubit/movies_cubit.dart';
 
 class StoryLine extends StatefulWidget {
   const StoryLine({
@@ -11,7 +12,7 @@ class StoryLine extends StatefulWidget {
   });
 
   static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  static final TextEditingController controller = TextEditingController();
+  //static final TextEditingController controller = TextEditingController();
   final String initialValue;
   final bool readOnly;
 
@@ -19,8 +20,8 @@ class StoryLine extends StatefulWidget {
     return formKey.currentState?.validate() ?? false;
   }
 
-  static void clearFields() {
-    controller.clear();
+  static void clearFields(BuildContext context) {
+    MovieCubit.get(context).storyLineController.clear();
     formKey.currentState?.reset();
   }
 
@@ -32,7 +33,7 @@ class _StoryLineState extends State<StoryLine> {
   @override
   void initState() {
     super.initState();
-    StoryLine.controller.text = widget.initialValue;
+    MovieCubit.get(context).storyLineController.text = widget.initialValue;
   }
 
   @override
@@ -41,31 +42,30 @@ class _StoryLineState extends State<StoryLine> {
       key: StoryLine.formKey,
       child: Center(
         child: Padding(
-          padding:
-              EdgeInsets.only(left: 30.w, right: 30.w, top: 8.h, bottom: 28.h),
+          padding: EdgeInsets.only(left: 30.w, right: 30.w, top: 8.h, bottom: 28.h),
           child: NewTextField(
-            controller: StoryLine.controller,
+            controller: MovieCubit.get(context).storyLineController,
             hintText: '\n\n Write story line here ...',
             borderColor: Colors.black,
             errorText: null,
             keyboardType: TextInputType.multiline,
             obscureText: false,
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             errorStyle: const TextStyle(fontSize: 12, color: Colors.red),
             isMultiline: true,
             maxLines: 5,
             readOnly: widget.readOnly,
             onChanged: (_) {},
-            validator: (value) {
-              if (widget.readOnly) return null;
-              return Validators.validateAnyText(
-                value ?? '',
-                'Story Line',
-                maxLength: 1000,
-                //lettersOnly: false,
-              );
-            },
+            validator: (value) {}
+            // {
+            //   if (widget.readOnly) return null;
+            //   return Validators.validateRequired(
+            //     value ?? '',
+            //     'Story Line',
+            //     maxLength: 50,
+            //     lettersOnly: false,
+            //   );
+            // },
           ),
         ),
       ),
