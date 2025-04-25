@@ -54,8 +54,9 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MultiBlocProvider(
           providers: [
-            BlocProvider(create:(context) => MovieCubit(),),
-
+            BlocProvider(
+              create: (context) => MovieCubit(),
+            ),
             BlocProvider(
               create: (context) => SettingsCubit(),
             ),
@@ -68,7 +69,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: "Admin Dashboard",
             theme: ThemeData.dark(),
-            home: NavigationList(),
+            home: SignIn(),
           ),
         );
       },
