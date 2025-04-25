@@ -34,7 +34,7 @@ class SeatNumberSection extends StatelessWidget {
                   fontSize: 5.sp,
                   color: Colors.black,
                   fontWeight: FontWeight.bold)),
-          SizedBox(height: 3.h),
+         // SizedBox(height: 2.h),
           Row(
             children: [
               SeatInput(
@@ -61,7 +61,7 @@ class SeatNumberSection extends StatelessWidget {
                       color: Colors.black,
                       onPressed: () {}),
                   IconButton(
-                      icon: Icon(Icons.edit, color: Colors.green),
+                      icon: Icon(Icons.delete, color: Colors.red),
                       onPressed: () {}),
                 ],
               ),

@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
 import '../../../../../widgets/button/button_builder.dart';
+import '../widgets/crew_names.dart';
 import '../widgets/movie_info.dart';
-import '../widgets/names.dart';
+import '../widgets/actor_names.dart';
 import '../widgets/story_line.dart';
 
 class MovieDetail extends StatefulWidget {
   final Map<String, String> movieData;
   final bool isViewOnly;
-
-  const MovieDetail({super.key, required this.movieData, this.isViewOnly = false});
+  final bool isEditing;
+  const MovieDetail({super.key, required this.movieData, this.isViewOnly = false,this.isEditing = false,});
 
   static final GlobalKey<MovieInfoScreenState> _movieInfoKey = GlobalKey<MovieInfoScreenState>();
 
@@ -68,7 +69,7 @@ class _MovieDetailState extends State<MovieDetail> {
                       constraints: BoxConstraints(minHeight: constraints.maxHeight),
                       child: IntrinsicHeight(
                         child: Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 30.w),
+                          padding: EdgeInsets.symmetric(horizontal: 9.w),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
@@ -105,7 +106,7 @@ class _MovieDetailState extends State<MovieDetail> {
                               ),
 
                               Padding(
-                                padding: EdgeInsets.only(left: 30.w, top: 30.h, bottom: 10.h),
+                                padding: EdgeInsets.only(left: 70.w, top: 30.h, bottom: 10.h),
                                 child: Text(
                                   "Story Line",
                                   style: TextStyle(
@@ -122,14 +123,22 @@ class _MovieDetailState extends State<MovieDetail> {
                               ),
                               Padding(
                                 padding: EdgeInsets.only(left: 8.w, right: 2.w, top: 20.h, bottom: 30.h),
-                                child: Names(
-                                  directors: directors,
-                                  actors: actors,
+                                child: ActorNames(
+
+                       actors: actors,
                                   isViewOnly: widget.isViewOnly,
                                 ),
                               ),
 
-                              SizedBox(height: 35.h),
+                              SizedBox(height: 20.h),
+                              CrewNames(
+                                key: CrewNames.crewKey,
+                                directorName: widget.movieData['Director Name'] ?? '',
+                                writerName: widget.movieData['Writer Name'] ?? '',
+                                producerName: widget.movieData['Producer Name'] ?? '',
+                                isViewOnly: widget.isViewOnly,
+                              ),
+                              SizedBox(height: 60.h),
 
                               if (!widget.isViewOnly)
                                 Row(
@@ -162,15 +171,16 @@ class _MovieDetailState extends State<MovieDetail> {
                                     //   ),
                                     // ),
                                     ButtonBuilder(
-                                      text: 'Add Movie',
+                      text: widget.isEditing ? 'Save' : 'Add Movie',
                                       onTap: () {
 
                                         // التحقق من صحة البيانات
                                         final isMovieInfoValid = MovieDetail._movieInfoKey.currentState?.validateFields() ?? false;
-                                        final isNamesValid = Names.validate();
+                                        final isNamesValid = ActorNames.validate();
                                         final isStoryLineValid = StoryLine.validate();
+                                        final isCrewValid = CrewNames.crewKey.currentState?.widget.validate() ?? false;
 
-                                        if (isMovieInfoValid && isNamesValid && isStoryLineValid && promoLinkError == null) {
+                                        if (isMovieInfoValid && isNamesValid && isStoryLineValid&&isCrewValid && promoLinkError == null) {
                                           MovieCubit.get(context).uploadMovieToFirestore();
 
                                           print('All fields are valid');

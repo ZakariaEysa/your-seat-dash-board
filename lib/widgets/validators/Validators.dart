@@ -2,7 +2,7 @@ class Validators {
   static String? validateRequired(
       String? value,
       String fieldName, {
-        int maxLength = 20,
+        int maxLength = 30,
         int minLength = 1,
         bool lettersOnly = false,
         bool numbersOnly = false,
@@ -28,9 +28,31 @@ class Validators {
       return _validateNumbersOnly(value, fieldName);
     }
 
+    // نسمح بكل شيء، بما فيها الرموز الخاصة
     return null;
   }
 
+
+  static String? validateAnyText(
+      String? value,
+      String fieldName, {
+        int maxLength = 100,
+        int minLength = 1,
+      }) {
+    if (value == null || value.isEmpty) {
+      return '$fieldName is required';
+    }
+
+    if (value.length < minLength) {
+      return '$fieldName must be at least $minLength characters';
+    }
+
+    if (value.length > maxLength) {
+      return '$fieldName at most $maxLength characters';
+    }
+
+    return null;
+  }
   static String? _validateNumbersOnly(String value, String fieldName) {
     final numericRegex = RegExp(r'^[0-9]+$');
     if (!numericRegex.hasMatch(value)) {
@@ -40,11 +62,13 @@ class Validators {
   }
 
   static String? _validateLettersOnly(
-      String value,
-      String fieldName, {
-        bool allowSpaces = true,
-      }) {
-    final pattern = allowSpaces ? r'^[a-zA-Z\u0600-\u06FF\s]+$' : r'^[a-zA-Z\u0600-\u06FF]+$';
+    String value,
+    String fieldName, {
+    bool allowSpaces = true,
+  }) {
+    final pattern = allowSpaces
+        ? r'^[a-zA-Z\u0600-\u06FF\s]+$'
+        : r'^[a-zA-Z\u0600-\u06FF]+$';
     final lettersRegex = RegExp(pattern);
 
     if (!lettersRegex.hasMatch(value)) {
@@ -110,17 +134,54 @@ class Validators {
 
     return null;
   }
-
-  /// ✅ Validate format like "2h 30m"
   static String? validateDurationFormat(String? value) {
     if (value == null || value.isEmpty) {
       return 'Duration is required';
     }
 
-    final regex = RegExp(r'^\d{1,2}h \d{1,2}m$');
+    final regex = RegExp(r'^\d+m$');
 
     if (!regex.hasMatch(value)) {
-      return 'Duration must be in the format like 2h 30m';
+      return 'Duration must be in format like: 30m';
+    }
+
+    final minutesStr = value.substring(0, value.length - 1);
+    final minutes = int.tryParse(minutesStr);
+
+    if (minutes == null || minutes == 0) {
+      return 'Duration must be greater than zero';
+    }
+
+    return null;
+  }
+
+  static String? validateVersionNumber(String? value) {
+    if (value == null || value.isEmpty) {
+      return 'Version number is required';
+    }
+
+    final dateRegex = RegExp(r'^\d{4}-\d{2}-\d{2}$');
+    if (!dateRegex.hasMatch(value)) {
+      return 'Version must be in YYYY-MM-DD format';
+    }
+
+    final parts = value.split('-');
+    final year = int.tryParse(parts[0]);
+    final month = int.tryParse(parts[1]);
+    final day = int.tryParse(parts[2]);
+
+    if (year == null || month == null || day == null) {
+      return 'Invalid date numbers';
+    }
+    if (year == 0) {
+      return 'Invalid year: 0000 is not a valid year'; // رسالة الخطأ بالإنجليزية
+    }
+    if (month < 1 || month > 12) {
+      return 'Month must be between 01-12';
+    }
+
+    if (day < 1 || day > 31) {
+      return 'Day must be between 01-31';
     }
 
     return null;

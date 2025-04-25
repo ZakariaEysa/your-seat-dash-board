@@ -30,18 +30,20 @@ class SeatPriceSection extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text("Price for seat", style: TextStyle(fontSize: 5.sp,color: Colors.black, fontWeight: FontWeight.bold)),
-          SizedBox(height: 3.h),
+        //  SizedBox(height: 2.h),
           Row(
             children: [
-              SeatInput(label: 'VIP', color: Color(0xFFA79F06), controller: vipController, errorText: vipError),
+              Expanded(child: SeatInput(label: 'VIP', color: Color(0xFFA79F06), controller: vipController, errorText: vipError)),
               SizedBox(width: 8.w),
-              SeatInput(label: 'Premium', color: Color(0xFFFF5E3A), controller: premiumController, errorText: premiumError),
+              Expanded(child: SeatInput(label: 'Premium', color: Color(0xFFFF5E3A), controller: premiumController, errorText: premiumError)),
               SizedBox(width: 8.w),
-              SeatInput(label: 'Standard', color: Colors.blueAccent, controller: standardController, errorText: standardError),
+              Expanded(child: SeatInput(label: 'Standard', color: Colors.blueAccent, controller: standardController, errorText: standardError)),
               Column(
                 children: [
                   IconButton(icon: Icon(Icons.add_circle_outline),color: Colors.black, onPressed: () {}),
-                  IconButton(icon: Icon(Icons.edit, color: Colors.green), onPressed: () {}),
+                  IconButton(
+                      icon: Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {}),
                 ],
               ),
             ],
