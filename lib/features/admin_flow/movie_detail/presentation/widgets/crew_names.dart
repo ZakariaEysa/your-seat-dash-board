@@ -48,10 +48,13 @@ class _CrewNamesState extends State<CrewNames> {
   bool _validateFields() {
     setState(() {
       _directorError = Validators.validateRequired(
+        lettersOnly: true,
           _directorController.text, 'Director Name');
       _writerError =
-          Validators.validateRequired(_writerController.text, 'Writer Name');
-      _producerError = Validators.validateRequired(
+          Validators.validateRequired(        lettersOnly: true,
+              _writerController.text, 'Writer Name');
+      _producerError = Validators.validateRequired(        lettersOnly: true,
+
           _producerController.text, 'Producer Name');
     });
     return _directorError == null &&
@@ -107,7 +110,8 @@ class _CrewNamesState extends State<CrewNames> {
                 controller: _directorController,
                 errorText: _directorError,
                 validator: (value) =>
-                    Validators.validateRequired(value, 'Director Name'),
+                    Validators.validateRequired(value, 'Director Name',  lettersOnly: true,
+                      maxLength: 50,),
                 onUpload: () =>
                     _pickImage((img) => setState(() => _directorImage = img)),
                 onDeleteImage: () => setState(() => _directorImage = null),
@@ -126,7 +130,8 @@ class _CrewNamesState extends State<CrewNames> {
                 controller: _writerController,
                 errorText: _writerError,
                 validator: (value) =>
-                    Validators.validateRequired(value, 'Writer Name'),
+                    Validators.validateRequired(value, 'Writer Name',  lettersOnly: true,
+                      maxLength: 50,),
                 onUpload: () =>
                     _pickImage((img) => setState(() => _writerImage = img)),
                 onDeleteImage: () => setState(() => _writerImage = null),
@@ -147,7 +152,8 @@ class _CrewNamesState extends State<CrewNames> {
                 controller: _producerController,
                 errorText: _producerError,
                 validator: (value) =>
-                    Validators.validateRequired(value, 'Producer Name'),
+                    Validators.validateRequired(value, 'Producer Name',  lettersOnly: true,
+                      maxLength: 50,),
                 onUpload: () =>
                     _pickImage((img) => setState(() => _producerImage = img)),
                 onDeleteImage: () => setState(() => _producerImage = null),
