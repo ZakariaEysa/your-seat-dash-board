@@ -12,7 +12,7 @@ class StoryLine extends StatefulWidget {
   });
 
   static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  //static final TextEditingController controller = TextEditingController();
+  static final TextEditingController controller = TextEditingController();
   final String initialValue;
   final bool readOnly;
 
@@ -21,7 +21,8 @@ class StoryLine extends StatefulWidget {
   }
 
   static void clearFields(BuildContext context) {
-    MovieCubit.get(context).storyLineController.clear();
+    controller.clear();
+    MovieCubit.get(context).storyLineController.clear(); // ربط مع الكيوبت
     formKey.currentState?.reset();
   }
 
@@ -33,7 +34,7 @@ class _StoryLineState extends State<StoryLine> {
   @override
   void initState() {
     super.initState();
-    MovieCubit.get(context).storyLineController.text = widget.initialValue;
+    StoryLine.controller.text = widget.initialValue;
   }
 
   @override
@@ -42,9 +43,9 @@ class _StoryLineState extends State<StoryLine> {
       key: StoryLine.formKey,
       child: Center(
         child: Padding(
-          padding: EdgeInsets.only(left: 30.w, right: 30.w, top: 8.h, bottom: 28.h),
+          padding: EdgeInsets.only(left: 70.w, right: 70.w, top: 8.h, bottom: 28.h),
           child: NewTextField(
-            controller: MovieCubit.get(context).storyLineController,
+            controller: StoryLine.controller,
             hintText: '\n\n Write story line here ...',
             borderColor: Colors.black,
             errorText: null,
@@ -56,16 +57,14 @@ class _StoryLineState extends State<StoryLine> {
             maxLines: 5,
             readOnly: widget.readOnly,
             onChanged: (_) {},
-            validator: (value) {}
-            // {
-            //   if (widget.readOnly) return null;
-            //   return Validators.validateRequired(
-            //     value ?? '',
-            //     'Story Line',
-            //     maxLength: 50,
-            //     lettersOnly: false,
-            //   );
-            // },
+            validator: (value) {
+              if (widget.readOnly) return null;
+              return Validators.validateAnyText(
+                value ?? '',
+                'Story Line',
+                maxLength: 1000,
+              );
+            },
           ),
         ),
       ),

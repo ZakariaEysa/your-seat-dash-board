@@ -9,12 +9,12 @@ class Movies extends StatefulWidget {
 }
 
 class _MoviesState extends State<Movies> {
-  // Sample movie data for illustration. Replace with actual movie data.
+
   final Map<String, String> movie = {
     'title': 'Sample Movie',
     'director': 'John Doe',
     'actor': 'Jane Smith',
-    // Add other necessary movie properties here
+
   };
 
   @override
@@ -44,17 +44,21 @@ class _MoviesState extends State<Movies> {
                       ),
                     );
                   },
+
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Icon(Icons.add_circle_outline, color: Colors.white, size: 7.sp),
                       SizedBox(width: 3.w),
-                      Text(
-                        'Add',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 5.sp,
+                      Padding(
+                        padding:  EdgeInsets.only(right: 4.w,top: 2.h),
+                        child: Text(
+                          'Add',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 5.sp,
+                          ),
                         ),
                       ),
                     ],
@@ -66,7 +70,7 @@ class _MoviesState extends State<Movies> {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(left: 10.w),
-                child: MovieTablePage(), // Your Movie Table widget here
+                child: MovieTablePage(),
               ),
             ),
           ],

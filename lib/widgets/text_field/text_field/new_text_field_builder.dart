@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NewTextField extends StatelessWidget {
@@ -22,7 +21,7 @@ class NewTextField extends StatelessWidget {
   final InputBorder? enabledBorder;
   final bool expands;
   final bool enabled;
-  final bool readOnly; // ✅ إضافة readOnly
+  final bool readOnly;
 
   const NewTextField({
     Key? key,
@@ -46,7 +45,7 @@ class NewTextField extends StatelessWidget {
     this.enabledBorder,
     this.expands = false,
     this.enabled = true,
-    this.readOnly = false, // ✅ إضافة default
+    this.readOnly = false,
   }) : super(key: key);
 
   @override
@@ -67,7 +66,7 @@ class NewTextField extends StatelessWidget {
       onChanged: onChanged,
       validator: validator,
       enabled: enabled,
-      readOnly: readOnly, // ✅ استخدامها هنا
+      readOnly: readOnly,
       decoration: InputDecoration(
         filled: true,
         fillColor: enabled ? Colors.white : Colors.grey[200],
@@ -85,7 +84,9 @@ class NewTextField extends StatelessWidget {
         focusedBorder: focusedBorder ??
             OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: enabled ? borderColor : Colors.grey, width: 1.5),
+              borderSide: BorderSide(
+                  color: enabled ? borderColor : Colors.grey,
+                  width: 1.5),
             ),
         errorText: errorText,
         errorStyle: errorStyle ??

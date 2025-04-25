@@ -37,14 +37,16 @@ class MovieTextFieldLabel extends StatelessWidget {
         ),
         SizedBox(height: 5.h),
         NewTextField(
-          controller: controller,
-          keyboardType: TextInputType.text,
-          hintText: hintText,
-          borderColor: errorText != null ? errorColor : Colors.black,
-          errorText: errorText,
-          readOnly: readOnly,
-          onChanged: onChanged,
-        ),
+            controller: controller,
+            keyboardType: TextInputType.text, // يجب أن يكون text وليس multiline إذا كنت تريد سطر واحد
+            hintText: hintText,
+            borderColor: errorText != null ? errorColor : Colors.black,
+            errorText: errorText,
+            readOnly: readOnly,
+            onChanged: onChanged,
+            // تأكد من عدم وجود أي قيود إضافية هنا
+          ),
+
       ],
     );
   }
