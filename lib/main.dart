@@ -9,6 +9,7 @@ import 'package:yourseatgraduationproject/features/admin_flow/home/presentation/
 import 'package:yourseatgraduationproject/features/admin_flow/payment/data/repos_impl/payment_repo_impl.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/payment/presentation/cubit/payment_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/cubit/settings_cubit.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/signin/auth_cubit/auth_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/signin/view/signin.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/transactions/view/transactions.dart';
 import 'package:yourseatgraduationproject/widgets/list/list.dart';
@@ -54,6 +55,10 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MultiBlocProvider(
           providers: [
+            BlocProvider(
+            create: (context) => AuthCubit(),
+        child: const SignInContent(), // افصل محتوى الصفحة في ويدجت تانية عشان النظافة
+        ),
             BlocProvider(create:(context) => MovieCubit(),),
 
             BlocProvider(
@@ -68,10 +73,12 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: "Admin Dashboard",
             theme: ThemeData.dark(),
-            home: NavigationList(),
+            home: SignInContent(),
           ),
         );
       },
     );
   }
 }
+
+
