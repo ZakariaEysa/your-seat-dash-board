@@ -17,6 +17,7 @@ import 'package:yourseatgraduationproject/features/admin_flow/payment/data/repos
 import 'package:yourseatgraduationproject/features/admin_flow/payment/presentation/cubit/payment_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/cubit/settings_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/views/Cinema_design.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/signin/auth_cubit/auth_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/signin/view/signin.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/transactions/view/transactions.dart';
 import 'package:yourseatgraduationproject/widgets/list/list.dart';
@@ -74,6 +75,12 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) => MovieCubit(),
             ),
+            BlocProvider(
+            create: (context) => AuthCubit(),
+        child: const SignInContent(), // افصل محتوى الصفحة في ويدجت تانية عشان النظافة
+        ),
+            BlocProvider(create:(context) => MovieCubit(),),
+
             BlocProvider(
               create: (context) => SettingsCubit(),
             ),
