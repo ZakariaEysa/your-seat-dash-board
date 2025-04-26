@@ -73,7 +73,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: "Admin Dashboard",
             theme: ThemeData.dark(),
-            home: SignInContent(),
+            home: const NavigationList(),
           ),
         );
       },

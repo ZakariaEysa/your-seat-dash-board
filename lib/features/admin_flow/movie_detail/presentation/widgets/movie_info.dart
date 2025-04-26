@@ -27,10 +27,10 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
   static const Color errorColor = Color(0xFFE53935);
 
   // Controllers
-  final TextEditingController _movieNameController = TextEditingController();
-  final TextEditingController _durationController = TextEditingController();
-  final TextEditingController _promoLinkController = TextEditingController();
-  final TextEditingController _versionController = TextEditingController();
+  // final TextEditingController _movieNameController = TextEditingController();
+  // final TextEditingController _durationController = TextEditingController();
+  // final TextEditingController _promoLinkController = TextEditingController();
+  // final TextEditingController _versionController = TextEditingController();
 
   // Dropdown values
   String? selectedGenre;
@@ -76,11 +76,11 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
     final movie = widget.movieData;
 
     // Initialize from movie data
-    _movieNameController.text = movie['name'] ?? '';
-    _durationController.text = movie['duration'] ?? '';
-    _versionController.text = movie['vresionnumber'] ?? '';
+    MovieCubit.get(context).movieNameController.text = movie['name'] ?? '';
+    MovieCubit.get(context).durationController.text = movie['duration'] ?? '';
+    MovieCubit.get(context).versionController.text = movie['vresionnumber'] ?? '';
     promoUrl = movie['promoUrl'] ?? '';
-    _promoLinkController.text = promoUrl;
+    MovieCubit.get(context).promoLinkController.text = promoUrl;
 
     selectedGenre = genreOptions.contains(movie['genre']) ? movie['genre'] : null;
     selectedLanguage = languageOptions.contains(movie['language']) ? movie['language'] : null;
@@ -99,16 +99,16 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
   bool validateFields() {
     setState(() {
       _movieNameError = Validators.validateRequired(
-        _movieNameController.text,
+        MovieCubit.get(context).movieNameController.text,
         'Movie name',
       );
-      _durationError =   Validators.validateDurationFormat(_durationController.text);
+      _durationError =   Validators.validateDurationFormat(MovieCubit.get(context).durationController.text);
       _movieGenreError = Validators.validateRequired(selectedGenre, 'Movie genre');
       _languageError = Validators.validateRequired(selectedLanguage, 'Language');
       _censorshipError = Validators.validateRequired(selectedCensorship, 'Censorship');
       _statusError = Validators.validateRequired(selectedStatus, 'Status');
-      _promoLinkError = Validators.validateYouTubeLink(_promoLinkController.text);
-      _versionError = Validators.validateVersionNumber(_versionController.text);
+      _promoLinkError = Validators.validateYouTubeLink(MovieCubit.get(context).promoLinkController.text);
+      _versionError = Validators.validateVersionNumber(MovieCubit.get(context).versionController.text);
     });
 
     return _movieNameError == null &&
@@ -123,10 +123,10 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
 
   @override
   void dispose() {
-    _movieNameController.dispose();
-    _durationController.dispose();
-    _promoLinkController.dispose();
-    _versionController.dispose();
+    // _movieNameController.dispose();
+    // _durationController.dispose();
+    // _promoLinkController.dispose();
+    // _versionController.dispose();
     super.dispose();
   }
 
@@ -160,7 +160,7 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                 child: MovieTextFieldLabel(
                                   label: "Movie Name",
                                   hintText: "Avengers",
-                                  controller: _movieNameController,
+                                  controller: MovieCubit.get(context).movieNameController,
                                   errorText: _movieNameError,
                                   errorColor: errorColor,
                                   onChanged: (value) {
@@ -179,7 +179,7 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                 child: MovieTextFieldLabel(
                                   label: "Duration",
                                   hintText: "120m",
-                                  controller: _durationController,
+                                  controller: MovieCubit.get(context).durationController,
                                   errorText: _durationError,
                                   errorColor: errorColor,
                                   onChanged: (value) {
@@ -198,7 +198,7 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                 child: MovieTextFieldLabel(
                                   label: "Promo Link",
                                   hintText: "https://youtube/VIDEO_ID",
-                                  controller: _promoLinkController,
+                                  controller: MovieCubit.get(context).promoLinkController,
                                   errorText: _promoLinkError,
                                   errorColor: errorColor,
                                   onChanged: (value) {
@@ -213,7 +213,7 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                 child: MovieTextFieldLabel(
                                   label: "Version Number",
                                   hintText: "YYYY-MM-DD",
-                                  controller: _versionController,
+                                  controller: MovieCubit.get(context).versionController,
                                   errorText: _versionError,
                                   errorColor: errorColor,
                                   onChanged: (value) {
@@ -239,7 +239,7 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                             color: Colors.black)),
                                     SizedBox(height: 4.h),
                                     NewDropdownField(
-                                      value: selectedLanguage,
+                                      value: MovieCubit.get(context).selectedLanguage,
                                       items: languageOptions,
                                       hintText: 'English',
                                       errorText: _languageError,
@@ -247,6 +247,7 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                       onChanged: (value) {
                                         setState(() {
                                           selectedLanguage = value;
+                                          MovieCubit.get(context).selectedLanguage = selectedLanguage;
                                           _languageError = Validators.validateRequired(value, 'Language');
                                         });
                                       },
@@ -266,7 +267,7 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                             color: Colors.black)),
                                     SizedBox(height: 4.h),
                                     NewDropdownField(
-                                      value: selectedCensorship,
+                                      value: MovieCubit.get(context).selectedCensorship,
                                       items: censorshipOptions,
                                       hintText: 'TV-Y7',
                                       errorText: _censorshipError,
@@ -274,6 +275,7 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                       onChanged: (value) {
                                         setState(() {
                                           selectedCensorship = value;
+                                          MovieCubit.get(context).selectedCensorship = selectedCensorship;
                                           _censorshipError = Validators.validateRequired(value, 'Censorship');
                                         });
                                       },
@@ -304,7 +306,8 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                       errorColor: errorColor,
                                       onChanged: (value) {
                                         setState(() {
-                                          selectedStatus = value;
+                                          selectedStatus = value ;
+                                          MovieCubit.get(context).selectedStatus = selectedStatus;
                                           _statusError = Validators.validateRequired(value, 'Status');
                                         });
                                       },
@@ -331,7 +334,8 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                       errorColor: errorColor,
                                       onChanged: (value) {
                                         setState(() {
-                                          selectedGenre = value;
+                                           selectedGenre = value ;
+                                          MovieCubit.get(context).selectedGenre = selectedGenre;
                                           _movieGenreError = Validators.validateRequired(value, 'Movie genre');
                                         });
                                       },
@@ -370,3 +374,5 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
     );
   }
 }
+
+

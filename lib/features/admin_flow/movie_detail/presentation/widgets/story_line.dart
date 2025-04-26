@@ -12,7 +12,6 @@ class StoryLine extends StatefulWidget {
   });
 
   static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  static final TextEditingController controller = TextEditingController();
   final String initialValue;
   final bool readOnly;
 
@@ -21,7 +20,7 @@ class StoryLine extends StatefulWidget {
   }
 
   static void clearFields(BuildContext context) {
-    controller.clear();
+    //MovieCubit.get(context).storyLineController.clear();
     MovieCubit.get(context).storyLineController.clear(); // ربط مع الكيوبت
     formKey.currentState?.reset();
   }
@@ -34,7 +33,7 @@ class _StoryLineState extends State<StoryLine> {
   @override
   void initState() {
     super.initState();
-    StoryLine.controller.text = widget.initialValue;
+    MovieCubit.get(context).storyLineController.text = widget.initialValue;
   }
 
   @override
@@ -45,7 +44,7 @@ class _StoryLineState extends State<StoryLine> {
         child: Padding(
           padding: EdgeInsets.only(left: 70.w, right: 70.w, top: 8.h, bottom: 28.h),
           child: NewTextField(
-            controller: StoryLine.controller,
+            controller: MovieCubit.get(context).storyLineController,
             hintText: '\n\n Write story line here ...',
             borderColor: Colors.black,
             errorText: null,
