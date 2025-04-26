@@ -1,11 +1,12 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+
 import '../../../../../../widgets/button/button_builder.dart';
 
 class PDFSection extends StatelessWidget {
   final PlatformFile? pickedPdf;
-  final Function(PlatformFile?) onPick;
+  final VoidCallback onPick;
   final VoidCallback onDelete;
 
   const PDFSection({
@@ -14,18 +15,6 @@ class PDFSection extends StatelessWidget {
     required this.onPick,
     required this.onDelete,
   });
-
-  Future<void> pickPDF() async {
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['pdf'],
-      withData: true,
-    );
-
-    if (result != null && result.files.single.bytes != null) {
-      onPick(result.files.single);
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,7 +43,7 @@ class PDFSection extends StatelessWidget {
               children: [
                 ButtonBuilder(
                   text: pickedPdf == null ? 'Upload' : 'Change',
-                  onTap: () => pickPDF(),
+                  onTap: onPick,
                   width: 30.w,
                   height: 51.h,
                   buttonColor: const Color(0xFF292D32),
@@ -81,9 +70,9 @@ class PDFSection extends StatelessWidget {
                   overflow: TextOverflow.ellipsis),
               Text("Size: ${(pickedPdf!.size / 1024).toStringAsFixed(2)} KB",
                   style: TextStyle(fontSize: 3.sp, color: Colors.black)),
-            ]
+            ],
           ],
-        )
+        ),
       ],
     );
   }

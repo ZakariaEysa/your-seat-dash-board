@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../../../../data/local_storage_service/local_storage_service.dart';
+import '../../../../../../utils/app_logs.dart';
 import '../Text_filed.dart';
 
 class PaymentText extends StatefulWidget {
@@ -11,6 +13,7 @@ class PaymentText extends StatefulWidget {
 }
 
 class PaymentTextState extends State<PaymentText> {
+  String? cinemaId;
   final TextEditingController _beneficiaryController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
   final TextEditingController _bankNameController = TextEditingController();
@@ -40,11 +43,15 @@ class PaymentTextState extends State<PaymentText> {
 
   Future<void> fetchPaymentDetails() async {
     try {
-      await Future.delayed(const Duration(seconds: 2)); // تأخير 5 ثواني
+      await Future.delayed(const Duration(seconds: 2)); // تأخير 2 ثواني
+
+      String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
 
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection('Cinemas')
-          .doc('payment_info')
+          .doc(cinemaId)
+          .collection('payment_info')
+          .doc('bank_details')
           .get();
 
       if (snapshot.exists) {
@@ -69,8 +76,13 @@ class PaymentTextState extends State<PaymentText> {
   Future<void> savePaymentDetails() async {
     try {
       CollectionReference cinemas = FirebaseFirestore.instance.collection('Cinemas');
+      String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
 
-      await cinemas.doc('payment_info').set({
+      await cinemas
+          .doc(cinemaId)
+          .collection('payment_info')
+          .doc('bank_details')
+          .set({
         'beneficiaryName': _beneficiaryController.text.trim(),
         'country': _countryController.text.trim(),
         'bankName': _bankNameController.text.trim(),
@@ -98,6 +110,18 @@ class PaymentTextState extends State<PaymentText> {
     }
   }
 
+
+  String extractUsername(String email) {
+    AppLogs.errorLog(email.toString());
+
+    // نفترض إن الإيميل دايماً بينتهي بـ @admin.com
+    if (email.contains("@")) {
+      // بنشيل الجزء بتاع @admin.com ونرجع الاسم
+      return email.substring(0, email.indexOf("@admin.com"));
+    } else {
+      return "Invalid email format"; // لو الإيميل مش بالصيغة المطلوبة
+    }
+  }
   bool validateFields() {
     setState(() {
       _beneficiaryError = _validateName(_beneficiaryController.text.trim(), min: 3, max: 70);
