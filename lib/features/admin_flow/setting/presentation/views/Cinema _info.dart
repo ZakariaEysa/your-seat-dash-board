@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yourseatgraduationproject/utils/app_logs.dart';
 import 'package:yourseatgraduationproject/utils/navigation.dart';
-import '../../../../../data/local_storage_service/local_storage_service.dart';
 import '../../../../../widgets/button/button_builder.dart';
 import '../cubit/settings_cubit.dart';
 import '../widgets/cinema_info_text/cinema_text.dart';
