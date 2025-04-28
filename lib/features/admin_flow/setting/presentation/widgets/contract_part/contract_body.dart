@@ -31,7 +31,7 @@ class _ContractBodyState extends State<ContractBody> {
     fetchUploadedFile(); // ✅ تحميل الملف أول ما تفتح الصفحة
   }
 
-  // ✅ رفع ملف PDF إلى Firestore
+// ✅ رفع ملف PDF إلى Firestore مباشرة داخل Collection واحدة
   Future<void> uploadToFirestoreWeb() async {
     if (selectedFile == null || selectedFile!.bytes == null) {
       print("⚠️ لا يوجد ملف PDF.");
@@ -53,9 +53,7 @@ class _ContractBodyState extends State<ContractBody> {
       };
 
       await FirebaseFirestore.instance
-          .collection('Cinemas')
-          .doc('contract')
-          .collection('uploadedFiles')
+          .collection('contracts') // ✅ رفع الملف في Collection رئيسية اسمها contracts
           .add(fileInfo);
 
       print("✅ تم رفع الملف بنجاح إلى Firestore!");
@@ -69,17 +67,15 @@ class _ContractBodyState extends State<ContractBody> {
     }
   }
 
-  // ✅ تحميل الملف الأخير من Firestore وتخزينه محليًا
+// ✅ تحميل آخر ملف PDF من Firestore
   Future<void> fetchUploadedFile() async {
     try {
       setState(() {
-        isLoading = true; // ✅ بدء التحميل
+        isLoading = true;
       });
 
       final snapshot = await FirebaseFirestore.instance
-          .collection('Cinemas')
-          .doc('contract')
-          .collection('uploadedFiles')
+          .collection('contracts') // ✅ نفس Collection
           .orderBy('timestamp', descending: true)
           .limit(1)
           .get();
@@ -105,22 +101,20 @@ class _ContractBodyState extends State<ContractBody> {
       print("❌ حدث خطأ أثناء تحميل الملف من فايرستور: $e");
     } finally {
       setState(() {
-        isLoading = false; // ✅ إيقاف التحميل بعد الانتهاء
+        isLoading = false;
       });
     }
   }
 
-  // ✅ تحميل الملف وفتحه للمستخدم
+// ✅ تحميل وفتح آخر ملف PDF من Firestore
   Future<void> downloadPdfFromFirestore() async {
     try {
       setState(() {
-        isLoading = true; // ✅ بدء التحميل
+        isLoading = true;
       });
 
       final snapshot = await FirebaseFirestore.instance
-          .collection('Cinemas')
-          .doc('contract')
-          .collection('uploadedFiles')
+          .collection('contracts') // ✅ نفس Collection
           .orderBy('timestamp', descending: true)
           .limit(1)
           .get();
@@ -152,7 +146,7 @@ class _ContractBodyState extends State<ContractBody> {
       );
     } finally {
       setState(() {
-        isLoading = false; // ✅ إيقاف التحميل بعد الانتهاء
+        isLoading = false;
       });
     }
   }

@@ -4,6 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import 'dart:typed_data';
+import '../../../../../data/local_storage_service/local_storage_service.dart';
+import '../../../../../utils/app_logs.dart';
 import '../widgets/cinema_design/cover_section.dart';
 import '../widgets/cinema_design/pdf_section.dart';
 import '../widgets/cinema_design/save_cancel_button.dart';
@@ -16,6 +18,7 @@ class CinemaDesign extends StatefulWidget {
 }
 
 class _CinemaDesignState extends State<CinemaDesign> {
+  String? cinemaId;
   PlatformFile? pickedPdf;
   PlatformFile? pickedCover;
 
@@ -55,7 +58,17 @@ class _CinemaDesignState extends State<CinemaDesign> {
       pickedCover = file;
     });
   }
+  String extractUsername(String email) {
+    AppLogs.errorLog(email.toString());
 
+    // نفترض إن الإيميل دايماً بينتهي بـ @admin.com
+    if (email.contains("@")) {
+      // بنشيل الجزء بتاع @admin.com ونرجع الاسم
+      return email.substring(0, email.indexOf("@admin.com"));
+    } else {
+      return "Invalid email format"; // لو الإيميل مش بالصيغة المطلوبة
+    }
+  }
   void cancelChanges() {
     bool wasChanged = pickedPdf != previousPdf || pickedCover != previousCover;
     setState(() {
@@ -71,103 +84,56 @@ class _CinemaDesignState extends State<CinemaDesign> {
 
   Future<void> fetchLastUploadedPdf() async {
     try {
-      final querySnapshot = await FirebaseFirestore.instance
+      String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+
+      final documentSnapshot = await FirebaseFirestore.instance
           .collection('Cinemas')
-          .doc('cinema_design')  // Remove inner "cinema_design"
-          .collection('uploadedFiles')
-          .orderBy('timestamp', descending: true)
-          .limit(1)
+          .doc(cinemaId)
           .get();
 
-      if (querySnapshot.docs.isNotEmpty) {
-        final data = querySnapshot.docs.first.data();
-        final String fileName = data['fileName'];
-        final int fileSize = data['fileSize'];
+      if (documentSnapshot.exists) {
+        final data = documentSnapshot.data();
+        if (data != null &&
+            data['fileName'] != null &&
+            data['fileSize'] != null &&
+            data['fileContent'] != null) {
 
-        setState(() {
-          pickedPdf = PlatformFile(
-            name: fileName,
-            size: fileSize,
-            bytes: null,
-            path: null,
-          );
-        });
+          final String pdfName = data['fileName'];
+          final int pdfSize = data['fileSize'];
+          final String base64Content = data['fileContent'];
+
+          Uint8List bytes = base64Decode(base64Content);
+
+          setState(() {
+            pickedPdf = PlatformFile(
+              name: pdfName,
+              size: pdfSize,
+              bytes: bytes,
+              path: null,
+            );
+          });
+
+          print("✅ تم تحميل ملف الـ PDF بنجاح!");
+        } else {
+          print("⚠️ لا توجد بيانات PDF محفوظة.");
+        }
+      } else {
+        print("⚠️ لا يوجد مستند لهذه السينما.");
       }
     } catch (e) {
-      print("⚠️ خطأ أثناء جلب الملف: $e");
+      print("⚠️ خطأ أثناء جلب ملف الـ PDF: $e");
     }
   }
 
-  Future<void> fetchLastUploadedCover() async {
-    try {
-      final querySnapshot = await FirebaseFirestore.instance
-          .collection('Cinemas')
-          .doc('cinema_design')  // Remove inner "cinema_design"
-          .collection('uploadedCovers')
-          .orderBy('timestamp', descending: true)
-          .limit(1)
-          .get();
+  void uploadToFirestoreWebpdf() async {
 
-      if (querySnapshot.docs.isNotEmpty) {
-        final data = querySnapshot.docs.first.data();
-        final String coverName = data['coverName'];
-        final int coverSize = data['coverSize'];
-        final String base64Content = data['coverContent'];
-
-        Uint8List bytes = base64Decode(base64Content);
-
-        setState(() {
-          pickedCover = PlatformFile(
-            name: coverName,
-            size: coverSize,
-            bytes: bytes,
-            path: null,
-          );
-        });
-      }
-    } catch (e) {
-      print("⚠️ فشل تحميل الصورة: $e");
-    }
-  }
-
-
-  void uploadCoverToFirestoreWeb() async {
-    if (pickedCover == null || pickedCover!.bytes == null) {
-      print("⚠️ لا يوجد صورة.");
-      return;
-    }
-
-    try {
-      String base64Cover = base64Encode(pickedCover!.bytes!);
-
-      final coverInfo = {
-        'coverName': pickedCover!.name,
-        'coverSize': pickedCover!.size,
-        'coverContent': base64Cover,
-        'timestamp': FieldValue.serverTimestamp(),
-      };
-
-      await FirebaseFirestore.instance
-          .collection('Cinemas')
-          .doc('cinema_design')  // Removed inner "cinema_design"
-          .collection('uploadedCovers')
-          .add(coverInfo);
-
-      print("✅ تم رفع الصورة بنجاح إلى Firestore!");
-    } catch (e) {
-      print("❌ فشل رفع الصورة.");
-      print("🛠️ الخطأ: $e");
-    }
-  }
-  void uploadToFirestoreWeb() async {
     if (pickedPdf == null || pickedPdf!.bytes == null) {
       print("⚠️ لا يوجد ملف PDF.");
       return;
     }
-
     try {
       String base64Content = base64Encode(pickedPdf!.bytes!);
-
+      String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
       final fileInfo = {
         'fileName': pickedPdf!.name,
         'fileSize': pickedPdf!.size,
@@ -177,17 +143,88 @@ class _CinemaDesignState extends State<CinemaDesign> {
 
       await FirebaseFirestore.instance
           .collection('Cinemas')
-          .doc('cinema_design')  // Removed inner "cinema_design"
+          .doc(cinemaId)
+          .set(fileInfo, SetOptions(merge: true));
 
-          .collection('uploadedFiles')
-          .add(fileInfo);
-
-      print("✅ تم رفع الملف بنجاح إلى Firestore!");
+    print("✅ تم رفع الملف بنجاح إلى Firestore!");
     } catch (e) {
       print("❌ فشل رفع الملف.");
       print("🛠️ الخطأ: $e");
     }
   }
+  Future<void> fetchLastUploadedCover() async {
+    try {
+      String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+
+      final documentSnapshot = await FirebaseFirestore.instance
+          .collection('Cinemas')
+          .doc(cinemaId)
+          .get();
+
+      if (documentSnapshot.exists) {
+        final data = documentSnapshot.data();
+        if (data != null &&
+            data['coverName'] != null &&
+            data['coverSize'] != null &&
+            data['coverContent'] != null) {
+
+          final String coverName = data['coverName'];
+          final int coverSize = data['coverSize'];
+          final String base64Content = data['coverContent'];
+
+          Uint8List bytes = base64Decode(base64Content);
+
+          setState(() {
+            pickedCover = PlatformFile(
+              name: coverName,
+              size: coverSize,
+              bytes: bytes,
+              path: null,
+            );
+          });
+
+          print("✅ تم تحميل الكوفر بنجاح!");
+        } else {
+          print("⚠️ لا توجد بيانات غلاف محفوظة.");
+        }
+      } else {
+        print("⚠️ لا يوجد مستند لهذه السينما.");
+      }
+    } catch (e) {
+      print("⚠️ فشل تحميل الصورة: $e");
+    }
+  }
+
+  void uploadCoverToFirestoreWeb() async {
+    if (pickedCover == null || pickedCover!.bytes == null) {
+      print("⚠️ لا يوجد صورة.");
+      return;
+    }
+
+    try {
+      String base64Cover = base64Encode(pickedCover!.bytes!);
+      String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+
+      final coverInfo = {
+        'poster_image': pickedCover!.name,
+        'coverSize': pickedCover!.size,
+        'coverContent': base64Cover,
+        'timestamp': FieldValue.serverTimestamp(),
+      };
+
+      await FirebaseFirestore.instance
+          .collection('Cinemas')
+          .doc(cinemaId)
+          .set(coverInfo, SetOptions(merge: true));  // 🔥 يخلي الداتا تتحدث من غير ما تطيّر الداتا القديمة
+
+      print("✅ تم رفع الصورة بنجاح إلى Firestore!");
+    } catch (e) {
+      print("❌ فشل رفع الصورة.");
+      print("🛠️ الخطأ: $e");
+    }
+  }
+
+
 
   void saveFiles() {
     if (pickedPdf == null || pickedCover == null) {
@@ -198,7 +235,7 @@ class _CinemaDesignState extends State<CinemaDesign> {
         ),
       );
     } else {
-      uploadToFirestoreWeb();
+      uploadToFirestoreWebpdf();
       uploadCoverToFirestoreWeb();
       previousPdf = pickedPdf;
       previousCover = pickedCover;
@@ -210,7 +247,6 @@ class _CinemaDesignState extends State<CinemaDesign> {
       );
     }
   }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -240,8 +276,11 @@ class _CinemaDesignState extends State<CinemaDesign> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("update Cinema Tax Register here",
-                      style: TextStyle(color: const Color(0xFF6A6767), fontSize: 5.sp)),
+                  Text(
+                    "update Cinema Tax Register here",
+                    style: TextStyle(
+                        color: const Color(0xFF6A6767), fontSize: 5.sp),
+                  ),
                   SizedBox(height: 50.h),
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -250,12 +289,14 @@ class _CinemaDesignState extends State<CinemaDesign> {
                         child: PDFSection(
                           pickedPdf: pickedPdf,
                           onPick: () async {
-                            FilePickerResult? result = await FilePicker.platform.pickFiles(
+                            FilePickerResult? result =
+                            await FilePicker.platform.pickFiles(
                               type: FileType.custom,
                               allowedExtensions: ['pdf'],
                               withData: true,
                             );
-                            if (result != null && result.files.single.bytes != null) {
+                            if (result != null &&
+                                result.files.single.bytes != null) {
                               setState(() {
                                 pickedPdf = result.files.single;
                               });
@@ -278,17 +319,13 @@ class _CinemaDesignState extends State<CinemaDesign> {
                       ),
                     ],
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 100.h, right: 20.w),
-                    child: Row(
-                      children: [
-                        SaveCancelButtons(
-                          onSave: saveFiles,
-                          onCancel: cancelChanges,
-                        ),
-                      ],
-                    ),
+                  // Spacer to push the Save/Cancel buttons to the center
+                  Spacer(),
+                  SaveCancelButtons(
+                    onSave: saveFiles,
+                    onCancel: cancelChanges,
                   ),
+                  SizedBox(height: 20.h), // Optional, to add some space below
                 ],
               ),
             ),
@@ -297,4 +334,5 @@ class _CinemaDesignState extends State<CinemaDesign> {
       ),
     );
   }
+
 }
