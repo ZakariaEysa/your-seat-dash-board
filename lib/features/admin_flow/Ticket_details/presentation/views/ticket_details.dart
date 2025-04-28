@@ -1,19 +1,36 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/Ticket_details/presentation/widets/Ticket_id.dart';
-import '../widets/Ticket_Info/Ticket_info.dart';
 
-class TicketDetails extends StatelessWidget {
+import '../widets/Ticket_Info/Ticket_info.dart';
+import '../widets/Ticket_id.dart';
+
+class TicketDetails extends StatefulWidget {
   const TicketDetails({super.key});
 
   @override
+  State<TicketDetails> createState() => _TicketDetailsState();
+}
+
+class _TicketDetailsState extends State<TicketDetails> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
-    final screenWidth = mediaQuery.size.width;
+    print('TicketDetails build called');
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Expanded(
+      body: Scrollbar(
+        controller: _scrollController,
+        thumbVisibility: true,
         child: SingleChildScrollView(
+          controller: _scrollController,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -27,4 +44,5 @@ class TicketDetails extends StatelessWidget {
         ),
       ),
     );
-  }}
+  }
+}
