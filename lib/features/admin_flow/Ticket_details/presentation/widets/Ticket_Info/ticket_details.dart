@@ -115,17 +115,10 @@ class TicketDetails extends StatelessWidget {
                             TextStyle(fontSize: 4.sp, color: Colors.black),
                           ),
                           SizedBox(width: 3.w),
-                          GestureDetector(
-                            onTap: () {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(content: Text("Download clicked")),
-                              );
-                            },
-                            child: Image.asset(
-                              "assets/icons/dow.png",
-                              width: 5.w,
-                              height: 20.h,
-                            ),
+                          Image.asset(
+                            "assets/icons/dow.png",
+                            width: 5.w,
+                            height: 20.h,
                           ),
                         ],
                       )

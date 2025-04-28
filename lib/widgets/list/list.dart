@@ -9,7 +9,9 @@ import '../../features/admin_flow/moives/view/movies.dart';
 import '../../features/admin_flow/rooming_sechduling/presentation/views/rooming_sechduling.dart';
 import '../../features/admin_flow/rooming_sechduling/presentation/widgets/schedule_item.dart';
 import '../../features/admin_flow/setting/presentation/widgets/App_move.dart';
+import '../../features/admin_flow/signin/view/signin.dart';
 import '../../features/admin_flow/transactions/view/transactions.dart';
+
 class NavigationList extends StatefulWidget {
   const NavigationList({super.key});
 
@@ -19,9 +21,6 @@ class NavigationList extends StatefulWidget {
 
 class _NavigationListState extends State<NavigationList> {
   int _currentIndex = 0;
-
-
-
 
   final List<ScheduleItem> _scheduleItems = [];
 
@@ -38,7 +37,6 @@ class _NavigationListState extends State<NavigationList> {
       Rooming(scheduleItems: _scheduleItems),
       RoomingScheduling(scheduleItems: _scheduleItems),
       App(),
-      const Center(child: Text("Logging Out...", style: TextStyle(fontSize: 24))),
     ];
 
     final List<Map<String, dynamic>> _menuItems = [
@@ -64,12 +62,18 @@ class _NavigationListState extends State<NavigationList> {
               children: [
                 Image.asset("assets/images/yourseat.png", width: 80.w),
                 SizedBox(height: 15.h),
-                for (int i = 0; i < _menuItems.length; i++) buildNavItem(i, _menuItems, _pages),
+                for (int i = 0; i < _menuItems.length; i++)
+                  buildNavItem(i, _menuItems, _pages),
               ],
             ),
           ),
           Expanded(
-            child: _pages[_currentIndex],
+            child: PrimaryScrollController(
+              controller: ScrollController(),
+              child: _pages[
+              _currentIndex >= _pages.length ? 0 : _currentIndex
+              ],
+            ),
           ),
         ],
       ),
@@ -83,10 +87,55 @@ class _NavigationListState extends State<NavigationList> {
       padding: EdgeInsets.only(bottom: 20.h),
       child: GestureDetector(
         onTap: () {
-          setState(() {
-            _currentIndex = index;
-          });
+          if (index == 8) {
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return AlertDialog(
+                  backgroundColor: Color(0xFF5A2D82),
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                  title: const Text(
+                    "Are you sure you want to log out?",
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                    textAlign: TextAlign.center,
+                  ),
+                  actionsAlignment: MainAxisAlignment.center,
+                  actions: [
+                    TextButton(
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(builder: (context) => SignIn()),
+                              (route) => false,
+                        );
+                      },
+                      child: const Text(
+                        "OK",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      child: const Text(
+                        "Cancel",
+                        style: TextStyle(color: Colors.white, fontSize: 16),
+                      ),
+                    ),
+                  ],
+                );
+              },
+            );
+          } else { // لو ضغط على أي صفحة تانية
+            setState(() {
+              _currentIndex = index;
+            });
+          }
         },
+
+
         child: Stack(
           children: [
             Container(

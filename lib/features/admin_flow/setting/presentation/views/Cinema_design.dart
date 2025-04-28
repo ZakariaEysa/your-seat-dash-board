@@ -4,18 +4,24 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'dart:convert';
 import 'dart:typed_data';
+import '../widgets/cinema_design/Description_cinema.dart';
 import '../widgets/cinema_design/cover_section.dart';
 import '../widgets/cinema_design/pdf_section.dart';
 import '../widgets/cinema_design/save_cancel_button.dart';
 
 class CinemaDesign extends StatefulWidget {
+
+
   const CinemaDesign({super.key});
 
   @override
   State<CinemaDesign> createState() => _CinemaDesignState();
+
 }
 
 class _CinemaDesignState extends State<CinemaDesign> {
+  final GlobalKey<DescriptionCinemaState> _descriptionKey = GlobalKey<DescriptionCinemaState>();
+
   PlatformFile? pickedPdf;
   PlatformFile? pickedCover;
 
@@ -190,10 +196,12 @@ class _CinemaDesignState extends State<CinemaDesign> {
   }
 
   void saveFiles() {
-    if (pickedPdf == null || pickedCover == null) {
+    final descriptionText = _descriptionKey.currentState?.descriptionText ?? '';
+
+    if (pickedPdf == null || pickedCover == null || descriptionText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please upload all required files❗', style: TextStyle(fontSize: 4.sp)),
+          content: Text('Please upload all required files and fill cinema description❗', style: TextStyle(fontSize:3.sp)),
           backgroundColor: Colors.red,
         ),
       );
@@ -210,6 +218,7 @@ class _CinemaDesignState extends State<CinemaDesign> {
       );
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -228,68 +237,85 @@ class _CinemaDesignState extends State<CinemaDesign> {
           : Center(
         child: Padding(
           padding: EdgeInsets.all(12.0.sp),
-          child: Container(
-            width: 880.w,
-            height: 668.h,
-            decoration: BoxDecoration(
-              color: const Color(0xFFF3F3F3),
-              borderRadius: BorderRadius.circular(5.r),
-            ),
-            child: Padding(
-              padding: EdgeInsets.only(top: 40.h, left: 10.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("update Cinema Tax Register here",
-                      style: TextStyle(color: const Color(0xFF6A6767), fontSize: 5.sp)),
-                  SizedBox(height: 50.h),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Expanded(
-                        child: PDFSection(
-                          pickedPdf: pickedPdf,
-                          onPick: () async {
-                            FilePickerResult? result = await FilePicker.platform.pickFiles(
-                              type: FileType.custom,
-                              allowedExtensions: ['pdf'],
-                              withData: true,
-                            );
-                            if (result != null && result.files.single.bytes != null) {
-                              setState(() {
-                                pickedPdf = result.files.single;
-                              });
-                            }
-                          },
-                          onDelete: () {
-                            setState(() {
-                              pickedPdf = null;
-                            });
-                          },
-                        ),
-                      ),
-                      SizedBox(width: 20.w),
-                      Expanded(
-                        child: CoverSection(
-                          pickedCover: pickedCover,
-                          onPick: setPickedCover,
-                          onDelete: () => setPickedCover(null),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 100.h, right: 20.w),
-                    child: Row(
+          child: SingleChildScrollView(
+            child: Container(
+              width: 880.w,
+              height: 700.h,
+              decoration: BoxDecoration(
+                color: const Color(0xFFF3F3F3),
+                borderRadius: BorderRadius.circular(5.r),
+              ),
+              child: Padding(
+                padding: EdgeInsets.only(top: 40.h, left: 10.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("update Cinema Tax Register here",
+                        style: TextStyle(color: const Color(0xFF6A6767), fontSize: 5.sp)),
+                    SizedBox(height: 50.h),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        SaveCancelButtons(
-                          onSave: saveFiles,
-                          onCancel: cancelChanges,
+                        Expanded(
+                          child: PDFSection(
+                            pickedPdf: pickedPdf,
+                            onPick: () async {
+                              FilePickerResult? result = await FilePicker.platform.pickFiles(
+                                type: FileType.custom,
+                                allowedExtensions: ['pdf'],
+                                withData: true,
+                              );
+                              if (result != null && result.files.single.bytes != null) {
+                                setState(() {
+                                  pickedPdf = result.files.single;
+                                });
+                              }
+                            },
+                            onDelete: () {
+                              setState(() {
+                                pickedPdf = null;
+                              });
+                            },
+                          ),
+                        ),
+                        SizedBox(width: 20.w),
+                        Expanded(
+                          child: CoverSection(
+                            pickedCover: pickedCover,
+                            onPick: setPickedCover,
+                            onDelete: () => setPickedCover(null),
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ],
+
+                Padding(
+                  padding: EdgeInsets.only(top: 90.h, left: 40.w),child:  Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                children: [ Text("Description Cinema",style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 5.sp
+                ),), DescriptionCinema(
+                  key: _descriptionKey, // هنا ضفنا المفتاح
+                  width: 180.w,
+                  height: 100.h,
+                  hintText: 'Write your cinema description here',
+                ),
+                ]),),
+
+                    Padding(
+                      padding: EdgeInsets.only(top: 100.h, right: 20.w),
+                      child: Row(
+                        children: [
+                          SaveCancelButtons(
+                            onSave: saveFiles,
+                            onCancel: cancelChanges,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ),

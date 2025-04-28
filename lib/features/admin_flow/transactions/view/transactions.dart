@@ -28,6 +28,7 @@ class _TransactionsState extends State<Transactions> {
         child: Padding(
           padding: EdgeInsets.all(18.sp),
           child: SingleChildScrollView(
+            primary: true,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [

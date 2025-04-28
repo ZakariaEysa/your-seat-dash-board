@@ -51,7 +51,7 @@ class PDFSection extends StatelessWidget {
                   borderShape: BorderRadius.circular(15.r),
                   style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 5.sp),
                 ),
-                SizedBox(width: 5.w),
+                SizedBox(width:3.w),
                 ButtonBuilder(
                   text: 'Delete',
                   onTap: onDelete,

@@ -218,80 +218,83 @@ class _ContractBodyState extends State<ContractBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 300.w,
-      height: 700.h,
-      decoration: BoxDecoration(
-        color: const Color(0xFFF3F3F3),
-        borderRadius: BorderRadius.circular(5.r),
-      ),
-      child: Padding(
-        padding: EdgeInsets.only(top: 50.h, left: 20.w, right: 20.w),
-        child: SingleChildScrollView( // ✅ أضفنا Scroll
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Contract info",
-                style: TextStyle(
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 8.sp,
+    return Padding(
+      padding:  EdgeInsets.all(12.0.sp),
+      child: Container(
+        width: 300.w,
+        height: 700.h,
+        decoration: BoxDecoration(
+          color: const Color(0xFFF3F3F3),
+          borderRadius: BorderRadius.circular(5.r),
+        ),
+        child: Padding(
+          padding: EdgeInsets.only(top: 50.h, left: 20.w, right: 20.w),
+          child: SingleChildScrollView( // ✅ أضفنا Scroll
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Contract info",
+                  style: TextStyle(
+                    color: Colors.black,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 8.sp,
+                  ),
                 ),
-              ),
-              Text(
-                "Update your Contract info here",
-                style: TextStyle(color: Color(0xFF625C5C), fontSize: 5.sp),
-              ),
-              SizedBox(height: 70.h),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ButtonBuilder(
-                    text: 'Download Contract',
-                    onTap: () => downloadPdfFromFirestore(),
-                    width: 86.w,
-                    height: 78.h,
-                    buttonColor: const Color(0xFFF3F3F3),
-                    frameColor: const Color(0xFFEB68E3),
-                    borderShape: BorderRadius.circular(10.r),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 8.sp,
+                Text(
+                  "Update your Contract info here",
+                  style: TextStyle(color: Color(0xFF625C5C), fontSize: 5.sp),
+                ),
+                SizedBox(height:20.h),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ButtonBuilder(
+                      text: 'Download Contract',
+                      onTap: () => downloadPdfFromFirestore(),
+                      width: 86.w,
+                      height: 78.h,
+                      buttonColor: const Color(0xFFF3F3F3),
+                      frameColor: const Color(0xFFEB68E3),
+                      borderShape: BorderRadius.circular(10.r),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 8.sp,
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 40.w),
-                  ButtonBuilder(
-                    text: selectedFile == null ? 'Upload Contract' : 'Change File',
-                    onTap: () => uploadContract(context),
-                    width: 86.w,
-                    height: 78.h,
-                    buttonColor: const Color(0xFFF3F3F3),
-                    frameColor: const Color(0xFFEB68E3),
-                    borderShape: BorderRadius.circular(10.r),
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 8.sp,
+                    SizedBox(width: 40.w),
+                    ButtonBuilder(
+                      text: selectedFile == null ? 'Upload Contract' : 'Change File',
+                      onTap: () => uploadContract(context),
+                      width: 86.w,
+                      height: 78.h,
+                      buttonColor: const Color(0xFFF3F3F3),
+                      frameColor: const Color(0xFFEB68E3),
+                      borderShape: BorderRadius.circular(10.r),
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 8.sp,
+                      ),
                     ),
-                  ),
-                ],
-              ),
-              SizedBox(height: 30.h),
+                  ],
+                ),
+                SizedBox(height: 30.h),
 
-              if (isLoading)
-                Center(child: CircularProgressIndicator()) // ✅ إظهار لودينج
-              else if (uploadedFile != null)
-                ContractFileInfo(file: uploadedFile!)
-              else if (selectedFile != null)
-                  ContractFileInfo(file: selectedFile!),
+                if (isLoading)
+                  Center(child: CircularProgressIndicator()) // ✅ إظهار لودينج
+                else if (uploadedFile != null)
+                  ContractFileInfo(file: uploadedFile!)
+                else if (selectedFile != null)
+                    ContractFileInfo(file: selectedFile!),
 
-              ContractButtons(
-                onSave: saveChanges,
-                onCancel: cancelChanges,
-              ),
-            ],
+                ContractButtons(
+                  onSave: saveChanges,
+                  onCancel: cancelChanges,
+                ),
+              ],
+            ),
           ),
         ),
       ),

@@ -114,7 +114,7 @@ class _TicketIdState extends State<TicketId> {
                             if (value == null || value.isEmpty) {
                               return 'Please enter your ticket number';
                             } else if (!RegExp(r'^#\d{9}$').hasMatch(value)) {
-                              return 'Format must be like #123456789';
+                              return 'The format should be like # and nine numbers.';
                             }
                             return null;
                           },
@@ -129,20 +129,29 @@ class _TicketIdState extends State<TicketId> {
             ButtonBuilder(
               text: 'Ticket',
               onTap: () {
-                if (_formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text(
-                        'Ticket number accepted: ${_ticketController.text}',
-                      ),
-                      backgroundColor: Colors.green,
-                    ),
-                  );
-                } else {
+                final value = _ticketController.text;
+
+                if (value.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
                       content: Text('Please enter your ticket number!'),
                       backgroundColor: Colors.red,
+                    ),
+                  );
+                } else if (!RegExp(r'^#\d{9}$').hasMatch(value)) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('The format should be like # and nine numbers.'),
+                      backgroundColor: Colors.orange,
+                    ),
+                  );
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'Ticket number accepted: $value',
+                      ),
+                      backgroundColor: Colors.green,
                     ),
                   );
                 }
@@ -158,6 +167,7 @@ class _TicketIdState extends State<TicketId> {
                 fontSize: 6.sp,
               ),
             ),
+
           ],
         ),
       ),
