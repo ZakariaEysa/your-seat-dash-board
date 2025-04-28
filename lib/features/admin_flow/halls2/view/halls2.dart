@@ -11,8 +11,8 @@ class Halls2 extends StatefulWidget {
 }
 
 class _Halls2State extends State<Halls2> {
-  final List<GlobalKey<HallConfigPageState>> hallKeys = [
-    GlobalKey<HallConfigPageState>()
+  final List<GlobalKey<BasicHallState>> hallKeys = [
+    GlobalKey<BasicHallState>()
   ];
 
   final Set<int> selectedHalls = {};
@@ -20,7 +20,7 @@ class _Halls2State extends State<Halls2> {
   @override
   void initState() {
     super.initState();
-    selectedHalls.clear(); // تأكيد عدم تحديد أي قاعة تلقائياً
+    selectedHalls.clear();
   }
 
   void _validateAndSave() {
@@ -33,45 +33,70 @@ class _Halls2State extends State<Halls2> {
     }
 
     if (allValid) {
-      print("✅ All halls are valid. Proceed to save.");
-      // Proceed with saving logic
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('All halls are valid. Proceed to save.')),
+      );
+      _saveHallsData();
     } else {
-      print("❌ Some halls are invalid.");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fix all errors before saving')),
       );
     }
   }
 
+  void _saveHallsData() {
+    print('Saving halls data...');
+    for (var key in hallKeys) {
+      final hallData = key.currentState?.getHallData();
+      print('Hall data: $hallData');
+    }
+  }
+
   void _confirmDeleteSelected() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Confirm Delete'),
-        content: const Text('Are you sure you want to delete selected halls?'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              setState(() {
-                final sorted = selectedHalls.toList()
-                  ..sort((a, b) => b.compareTo(a));
-                for (var index in sorted) {
-                  hallKeys.removeAt(index);
-                }
-                selectedHalls.clear();
-              });
-              Navigator.pop(context);
-            },
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-            child: const Text('Delete'),
-          ),
-        ],
-      ),
-    );
+    if (selectedHalls.isEmpty) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('No Hall Selected'),
+          content: const Text('Please select at least one hall to delete.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Confirm Delete'),
+          content: const Text('Are you sure you want to delete selected halls?'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text('Cancel'),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  final sorted = selectedHalls.toList()
+                    ..sort((a, b) => b.compareTo(a));
+                  for (var index in sorted) {
+                    hallKeys.removeAt(index);
+                  }
+                  selectedHalls.clear();
+                });
+                Navigator.pop(context);
+              },
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+              child: const Text('Delete', style: TextStyle(color: Colors.white)),
+            ),
+          ],
+        ),
+      );
+    }
   }
 
   void _confirmAddHall() {
@@ -88,7 +113,7 @@ class _Halls2State extends State<Halls2> {
           ElevatedButton(
             onPressed: () {
               setState(() {
-                hallKeys.add(GlobalKey<HallConfigPageState>());
+                hallKeys.add(GlobalKey<BasicHallState>());
               });
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
@@ -159,7 +184,7 @@ class _Halls2State extends State<Halls2> {
                 itemBuilder: (context, index) {
                   return Stack(
                     children: [
-                      HallConfigPage(key: hallKeys[index]),
+                      BasicHall(key: hallKeys[index]),
                       if (index != 0)
                         Positioned(
                           top: 0,
@@ -180,11 +205,10 @@ class _Halls2State extends State<Halls2> {
                     ],
                   );
                 },
-
               ),
             ),
 
-            // Save / Cancel Buttons
+            // Save & Cancel Buttons
             Padding(
               padding: const EdgeInsets.all(18.0),
               child: Row(
@@ -207,7 +231,7 @@ class _Halls2State extends State<Halls2> {
                   ButtonBuilder(
                     text: 'Cancel',
                     onTap: () {
-                      // Cancel logic
+                      Navigator.of(context).pop();
                     },
                     width: 40.w,
                     height: 50.h,
@@ -223,23 +247,24 @@ class _Halls2State extends State<Halls2> {
               ),
             ),
 
+            // Delete Selected Button
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
               child: ElevatedButton.icon(
-                onPressed: _confirmDeleteSelected ,
+                onPressed: _confirmDeleteSelected,
                 icon: const Icon(Icons.delete, color: Colors.white),
-                label: const Text('Delete Selected'),
+                label: Text('Delete Selected',
+                    style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor:
-                   Colors.red ,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  backgroundColor: Colors.red,
+                  padding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
                 ),
               ),
             ),
-
           ],
         ),
       ),
