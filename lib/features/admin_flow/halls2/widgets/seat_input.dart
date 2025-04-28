@@ -8,6 +8,7 @@ class SeatInput extends StatelessWidget {
   final TextEditingController? controller;
   final String? errorText;
   final Function(String)? onChanged;
+  final String? Function(String?)? validator;
 
   const SeatInput({
     required this.label,
@@ -15,12 +16,12 @@ class SeatInput extends StatelessWidget {
     this.controller,
     this.errorText,
     this.onChanged,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
     return Flexible(
-      // استخدام Flexible بدلاً من Expanded
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
@@ -29,19 +30,19 @@ class SeatInput extends StatelessWidget {
             style: TextStyle(
               color: color,
               fontWeight: FontWeight.bold,
-              fontSize: 3.sp, // تقليل حجم الخط
+              fontSize: 3.sp,
             ),
           ),
-          SizedBox(height: 2.h), // تقليل المسافة
+          SizedBox(height: 2.h),
           SizedBox(
-          //  width: 90.w, // تقليل العرض
             child: NewTextField(
               controller: controller,
               borderColor: errorText != null ? Colors.red : Colors.black,
               errorText: errorText,
               keyboardType: TextInputType.number,
               onChanged: onChanged,
-              contentPadding: EdgeInsets.all(4.sp), // تقليل padding للحقل
+              contentPadding: EdgeInsets.all(4.sp),
+              validator: validator,
             ),
           ),
         ],
