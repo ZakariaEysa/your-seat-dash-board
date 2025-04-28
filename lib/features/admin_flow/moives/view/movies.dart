@@ -32,7 +32,7 @@ class _MoviesState extends State<Movies> {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF560B76),
-                    padding: EdgeInsets.symmetric(horizontal: 8.h, vertical: 5.w),
+                    padding: EdgeInsets.symmetric(horizontal: 3.h, vertical: 5.w),
                   ),
                   onPressed: () {
                     Navigator.push(

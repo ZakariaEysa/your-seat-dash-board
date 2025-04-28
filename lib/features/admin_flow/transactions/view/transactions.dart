@@ -28,7 +28,6 @@ class _TransactionsState extends State<Transactions> {
         child: Padding(
           padding: EdgeInsets.all(18.sp),
           child: SingleChildScrollView(
-            primary: true,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -40,7 +39,7 @@ class _TransactionsState extends State<Transactions> {
                           SalesContainer(),
                           SizedBox(height: 20.h),
                           SizedBox(
-                              width: 860.w,
+                              width: 760.w,
                               child: PaymentTable(
                                   transactions: state.transactions)),
                         ],
