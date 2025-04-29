@@ -8,8 +8,21 @@ import 'package:yourseatgraduationproject/features/admin_flow/moives/widgets/mov
 import 'DetailsButton.dart';
 import 'movie_cell.dart';
 
-class MovieStates extends StatelessWidget {
+class MovieStates extends StatefulWidget {
   const MovieStates({super.key});
+
+  @override
+  State<MovieStates> createState() => _MovieStatesState();
+}
+
+class _MovieStatesState extends State<MovieStates> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +51,12 @@ class MovieStates extends StatelessWidget {
 
   Widget _buildTable() {
     return Scrollbar(
+      controller: _scrollController,
       thumbVisibility: true,
       radius: Radius.circular(8.r),
       thickness: 8.w,
       child: SingleChildScrollView(
+        controller: _scrollController,
         scrollDirection: Axis.vertical,
         child: DataTable(
           dataRowMinHeight: 40.h,

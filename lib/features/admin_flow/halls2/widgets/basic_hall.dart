@@ -3,16 +3,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/halls2/widgets/seat_number.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/halls2/widgets/seat_price.dart';
 import '../../../../widgets/text_field/text_field/new_text_field_builder.dart';
-import '../../../../widgets/validators/Validators.dart';
+import '../../../../widgets/validators/validators.dart';
 
-class HallConfigPage extends StatefulWidget {
-  const HallConfigPage({Key? key}) : super(key: key);
+class BasicHall extends StatefulWidget {
+  const BasicHall({Key? key}) : super(key: key);
 
   @override
-  HallConfigPageState createState() => HallConfigPageState();
+  BasicHallState createState() => BasicHallState();
 }
 
-class HallConfigPageState extends State<HallConfigPage> {
+class BasicHallState extends State<BasicHall> {
   final TextEditingController _hallNameController = TextEditingController();
   final TextEditingController _vipSeatCountController = TextEditingController();
   final TextEditingController _premiumSeatCountController = TextEditingController();
@@ -36,41 +36,19 @@ class HallConfigPageState extends State<HallConfigPage> {
         'Hall Name',
       );
 
-      _vipSeatCountError = Validators.validateRequired(
-        _vipSeatCountController.text,
-        'Field',
-        numbersOnly: true,
-      );
+      _vipSeatCountError =
+          _validateSeatNumber(_vipSeatCountController.text, 'VIP seats');
+      _premiumSeatCountError = _validateSeatNumber(
+          _premiumSeatCountController.text, 'Premium seats');
+      _standardSeatCountError = _validateSeatNumber(
+          _standardSeatCountController.text, 'Standard seats');
 
-      _premiumSeatCountError = Validators.validateRequired(
-        _premiumSeatCountController.text,
-        'Field',
-        numbersOnly: true,
-      );
-
-      _standardSeatCountError = Validators.validateRequired(
-        _standardSeatCountController.text,
-        'Field',
-        numbersOnly: true,
-      );
-
-      _vipSeatPriceError = Validators.validateRequired(
-        _vipSeatPriceController.text,
-        'Field',
-        numbersOnly: true,
-      );
-
-      _premiumSeatPriceError = Validators.validateRequired(
-        _premiumSeatPriceController.text,
-        'Field',
-        numbersOnly: true,
-      );
-
-      _standardSeatPriceError = Validators.validateRequired(
-        _standardSeatPriceController.text,
-        'Field',
-        numbersOnly: true,
-      );
+      _vipSeatPriceError =
+          _validatePrice(_vipSeatPriceController.text, 'VIP seat price');
+      _premiumSeatPriceError = _validatePrice(
+          _premiumSeatPriceController.text, 'Premium seat price');
+      _standardSeatPriceError = _validatePrice(
+          _standardSeatPriceController.text, 'Standard seat price');
     });
 
     return _hallNameError == null &&
@@ -80,6 +58,45 @@ class HallConfigPageState extends State<HallConfigPage> {
         _vipSeatPriceError == null &&
         _premiumSeatPriceError == null &&
         _standardSeatPriceError == null;
+  }
+
+  String? _validateSeatNumber(String value, String fieldName) {
+    if (value.isEmpty) {
+      return 'Field is required';
+    }
+    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+      return 'Only numbers';
+    }
+    final number = int.tryParse(value);
+    if (number == null || number <= 0) {
+      return 'At least 1 seat';
+    }
+    if (number > 10000) {
+      return 'At Most 10000';
+    }
+    return null;
+  }
+
+  String? _validatePrice(String value, String fieldName) {
+    if (value.isEmpty) {
+      return 'Field is required';
+    }
+    if (!RegExp(r'^[0-9]+$').hasMatch(value)) {
+      return 'Only numbers';
+    }
+    return null;
+  }
+
+  Map<String, dynamic> getHallData() {
+    return {
+      'hallName': _hallNameController.text,
+      'vipSeats': _vipSeatCountController.text,
+      'premiumSeats': _premiumSeatCountController.text,
+      'standardSeats': _standardSeatCountController.text,
+      'vipPrice': _vipSeatPriceController.text,
+      'premiumPrice': _premiumSeatPriceController.text,
+      'standardPrice': _standardSeatPriceController.text,
+    };
   }
 
   @override
@@ -122,30 +139,57 @@ class HallConfigPageState extends State<HallConfigPage> {
                 ),
                 Expanded(
                   child: NewTextField(
-
                     controller: _hallNameController,
                     errorText: _hallNameError,
+                    borderColor:
+                    _hallNameError != null ? Colors.red : Colors.black,
+                    onChanged: (value) {
+                      setState(() {
+                        _hallNameError =
+                            Validators.validateAnyText(value, 'Hall Name');
+                      });
+                    },
                   ),
                 ),
               ],
             ),
             SizedBox(height: 4.h),
-            SeatNumberSection(
+            SeatNumber(
               vipController: _vipSeatCountController,
               premiumController: _premiumSeatCountController,
               standardController: _standardSeatCountController,
               vipError: _vipSeatCountError,
               premiumError: _premiumSeatCountError,
               standardError: _standardSeatCountError,
+              onChanged: () {
+                setState(() {
+                  _vipSeatCountError = _validateSeatNumber(
+                      _vipSeatCountController.text, 'VIP seats');
+                  _premiumSeatCountError = _validateSeatNumber(
+                      _premiumSeatCountController.text, 'Premium seats');
+                  _standardSeatCountError = _validateSeatNumber(
+                      _standardSeatCountController.text, 'Standard seats');
+                });
+              },
             ),
             SizedBox(height: 8.h),
-            SeatPriceSection(
+            SeatPrice(
               vipController: _vipSeatPriceController,
               premiumController: _premiumSeatPriceController,
               standardController: _standardSeatPriceController,
               vipError: _vipSeatPriceError,
               premiumError: _premiumSeatPriceError,
               standardError: _standardSeatPriceError,
+              onChanged: () {
+                setState(() {
+                  _vipSeatPriceError = _validatePrice(
+                      _vipSeatPriceController.text, 'VIP seat price');
+                  _premiumSeatPriceError = _validatePrice(
+                      _premiumSeatPriceController.text, 'Premium seat price');
+                  _standardSeatPriceError = _validatePrice(
+                      _standardSeatPriceController.text, 'Standard seat price');
+                });
+              },
             ),
           ],
         ),

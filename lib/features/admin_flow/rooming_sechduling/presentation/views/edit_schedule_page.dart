@@ -104,6 +104,7 @@ class _EditSchedulePageState extends State<EditSchedulePage> {
       body: Padding(
         padding: EdgeInsets.all(4.0.sp),
         child: SingleChildScrollView(
+          primary: true,
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

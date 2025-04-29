@@ -100,6 +100,7 @@ class _RoomingState extends State<Rooming> {
       backgroundColor: Colors.white,
       body: SafeArea(
         child: SingleChildScrollView(
+          primary: true,
           child: Column(
             children: [
               DateTimeFields(

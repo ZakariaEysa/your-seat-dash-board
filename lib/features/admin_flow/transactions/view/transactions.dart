@@ -39,7 +39,7 @@ class _TransactionsState extends State<Transactions> {
                           SalesContainer(),
                           SizedBox(height: 20.h),
                           SizedBox(
-                              width: 860.w,
+                              width: 760.w,
                               child: PaymentTable(
                                   transactions: state.transactions)),
                         ],
