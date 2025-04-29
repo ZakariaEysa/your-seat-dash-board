@@ -23,7 +23,6 @@ class _TicketDetailsState extends State<TicketDetails> {
 
   @override
   Widget build(BuildContext context) {
-    print('TicketDetails build called');
     return Scaffold(
       backgroundColor: Colors.white,
       body: Scrollbar(

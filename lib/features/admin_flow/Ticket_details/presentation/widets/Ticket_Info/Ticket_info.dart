@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'movie_info.dart';
-import 'ticket_details.dart';
+import 'ticket_details_widgets.dart';
 
 class TicketInfo extends StatelessWidget {
   const TicketInfo({super.key});

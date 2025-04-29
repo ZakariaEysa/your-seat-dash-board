@@ -7,6 +7,7 @@ class TicketDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
+      
       padding: EdgeInsets.only(top: 30.h, left: 10.w),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
