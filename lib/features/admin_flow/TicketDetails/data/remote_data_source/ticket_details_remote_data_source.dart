@@ -24,8 +24,8 @@ class TicketDetailsRemoteDataSourceImpl
       // findAndPrintTicket(cinemaId: "Plaza Cinema", orderId: "304514032");
 
       final cinemaDoc = await FirebaseFirestore.instance
-          .collection(cinemaId)
-          .doc("Plaza Cinema")
+          .collection("Cinemas")
+          .doc(cinemaId)
           .get();
 
       if (!cinemaDoc.exists) {

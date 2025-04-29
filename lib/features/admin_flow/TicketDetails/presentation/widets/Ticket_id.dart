@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/Ticket_details/presentation/cubit/ticket_details_cubit.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/TicketDetails/presentation/cubit/ticket_details_cubit.dart';
 
 import '../../../../../widgets/button/button_builder.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';

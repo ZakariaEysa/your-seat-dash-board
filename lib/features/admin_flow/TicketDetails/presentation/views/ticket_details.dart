@@ -36,7 +36,7 @@ class _TicketDetailsState extends State<TicketDetails> {
               SizedBox(height: 80.h),
               const TicketId(),
               SizedBox(height: 50.h),
-              const TicketInfo(),
+               TicketInfo(),
               SizedBox(height: 80.h),
             ],
           ),

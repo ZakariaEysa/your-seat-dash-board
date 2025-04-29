@@ -11,9 +11,9 @@ import 'package:yourseatgraduationproject/features/admin_flow/payment/data/remot
 import 'package:yourseatgraduationproject/features/admin_flow/payment/presentation/cubit/payment_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/cubit/settings_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
-import 'features/admin_flow/Ticket_details/data/remote_data_source/ticket_details_remote_data_source.dart';
-import 'features/admin_flow/Ticket_details/data/repos_impl/ticket_details_repo_impl.dart';
-import 'features/admin_flow/Ticket_details/presentation/cubit/ticket_details_cubit.dart';
+import 'features/admin_flow/TicketDetails/data/remote_data_source/ticket_details_remote_data_source.dart';
+import 'features/admin_flow/TicketDetails/data/repos_impl/ticket_details_repo_impl.dart';
+import 'features/admin_flow/TicketDetails/presentation/cubit/ticket_details_cubit.dart';
 import 'firebase_options.dart';
 import 'services/simple_bloc_observer_service.dart';
 

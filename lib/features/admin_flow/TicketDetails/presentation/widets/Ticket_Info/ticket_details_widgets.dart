@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class TicketDetails extends StatelessWidget {
-  const TicketDetails({super.key});
+import '../../../../../../data/local_storage_service/local_storage_service.dart';
+import '../../../../../../utils/app_logs.dart';
+import '../../../data/model/ticket_details_model.dart';
 
+class TicketDetails extends StatelessWidget {
+  const TicketDetails({super.key, required this.ticket});
+
+  final Ticket ticket;
   @override
   Widget build(BuildContext context) {
     return Padding(
-      
       padding: EdgeInsets.only(top: 30.h, left: 10.w),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -25,7 +29,7 @@ class TicketDetails extends StatelessWidget {
                   ),
                   SizedBox(width: 2.w),
                   Text(
-                    "210.000 VND",
+                    ticket.totalPrice.toString(),
                     style: TextStyle(color: Colors.black, fontSize: 4.sp),
                   )
                 ],
@@ -42,7 +46,7 @@ class TicketDetails extends StatelessWidget {
                   ),
                   SizedBox(width: 2.w),
                   Text(
-                    "Vincom Ocean Park",
+                    extractUsername(LocalStorageService.getUserData() ?? ""),
                     style: TextStyle(color: Colors.black, fontSize: 4.sp),
                   ),
                   SizedBox(width: 2.w),
@@ -53,11 +57,11 @@ class TicketDetails extends StatelessWidget {
                   ),
                 ],
               ),
-              SizedBox(height: 2.h),
-              Text(
-                "4th floor, Vincom Ocean Park, Da Ton, Gia\nLam, Ha Noi",
-                style: TextStyle(color: Colors.black, fontSize: 4.sp),
-              ),
+              // SizedBox(height: 2.h),
+              // Text(
+              //   "4th floor, Vincom Ocean Park, Da Ton, Gia\nLam, Ha Noi",
+              //   style: TextStyle(color: Colors.black, fontSize: 4.sp),
+              // ),
               SizedBox(height: 2.h),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -99,12 +103,12 @@ class TicketDetails extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Payment  : paymed",
+                        "Payment  : paid",
                         style: TextStyle(fontSize: 4.sp, color: Colors.black),
                       ),
                       SizedBox(height: 2.h),
                       Text(
-                        "Status   :   Active",
+                        "Status   :   ${ticket.status}",
                         style: TextStyle(fontSize: 4.sp, color: Colors.black),
                       ),
                       SizedBox(height: 2.h),
@@ -113,7 +117,7 @@ class TicketDetails extends StatelessWidget {
                           Text(
                             "Download ticket",
                             style:
-                            TextStyle(fontSize: 4.sp, color: Colors.black),
+                                TextStyle(fontSize: 4.sp, color: Colors.black),
                           ),
                           SizedBox(width: 3.w),
                           Image.asset(
@@ -132,5 +136,17 @@ class TicketDetails extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  String extractUsername(String email) {
+    AppLogs.errorLog(email.toString());
+
+    // نفترض إن الإيميل دايماً بينتهي بـ @admin.com
+    if (email.contains("@")) {
+      // بنشيل الجزء بتاع @admin.com ونرجع الاسم
+      return email.substring(0, email.indexOf("@admin.com"));
+    } else {
+      return "Invalid email format"; // لو الإيميل مش بالصيغة المطلوبة
+    }
   }
 }
