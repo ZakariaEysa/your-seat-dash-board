@@ -11,6 +11,7 @@ import 'package:yourseatgraduationproject/features/admin_flow/payment/data/remot
 import 'package:yourseatgraduationproject/features/admin_flow/payment/presentation/cubit/payment_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/cubit/settings_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
+import 'package:yourseatgraduationproject/widgets/list/list.dart';
 import 'features/admin_flow/TicketDetails/data/remote_data_source/ticket_details_remote_data_source.dart';
 import 'features/admin_flow/TicketDetails/data/repos_impl/ticket_details_repo_impl.dart';
 import 'features/admin_flow/TicketDetails/presentation/cubit/ticket_details_cubit.dart';
@@ -73,7 +74,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: "Admin Dashboard",
             theme: ThemeData.dark(),
-            home: SignIn(),
+            home: NavigationList(),
           ),
         );
       },
