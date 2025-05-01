@@ -171,7 +171,7 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
       {int limit = 10, int page = 1}) async {
     List<TransactionModel> allTransactions = [];
     int page = 1;
-    int limit = 2;
+    int limit = 0;
     bool hasMore = true;
 
     try {
