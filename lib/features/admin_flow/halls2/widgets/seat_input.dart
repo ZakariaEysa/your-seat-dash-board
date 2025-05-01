@@ -21,32 +21,30 @@ class SeatInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Flexible(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              color: color,
-              fontWeight: FontWeight.bold,
-              fontSize: 3.sp,
-            ),
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text(
+          label,
+          style: TextStyle(
+            color: color,
+            fontWeight: FontWeight.bold,
+            fontSize: 3.sp,
           ),
-          SizedBox(height: 2.h),
-          SizedBox(
-            child: NewTextField(
-              controller: controller,
-              borderColor: errorText != null ? Colors.red : Colors.black,
-              errorText: errorText,
-              keyboardType: TextInputType.number,
-              onChanged: onChanged,
-              contentPadding: EdgeInsets.all(4.sp),
-              validator: validator,
-            ),
+        ),
+        SizedBox(height: 2.h),
+        SizedBox(
+          child: NewTextField(
+            controller: controller,
+            borderColor: errorText != null ? Colors.red : Colors.black,
+            errorText: errorText,
+            keyboardType: TextInputType.number,
+            onChanged: onChanged,
+            contentPadding: EdgeInsets.all(4.sp),
+            validator: validator,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }
