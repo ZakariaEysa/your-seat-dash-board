@@ -240,7 +240,7 @@ class _CinemaDesignState extends State<CinemaDesign> {
           child: SingleChildScrollView(
             child: Container(
               width: 880.w,
-              height: 700.h,
+              height: 770.h,
               decoration: BoxDecoration(
                 color: const Color(0xFFF3F3F3),
                 borderRadius: BorderRadius.circular(5.r),

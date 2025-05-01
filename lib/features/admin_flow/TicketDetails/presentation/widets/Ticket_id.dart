@@ -1,8 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/TicketDetails/presentation/cubit/ticket_details_cubit.dart';
 
 import '../../../../../widgets/button/button_builder.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:equatable/equatable.dart';
+
+import '../../data/model/ticket_details_model.dart';
 
 class TicketId extends StatefulWidget {
   const TicketId({super.key});
@@ -13,7 +18,12 @@ class TicketId extends StatefulWidget {
 
 class _TicketIdState extends State<TicketId> {
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _ticketController = TextEditingController();
+
+  @override
+  initState() {
+    super.initState();
+    // findAndPrintTicket(cinemaId: "Plaza Cinema", orderId: "304514032");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +77,8 @@ class _TicketIdState extends State<TicketId> {
                           ),
                         ),
                         child: TextFormField(
-                          controller: _ticketController,
+                          controller:
+                              TicketDetailsCubit.get(context).ticketController,
                           obscureText: false,
                           style: TextStyle(fontSize: 4.sp, color: Colors.black),
                           textAlign: TextAlign.start,
@@ -129,7 +140,8 @@ class _TicketIdState extends State<TicketId> {
             ButtonBuilder(
               text: 'Ticket',
               onTap: () {
-                final value = _ticketController.text;
+                final value =
+                    TicketDetailsCubit.get(context).ticketController.text;
 
                 if (value.isEmpty) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -141,11 +153,14 @@ class _TicketIdState extends State<TicketId> {
                 } else if (!RegExp(r'^#\d{9}$').hasMatch(value)) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     const SnackBar(
-                      content: Text('The format should be like # and nine numbers.'),
+                      content:
+                          Text('The format should be like # and nine numbers.'),
                       backgroundColor: Colors.orange,
                     ),
                   );
                 } else {
+                  TicketDetailsCubit.get(context)
+                      .findAndPrintTicket(orderId: value);
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
                       content: Text(
@@ -167,7 +182,6 @@ class _TicketIdState extends State<TicketId> {
                 fontSize: 6.sp,
               ),
             ),
-
           ],
         ),
       ),
