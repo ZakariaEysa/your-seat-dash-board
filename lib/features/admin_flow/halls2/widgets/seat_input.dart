@@ -21,7 +21,7 @@ class SeatInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column( // تم إزالة Flexible من هنا
+    return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Text(
