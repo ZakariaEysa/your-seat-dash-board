@@ -4,6 +4,7 @@ import '../../../../../widgets/text_field/text_field/new_text_field_builder.dart
 
 class MovieTextFieldLabel extends StatelessWidget {
   final String label;
+  final String? initialValue;
   final TextEditingController controller;
   final String? errorText;
   final Color errorColor;
@@ -13,6 +14,7 @@ class MovieTextFieldLabel extends StatelessWidget {
 
   const MovieTextFieldLabel({
     Key? key,
+    this.initialValue,
     required this.label,
     required this.controller,
     this.errorText,
@@ -37,6 +39,7 @@ class MovieTextFieldLabel extends StatelessWidget {
         ),
         SizedBox(height: 5.h),
         NewTextField(
+          initialValue: initialValue,
             controller: controller,
             keyboardType: TextInputType.text, // يجب أن يكون text وليس multiline إذا كنت تريد سطر واحد
             hintText: hintText,
