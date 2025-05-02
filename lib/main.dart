@@ -41,6 +41,7 @@ void main() async {
 
   SimpleBlocObserverService();
 
+  
   // 🔥 Error Handler عشان نعرف فين المشاكل بالظبط
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
