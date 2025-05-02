@@ -45,15 +45,15 @@ class NewDropdownField extends StatelessWidget {
         fillColor: Colors.white,
         contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 10.h),
         border: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black),
+          borderSide: const BorderSide(color: Colors.black),
           borderRadius: BorderRadius.circular(8.r),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black),
+          borderSide: const BorderSide(color: Colors.black),
           borderRadius: BorderRadius.circular(8.r),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(color: Colors.black, width: 1.5),
+          borderSide: const BorderSide(color: Colors.black, width: 1.5),
           borderRadius: BorderRadius.circular(8.r),
         ),
         errorBorder: OutlineInputBorder(
