@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/moives/widgets/movietable.dart';
 import '../../movie_detail/presentation/view/movie_details.dart';
 
@@ -43,6 +44,7 @@ class _MoviesState extends State<Movies> {
                         ),
                       ),
                     );
+                    print(MovieCubit.get(context).versionController.text);
                   },
 
                   child: Row(

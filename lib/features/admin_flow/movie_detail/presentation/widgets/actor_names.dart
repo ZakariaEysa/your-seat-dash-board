@@ -152,23 +152,26 @@
 // }
 
 
+import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:file_picker/file_picker.dart';
 import '../../../../../widgets/validators/Validators.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/movie_detail/presentation/widgets/person_name_field.dart';
-
 import '../../../moives/data/movies_cubit/movies_cubit.dart';
 
 class ActorNames extends StatefulWidget {
   const ActorNames({
     super.key,
+    required this.movieData,
     required this.actors,
     this.isViewOnly = false,
   });
 
   final List<String> actors;
   final bool isViewOnly;
+  final Map<String, dynamic> movieData;
 
   static final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
@@ -182,6 +185,7 @@ class ActorNames extends StatefulWidget {
 
 class _ActorNamesState extends State<ActorNames> {
   List<PlatformFile?> _pickedImages = [];
+  List<Uint8List?> _actorImages = [];
 
   @override
   void initState() {
@@ -189,8 +193,26 @@ class _ActorNamesState extends State<ActorNames> {
     final cubit = MovieCubit.get(context);
 
     cubit.actorControllers = widget.actors.map((name) => TextEditingController(text: name)).toList();
+
     _pickedImages = List.generate(cubit.actorControllers!.length, (_) => null);
+    _actorImages = List.generate(cubit.actorControllers!.length, (_) => null);
     cubit.pickedActorImages = List.generate(cubit.actorControllers!.length, (_) => null);
+
+    // قراءة الصور من Base64
+    if (widget.movieData["cast_images"] != null && widget.movieData["cast_images"] is List) {
+      List<dynamic> images = widget.movieData["cast_images"];
+      for (int i = 0; i < images.length && i < _actorImages.length; i++) {
+        if (images[i] != null && images[i] is String) {
+          Uint8List bytes = base64Decode(images[i]);
+          _actorImages[i] = bytes;
+          cubit.pickedActorImages[i] = PlatformFile(
+            name: 'actor_$i.png',
+            size: bytes.length,
+            bytes: bytes,
+          );
+        }
+      }
+    }
 
     if (cubit.actorControllers!.isEmpty) _addActorField();
   }
@@ -199,6 +221,7 @@ class _ActorNamesState extends State<ActorNames> {
     final cubit = MovieCubit.get(context);
     cubit.actorControllers!.add(TextEditingController());
     _pickedImages.add(null);
+    _actorImages.add(null);
     cubit.pickedActorImages.add(null);
     setState(() {});
   }
@@ -208,6 +231,7 @@ class _ActorNamesState extends State<ActorNames> {
     if (cubit.actorControllers!.length > 1) {
       cubit.actorControllers!.removeAt(index);
       _pickedImages.removeAt(index);
+      _actorImages.removeAt(index);
       cubit.pickedActorImages.removeAt(index);
       setState(() {});
     }
@@ -225,12 +249,10 @@ class _ActorNamesState extends State<ActorNames> {
       final file = result.files.single;
       setState(() {
         _pickedImages[index] = file;
+        _actorImages[index] = file.bytes;
       });
 
       final cubit = MovieCubit.get(context);
-      if (cubit.pickedActorImages.length <= index) {
-        cubit.pickedActorImages.length = _pickedImages.length;
-      }
       cubit.pickedActorImages[index] = file;
     }
   }
@@ -239,6 +261,7 @@ class _ActorNamesState extends State<ActorNames> {
     final cubit = MovieCubit.get(context);
     setState(() {
       _pickedImages[index] = null;
+      _actorImages[index] = null;
     });
     cubit.pickedActorImages[index] = null;
   }
@@ -256,7 +279,7 @@ class _ActorNamesState extends State<ActorNames> {
             child: PersonNameField(
               label: 'Actor Name',
               controller: cubit.actorControllers![i],
-              imageBytes: _pickedImages[i]?.bytes,
+              imageBytes: _actorImages[i],
               onAdd: widget.isViewOnly ? null : _addActorField,
               onDelete: widget.isViewOnly || i == 0 ? null : () => _removeActorField(i),
               onUpload: () => _pickImage(i),
@@ -277,7 +300,7 @@ class _ActorNamesState extends State<ActorNames> {
               child: PersonNameField(
                 label: 'Actor Name',
                 controller: cubit.actorControllers![i + 1],
-                imageBytes: _pickedImages[i + 1]?.bytes,
+                imageBytes: _actorImages[i + 1],
                 onAdd: null,
                 onDelete: widget.isViewOnly ? null : () => _removeActorField(i + 1),
                 onUpload: () => _pickImage(i + 1),
@@ -321,3 +344,4 @@ class _ActorNamesState extends State<ActorNames> {
     );
   }
 }
+
