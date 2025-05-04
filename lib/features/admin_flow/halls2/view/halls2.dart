@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../../utils/global_halls_data.dart';
 import '../../../../widgets/button/button_builder.dart';
 import '../widgets/basic_hall.dart';
 
@@ -11,22 +12,18 @@ class Halls2 extends StatefulWidget {
 }
 
 class _Halls2State extends State<Halls2> {
-  final List<GlobalKey<BasicHallState>> hallKeys = [
-    GlobalKey<BasicHallState>()
-  ];
-
   final Set<int> selectedHalls = {};
 
   @override
   void initState() {
     super.initState();
-    selectedHalls.clear();
+    selectedHalls.clear(); // فقط نعيد تعيين المحددين
   }
 
   void _validateAndSave() {
     bool allValid = true;
 
-    for (var key in hallKeys) {
+    for (var key in globalHallKeys) {
       if (key.currentState?.validate() != true) {
         allValid = false;
       }
@@ -46,7 +43,7 @@ class _Halls2State extends State<Halls2> {
 
   void _saveHallsData() {
     print('Saving halls data...');
-    for (var key in hallKeys) {
+    for (var key in globalHallKeys) {
       final hallData = key.currentState?.getHallData();
       print('Hall data: $hallData');
     }
@@ -84,7 +81,7 @@ class _Halls2State extends State<Halls2> {
                   final sorted = selectedHalls.toList()
                     ..sort((a, b) => b.compareTo(a));
                   for (var index in sorted) {
-                    hallKeys.removeAt(index);
+                    globalHallKeys.removeAt(index);
                   }
                   selectedHalls.clear();
                 });
@@ -113,7 +110,7 @@ class _Halls2State extends State<Halls2> {
           ElevatedButton(
             onPressed: () {
               setState(() {
-                hallKeys.add(GlobalKey<BasicHallState>());
+                globalHallKeys.add(GlobalKey<BasicHallState>());
               });
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
@@ -180,11 +177,11 @@ class _Halls2State extends State<Halls2> {
                   crossAxisSpacing: 16,
                   mainAxisSpacing: 16,
                 ),
-                itemCount: hallKeys.length,
+                itemCount: globalHallKeys.length,
                 itemBuilder: (context, index) {
                   return Stack(
                     children: [
-                      BasicHall(key: hallKeys[index]),
+                      BasicHall(key: globalHallKeys[index]),
                       if (index != 0)
                         Positioned(
                           top: 0,
@@ -253,12 +250,11 @@ class _Halls2State extends State<Halls2> {
               child: ElevatedButton.icon(
                 onPressed: _confirmDeleteSelected,
                 icon: const Icon(Icons.delete, color: Colors.white),
-                label: Text('Delete Selected',
+                label: const Text('Delete Selected',
                     style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
-                  padding:
-                  const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),

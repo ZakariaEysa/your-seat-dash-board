@@ -173,6 +173,9 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
     int page = 1;
     int limit = 0;
     bool hasMore = true;
+    total = 0;
+    completed = 0;
+    refunded = 0;
 
     try {
       final token = await getAuthToken(); // جلب التوكن

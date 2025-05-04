@@ -41,7 +41,6 @@ void main() async {
 
   SimpleBlocObserverService();
 
-  
   // 🔥 Error Handler عشان نعرف فين المشاكل بالظبط
   FlutterError.onError = (FlutterErrorDetails details) {
     FlutterError.presentError(details);
@@ -69,8 +68,7 @@ class MyApp extends StatelessWidget {
             BlocProvider(create: (context) => SettingsCubit()),
             BlocProvider(
               create: (context) => AuthCubit(),
-              child:
-                  const SignInContent(),
+              child: const SignInContent(),
             ),
             BlocProvider(
               create: (context) => MovieCubit(),
@@ -91,12 +89,10 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: "Admin Dashboard",
             theme: ThemeData.dark(),
-            home: SignIn(),
+            home: NavigationList(),
           ),
         );
       },
     );
   }
 }
-
-
