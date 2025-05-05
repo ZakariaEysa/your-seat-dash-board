@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/payment/presentation/cubit/payment_cubit.dart';
+import 'package:yourseatgraduationproject/utils/app_logs.dart';
 import '../widgets/sales_container.dart';
 import '../widgets/payment_table.dart';
 
@@ -16,6 +17,8 @@ class _TransactionsState extends State<Transactions> {
   @override
   void initState() {
     super.initState();
+
+    PaymentCubit.get(context).resetTransactionStats();
     PaymentCubit.get(context).getAllTransactions();
   }
 
@@ -33,15 +36,20 @@ class _TransactionsState extends State<Transactions> {
               children: [
                 BlocBuilder<PaymentCubit, PaymentState>(
                   builder: (context, state) {
-                    if (state is TransactionSuccess) {
+                    AppLogs.errorLog(state.toString());
+                    if (PaymentCubit.get(context).transactions.isNotEmpty ||
+                        state is TransactionSuccess) {
                       return Column(
                         children: [
-                          SalesContainer(),
+                          SalesContainer(
+                              status: PaymentCubit.get(context)
+                                  .getTransactionStats()),
                           SizedBox(height: 20.h),
                           SizedBox(
                               width: 760.w,
                               child: PaymentTable(
-                                  transactions: state.transactions)),
+                                  transactions:
+                                      PaymentCubit.get(context).transactions)),
                         ],
                       );
                     } else if (state is PaymentError) {
