@@ -21,6 +21,7 @@ import 'features/admin_flow/TicketDetails/presentation/cubit/ticket_details_cubi
 import 'package:yourseatgraduationproject/features/admin_flow/signin/auth_cubit/auth_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/signin/view/signin.dart';
 import 'features/admin_flow/homepage/cubit/home_cubit.dart';
+import 'features/admin_flow/homepage/cubit/sales_dash_cubit/sales_dash_cubit.dart';
 import 'features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
 import 'features/admin_flow/payment/data/remote_data_source/payment_remote_data_source.dart';
 import 'firebase_options.dart';
@@ -66,6 +67,7 @@ class MyApp extends StatelessWidget {
       builder: (context, child) {
         return MultiBlocProvider(
           providers: [
+            BlocProvider(create: (_) => SalesDashCubit(),),
             BlocProvider(create: (context) => MovieCubit()),
             BlocProvider(create: (context) => AuthCubit()),
             BlocProvider(create: (context) => SettingsCubit()),
