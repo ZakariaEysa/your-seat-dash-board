@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/homepage/view/home.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/signin/auth_cubit/auth_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/signin/view/signin.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/payment/data/repos_impl/payment_repo_impl.dart';
@@ -19,6 +20,7 @@ import 'features/admin_flow/TicketDetails/data/repos_impl/ticket_details_repo_im
 import 'features/admin_flow/TicketDetails/presentation/cubit/ticket_details_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/signin/auth_cubit/auth_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/signin/view/signin.dart';
+import 'features/admin_flow/homepage/cubit/home_cubit.dart';
 import 'features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
 import 'features/admin_flow/payment/data/remote_data_source/payment_remote_data_source.dart';
 import 'firebase_options.dart';
@@ -67,16 +69,7 @@ class MyApp extends StatelessWidget {
             BlocProvider(create: (context) => MovieCubit()),
             BlocProvider(create: (context) => AuthCubit()),
             BlocProvider(create: (context) => SettingsCubit()),
-            BlocProvider(
-              create: (context) => AuthCubit(),
-              child: const SignInContent(),
-            ),
-            BlocProvider(
-              create: (context) => MovieCubit(),
-            ),
-            BlocProvider(
-              create: (context) => SettingsCubit(),
-            ),
+            BlocProvider(create: (context) => HomeCubit()),
             BlocProvider(
               create: (context) =>
                   PaymentCubit(PaymentRepoImpl(PaymentRemoteDataSourceImpl())),
@@ -90,7 +83,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: "Admin Dashboard",
             theme: ThemeData.dark(),
-            home: NavigationList(),
+            home: SignIn(),
           ),
         );
       },
