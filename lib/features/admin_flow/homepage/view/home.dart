@@ -72,14 +72,14 @@ class _HomeState extends State<Home> {
                       child: Text(state.errorMsg),
                     );
                   } else {
-                    return Center(
+                    return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
                 },
               ),
               SizedBox(height: 30.h),
-              MovieStates(),
+              const MovieStates(),
             ],
           ),
         ),

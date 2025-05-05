@@ -50,8 +50,6 @@ class PaymentTextState extends State<PaymentText> {
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection('Cinemas')
           .doc(cinemaId)
-          .collection('payment_info')
-          .doc('bank_details')
           .get();
 
       if (snapshot.exists) {
@@ -80,9 +78,7 @@ class PaymentTextState extends State<PaymentText> {
 
       await cinemas
           .doc(cinemaId)
-          .collection('payment_info')
-          .doc('bank_details')
-          .set({
+          .update({
         'beneficiaryName': _beneficiaryController.text.trim(),
         'country': _countryController.text.trim(),
         'bankName': _bankNameController.text.trim(),
@@ -94,7 +90,7 @@ class PaymentTextState extends State<PaymentText> {
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('✅ Saved Successfully!'),
+          content: Text('✅ Updated Successfully!'),
           backgroundColor: Colors.green,
           duration: Duration(seconds: 2),
         ),
@@ -109,7 +105,6 @@ class PaymentTextState extends State<PaymentText> {
       );
     }
   }
-
 
   String extractUsername(String email) {
     AppLogs.errorLog(email.toString());

@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../../../../data/local_storage_service/local_storage_service.dart';
+import '../../../../../../utils/app_logs.dart';
+
 
 class DescriptionCinema extends StatefulWidget {
   final double width;
@@ -19,6 +23,7 @@ class DescriptionCinema extends StatefulWidget {
 class DescriptionCinemaState extends State<DescriptionCinema> {
   final TextEditingController _controller = TextEditingController();
   String? _errorText;
+  bool _isLoading = true;
 
   void validate() {
     setState(() {
@@ -30,7 +35,48 @@ class DescriptionCinemaState extends State<DescriptionCinema> {
     });
   }
 
-  String get descriptionText => _controller.text.trim(); // ⬅️ رجع النص
+  String get descriptionText => _controller.text.trim();
+
+  @override
+  void initState() {
+    super.initState();
+    _loadDescriptionFromFirestore();
+  }
+
+  Future<void> _loadDescriptionFromFirestore() async {
+    try {
+      String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+
+      DocumentSnapshot snapshot = await FirebaseFirestore.instance
+          .collection('Cinemas')
+          .doc(cinemaId)
+          .get();
+
+      if (snapshot.exists && snapshot.data() != null) {
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        String? description = data['description'];
+
+        if (description != null) {
+          _controller.text = description;
+        }
+      }
+    } catch (e) {
+      print("❌ فشل تحميل وصف السينما: $e");
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+  String extractUsername(String email) {
+    AppLogs.errorLog(email.toString());
+
+    if (email.contains("@")) {
+      return email.substring(0, email.indexOf("@admin.com"));
+    } else {
+      return "Invalid email format";
+    }
+  }
 
   @override
   void dispose() {
@@ -40,7 +86,9 @@ class DescriptionCinemaState extends State<DescriptionCinema> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return _isLoading
+        ? const CircularProgressIndicator()
+        : Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Container(

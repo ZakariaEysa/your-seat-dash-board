@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../../../../data/local_storage_service/local_storage_service.dart';
 import '../../../../utils/global_halls_data.dart';
 import '../../../../widgets/button/button_builder.dart';
 import '../widgets/basic_hall.dart';
@@ -13,39 +15,153 @@ class Halls2 extends StatefulWidget {
 
 class _Halls2State extends State<Halls2> {
   final Set<int> selectedHalls = {};
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    selectedHalls.clear(); // فقط نعيد تعيين المحددين
+    selectedHalls.clear();
+    fetchHallDataFromFirestore();
+  }
+
+  Future<void> fetchHallDataFromFirestore() async {
+    try {
+      final CollectionReference cinemas = FirebaseFirestore.instance.collection('Cinemas');
+      final String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+
+      final docSnapshot = await cinemas.doc(cinemaId).get();
+      if (docSnapshot.exists && docSnapshot.data() != null) {
+        final data = docSnapshot.data() as Map<String, dynamic>;
+        final List<dynamic>? halls = data['halls'];
+
+        if (halls != null && halls.isNotEmpty) {
+          globalHallKeys.clear();
+          for (var hall in halls) {
+            final key = GlobalKey<BasicHallState>();
+            globalHallKeys.add(key);
+
+            WidgetsBinding.instance.addPostFrameCallback((_) {
+              final hallState = key.currentState;
+              if (hallState != null) {
+                hallState.setHallData({
+                  'hallName': hall['hallName'] ?? '',
+                  'vipSeats': hall['seats']
+                      ?.firstWhere((seat) => seat['seatType'] == 'VIP', orElse: () => {'seatCount': 0})['seatCount']
+                      .toString(),
+                  'premiumSeats': hall['seats']
+                      ?.firstWhere((seat) => seat['seatType'] == 'Premium', orElse: () => {'seatCount': 0})['seatCount']
+                      .toString(),
+                  'standardSeats': hall['seats']
+                      ?.firstWhere((seat) => seat['seatType'] == 'Standard', orElse: () => {'seatCount': 0})['seatCount']
+                      .toString(),
+                  'vipPrice': hall['seats']
+                      ?.firstWhere((seat) => seat['seatType'] == 'VIP', orElse: () => {'price': 0})['price']
+                      .toString(),
+                  'premiumPrice': hall['seats']
+                      ?.firstWhere((seat) => seat['seatType'] == 'Premium', orElse: () => {'price': 0})['price']
+                      .toString(),
+                  'standardPrice': hall['seats']
+                      ?.firstWhere((seat) => seat['seatType'] == 'Standard', orElse: () => {'price': 0})['price']
+                      .toString(),
+                });
+              }
+            });
+          }
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('⚠️ Error fetching hall data: ${e.toString()}'),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+      });
+    }
   }
 
   void _validateAndSave() {
     bool allValid = true;
-
     for (var key in globalHallKeys) {
       if (key.currentState?.validate() != true) {
         allValid = false;
       }
     }
-
     if (allValid) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('All halls are valid. Proceed to save.')),
-      );
-      _saveHallsData();
+      saveHallDataToFirestore();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please fix all errors before saving')),
+        const SnackBar(content: Text('❌ Please fix all errors before saving.')),
       );
     }
   }
 
-  void _saveHallsData() {
-    print('Saving halls data...');
-    for (var key in globalHallKeys) {
-      final hallData = key.currentState?.getHallData();
-      print('Hall data: $hallData');
+  Future<void> saveHallDataToFirestore() async {
+    try {
+      final CollectionReference cinemas = FirebaseFirestore.instance.collection('Cinemas');
+      final String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+
+      List<Map<String, dynamic>> allHalls = [];
+
+      for (var key in globalHallKeys) {
+        final hallState = key.currentState;
+        if (hallState != null) {
+          final hall = hallState.getHallData();
+          allHalls.add({
+            'hallName': hall['hallName'],
+            'seats': [
+              {
+                'seatType': 'VIP',
+                'seatCount': int.parse(hall['vipSeats']),
+                'price': int.parse(hall['vipPrice']),
+              },
+              {
+                'seatType': 'Premium',
+                'seatCount': int.parse(hall['premiumSeats']),
+                'price': int.parse(hall['premiumPrice']),
+              },
+              {
+                'seatType': 'Standard',
+                'seatCount': int.parse(hall['standardSeats']),
+                'price': int.parse(hall['standardPrice']),
+              },
+            ]
+          });
+        }
+      }
+
+      await cinemas.doc(cinemaId).update({
+        'halls': allHalls,
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('✅ Hall Data Saved Successfully!'),
+          backgroundColor: Colors.green,
+          duration: Duration(seconds: 2),
+        ),
+      );
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('⚠️ Error: ${e.toString()}'),
+          backgroundColor: Colors.red,
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+  }
+
+  String extractUsername(String email) {
+    if (email.contains("@")) {
+      return email.substring(0, email.indexOf("@admin.com"));
+    } else {
+      return "Invalid email format";
     }
   }
 
@@ -78,8 +194,7 @@ class _Halls2State extends State<Halls2> {
             ElevatedButton(
               onPressed: () {
                 setState(() {
-                  final sorted = selectedHalls.toList()
-                    ..sort((a, b) => b.compareTo(a));
+                  final sorted = selectedHalls.toList()..sort((a, b) => b.compareTo(a));
                   for (var index in sorted) {
                     globalHallKeys.removeAt(index);
                   }
@@ -128,11 +243,14 @@ class _Halls2State extends State<Halls2> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
+      body: isLoading
+          ? const Center(child: CircularProgressIndicator(
+        color: Colors.whit,
+      ))
+          : Container(
         color: Colors.white,
         child: Column(
           children: [
-            // Add Hall Button
             Padding(
               padding: EdgeInsets.only(top: 15.h, left: 270.w),
               child: SizedBox(
@@ -145,13 +263,11 @@ class _Halls2State extends State<Halls2> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10.r),
                     ),
-                    padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   ),
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Icon(Icons.add_circle_outline,
-                          color: Colors.white, size: 7.sp),
+                      Icon(Icons.add_circle_outline, color: Colors.white, size: 7.sp),
                       SizedBox(width: 2.w),
                       Text(
                         'Add Hall',
@@ -166,8 +282,6 @@ class _Halls2State extends State<Halls2> {
                 ),
               ),
             ),
-
-            // Halls Grid
             Expanded(
               child: GridView.builder(
                 padding: const EdgeInsets.all(16.0),
@@ -204,8 +318,6 @@ class _Halls2State extends State<Halls2> {
                 },
               ),
             ),
-
-            // Save & Cancel Buttons
             Padding(
               padding: const EdgeInsets.all(18.0),
               child: Row(
@@ -243,15 +355,12 @@ class _Halls2State extends State<Halls2> {
                 ],
               ),
             ),
-
-            // Delete Selected Button
             Padding(
               padding: const EdgeInsets.only(bottom: 10.0),
               child: ElevatedButton.icon(
                 onPressed: _confirmDeleteSelected,
                 icon: const Icon(Icons.delete, color: Colors.white),
-                label: const Text('Delete Selected',
-                    style: TextStyle(color: Colors.white)),
+                label: const Text('Delete Selected', style: TextStyle(color: Colors.white)),
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.red,
                   padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
