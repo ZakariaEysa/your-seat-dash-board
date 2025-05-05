@@ -29,6 +29,19 @@ class BasicHallState extends State<BasicHall> {
   String? _premiumSeatPriceError;
   String? _standardSeatPriceError;
 
+  // Method to set hall data in controllers
+  void setHallData(Map<String, dynamic> hallData) {
+    setState(() {
+      _hallNameController.text = hallData['hallName'] ?? '';
+      _vipSeatCountController.text = hallData['vipSeats'] ?? '';
+      _premiumSeatCountController.text = hallData['premiumSeats'] ?? '';
+      _standardSeatCountController.text = hallData['standardSeats'] ?? '';
+      _vipSeatPriceController.text = hallData['vipPrice'] ?? '';
+      _premiumSeatPriceController.text = hallData['premiumPrice'] ?? '';
+      _standardSeatPriceController.text = hallData['standardPrice'] ?? '';
+    });
+  }
+
   bool validate() {
     setState(() {
       _hallNameError = Validators.validateAnyText(
