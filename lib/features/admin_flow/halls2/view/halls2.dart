@@ -26,8 +26,10 @@ class _Halls2State extends State<Halls2> {
 
   Future<void> fetchHallDataFromFirestore() async {
     try {
-      final CollectionReference cinemas = FirebaseFirestore.instance.collection('Cinemas');
-      final String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+      final CollectionReference cinemas =
+          FirebaseFirestore.instance.collection('Cinemas');
+      final String cinemaId =
+          extractUsername(LocalStorageService.getUserData() ?? "");
 
       final docSnapshot = await cinemas.doc(cinemaId).get();
       if (docSnapshot.exists && docSnapshot.data() != null) {
@@ -46,22 +48,28 @@ class _Halls2State extends State<Halls2> {
                 hallState.setHallData({
                   'hallName': hall['hallName'] ?? '',
                   'vipSeats': hall['seats']
-                      ?.firstWhere((seat) => seat['seatType'] == 'VIP', orElse: () => {'seatCount': 0})['seatCount']
+                      ?.firstWhere((seat) => seat['seatType'] == 'VIP',
+                          orElse: () => {'seatCount': 0})['seatCount']
                       .toString(),
                   'premiumSeats': hall['seats']
-                      ?.firstWhere((seat) => seat['seatType'] == 'Premium', orElse: () => {'seatCount': 0})['seatCount']
+                      ?.firstWhere((seat) => seat['seatType'] == 'Premium',
+                          orElse: () => {'seatCount': 0})['seatCount']
                       .toString(),
                   'standardSeats': hall['seats']
-                      ?.firstWhere((seat) => seat['seatType'] == 'Standard', orElse: () => {'seatCount': 0})['seatCount']
+                      ?.firstWhere((seat) => seat['seatType'] == 'Standard',
+                          orElse: () => {'seatCount': 0})['seatCount']
                       .toString(),
                   'vipPrice': hall['seats']
-                      ?.firstWhere((seat) => seat['seatType'] == 'VIP', orElse: () => {'price': 0})['price']
+                      ?.firstWhere((seat) => seat['seatType'] == 'VIP',
+                          orElse: () => {'price': 0})['price']
                       .toString(),
                   'premiumPrice': hall['seats']
-                      ?.firstWhere((seat) => seat['seatType'] == 'Premium', orElse: () => {'price': 0})['price']
+                      ?.firstWhere((seat) => seat['seatType'] == 'Premium',
+                          orElse: () => {'price': 0})['price']
                       .toString(),
                   'standardPrice': hall['seats']
-                      ?.firstWhere((seat) => seat['seatType'] == 'Standard', orElse: () => {'price': 0})['price']
+                      ?.firstWhere((seat) => seat['seatType'] == 'Standard',
+                          orElse: () => {'price': 0})['price']
                       .toString(),
                 });
               }
@@ -102,8 +110,10 @@ class _Halls2State extends State<Halls2> {
 
   Future<void> saveHallDataToFirestore() async {
     try {
-      final CollectionReference cinemas = FirebaseFirestore.instance.collection('Cinemas');
-      final String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+      final CollectionReference cinemas =
+          FirebaseFirestore.instance.collection('Cinemas');
+      final String cinemaId =
+          extractUsername(LocalStorageService.getUserData() ?? "");
 
       List<Map<String, dynamic>> allHalls = [];
 
@@ -185,7 +195,8 @@ class _Halls2State extends State<Halls2> {
         context: context,
         builder: (context) => AlertDialog(
           title: const Text('Confirm Delete'),
-          content: const Text('Are you sure you want to delete selected halls?'),
+          content:
+              const Text('Are you sure you want to delete selected halls?'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -194,7 +205,8 @@ class _Halls2State extends State<Halls2> {
             ElevatedButton(
               onPressed: () {
                 setState(() {
-                  final sorted = selectedHalls.toList()..sort((a, b) => b.compareTo(a));
+                  final sorted = selectedHalls.toList()
+                    ..sort((a, b) => b.compareTo(a));
                   for (var index in sorted) {
                     globalHallKeys.removeAt(index);
                   }
@@ -203,7 +215,8 @@ class _Halls2State extends State<Halls2> {
                 Navigator.pop(context);
               },
               style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
-              child: const Text('Delete', style: TextStyle(color: Colors.white)),
+              child:
+                  const Text('Delete', style: TextStyle(color: Colors.white)),
             ),
           ],
         ),
@@ -244,135 +257,140 @@ class _Halls2State extends State<Halls2> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: isLoading
-          ? const Center(child: CircularProgressIndicator(
-        color: Colors.whit,
-      ))
+          ? Center(
+              child: CircularProgressIndicator(
+              color: Colors.white,
+            ))
           : Container(
-        color: Colors.white,
-        child: Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(top: 15.h, left: 270.w),
-              child: SizedBox(
-                width: 90.w,
-                height: 40.h,
-                child: ElevatedButton(
-                  onPressed: _confirmAddHall,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF560B76),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.r),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Icon(Icons.add_circle_outline, color: Colors.white, size: 7.sp),
-                      SizedBox(width: 2.w),
-                      Text(
-                        'Add Hall',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 6.sp,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            Expanded(
-              child: GridView.builder(
-                padding: const EdgeInsets.all(16.0),
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 2,
-                  childAspectRatio: 1.4,
-                  crossAxisSpacing: 16,
-                  mainAxisSpacing: 16,
-                ),
-                itemCount: globalHallKeys.length,
-                itemBuilder: (context, index) {
-                  return Stack(
-                    children: [
-                      BasicHall(key: globalHallKeys[index]),
-                      if (index != 0)
-                        Positioned(
-                          top: 0,
-                          left: 0,
-                          child: Checkbox(
-                            value: selectedHalls.contains(index),
-                            onChanged: (bool? selected) {
-                              setState(() {
-                                if (selected == true) {
-                                  selectedHalls.add(index);
-                                } else {
-                                  selectedHalls.remove(index);
-                                }
-                              });
-                            },
+              color: Colors.white,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: 15.h, left: 270.w),
+                    child: SizedBox(
+                      width: 90.w,
+                      height: 40.h,
+                      child: ElevatedButton(
+                        onPressed: _confirmAddHall,
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xFF560B76),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.r),
                           ),
                         ),
-                    ],
-                  );
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(18.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  ButtonBuilder(
-                    text: 'Save',
-                    onTap: _validateAndSave,
-                    width: 40.w,
-                    height: 50.h,
-                    buttonColor: const Color(0xFF560B76),
-                    borderShape: BorderRadius.circular(10.r),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 7.sp,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.add_circle_outline,
+                                color: Colors.white, size: 7.sp),
+                            SizedBox(width: 2.w),
+                            Text(
+                              'Add Hall',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: 6.sp,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
-                  SizedBox(width: 10.w),
-                  ButtonBuilder(
-                    text: 'Cancel',
-                    onTap: () {
-                      Navigator.of(context).pop();
-                    },
-                    width: 40.w,
-                    height: 50.h,
-                    buttonColor: const Color(0xFF560B76),
-                    borderShape: BorderRadius.circular(10.r),
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 7.sp,
+                  Expanded(
+                    child: GridView.builder(
+                      padding: const EdgeInsets.all(16.0),
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 1.4,
+                        crossAxisSpacing: 16,
+                        mainAxisSpacing: 16,
+                      ),
+                      itemCount: globalHallKeys.length,
+                      itemBuilder: (context, index) {
+                        return Stack(
+                          children: [
+                            BasicHall(key: globalHallKeys[index]),
+                            if (index != 0)
+                              Positioned(
+                                top: 0,
+                                left: 0,
+                                child: Checkbox(
+                                  value: selectedHalls.contains(index),
+                                  onChanged: (bool? selected) {
+                                    setState(() {
+                                      if (selected == true) {
+                                        selectedHalls.add(index);
+                                      } else {
+                                        selectedHalls.remove(index);
+                                      }
+                                    });
+                                  },
+                                ),
+                              ),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(18.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        ButtonBuilder(
+                          text: 'Save',
+                          onTap: _validateAndSave,
+                          width: 40.w,
+                          height: 50.h,
+                          buttonColor: const Color(0xFF560B76),
+                          borderShape: BorderRadius.circular(10.r),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 7.sp,
+                          ),
+                        ),
+                        SizedBox(width: 10.w),
+                        ButtonBuilder(
+                          text: 'Cancel',
+                          onTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          width: 40.w,
+                          height: 50.h,
+                          buttonColor: const Color(0xFF560B76),
+                          borderShape: BorderRadius.circular(10.r),
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 7.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10.0),
+                    child: ElevatedButton.icon(
+                      onPressed: _confirmDeleteSelected,
+                      icon: const Icon(Icons.delete, color: Colors.white),
+                      label: const Text('Delete Selected',
+                          style: TextStyle(color: Colors.white)),
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 20, vertical: 12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
                     ),
                   ),
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
-              child: ElevatedButton.icon(
-                onPressed: _confirmDeleteSelected,
-                icon: const Icon(Icons.delete, color: Colors.white),
-                label: const Text('Delete Selected', style: TextStyle(color: Colors.white)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.red,
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }

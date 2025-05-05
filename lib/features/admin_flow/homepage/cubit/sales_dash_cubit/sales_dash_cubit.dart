@@ -43,7 +43,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'sales_dash_state.dart';
 
-
 class SalesDashCubit extends Cubit<SalesDashState> {
   SalesDashCubit() : super(SalesDashInitial());
 
@@ -52,8 +51,9 @@ class SalesDashCubit extends Cubit<SalesDashState> {
   int? totalMovies;
   Future<void> getTotalIncome() async {
     if (totalIncome != null && totalCustomers != null) {
-      emit(SalesDashSuccess(totalIncome: totalIncome??0,
-        totalCustomers: totalCustomers??0,
+      emit(SalesDashSuccess(
+        totalIncome: totalIncome ?? 0,
+        totalCustomers: totalCustomers ?? 0,
       ));
       return;
     }
@@ -86,9 +86,9 @@ class SalesDashCubit extends Cubit<SalesDashState> {
       totalCustomers = ticketCount;
 
       emit(SalesDashSuccess(
-        totalIncome: totalIncome??0,
-        totalCustomers:totalCustomers??0,
-      totalMovies: totalMovies));
+          totalIncome: totalIncome ?? 0,
+          totalCustomers: totalCustomers ?? 0,
+          totalMovies: totalMovies));
     } catch (e) {
       emit(SalesDashError('Something went wrong : $e'));
     }
@@ -109,13 +109,11 @@ class SalesDashCubit extends Cubit<SalesDashState> {
       totalMovies = movies.length;
 
       emit(SalesDashSuccess(
-        totalIncome: totalIncome,
-       totalCustomers: totalCustomers,
-       totalMovies: totalMovies
-      ));
+          totalIncome: totalIncome,
+          totalCustomers: totalCustomers,
+          totalMovies: totalMovies));
     } catch (e) {
       emit(SalesDashError('Something went wrong :$e'));
     }
   }
-
 }
