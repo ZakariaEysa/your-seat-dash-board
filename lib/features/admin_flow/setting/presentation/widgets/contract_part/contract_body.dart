@@ -8,6 +8,8 @@ import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import '../../../../../../data/local_storage_service/local_storage_service.dart';
+import '../../../../../../utils/app_logs.dart';
 import '../../../../../../widgets/button/button_builder.dart';
 import 'contract_file_info.dart';
 import 'contract_buttons.dart';
@@ -20,18 +22,72 @@ class ContractBody extends StatefulWidget {
 }
 
 class _ContractBodyState extends State<ContractBody> {
+  String? cinemaId;
   PlatformFile? selectedFile;
   PlatformFile? previousFile;
-  PlatformFile? uploadedFile; // ✅ الملف اللي جاي من فايرستور
-  bool isLoading = false; // ✅ متغير لتحديد حالة التحميل
+  PlatformFile? uploadedFile;
+  bool isLoading = false;
+  bool isInitialLoading = true;
 
   @override
   void initState() {
     super.initState();
-    fetchUploadedFile(); // ✅ تحميل الملف أول ما تفتح الصفحة
+    cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+    fetchUploadedContract();
   }
 
-  // ✅ رفع ملف PDF إلى Firestore
+  String extractUsername(String email) {
+    AppLogs.errorLog(email.toString());
+    if (email.contains("@")) {
+      return email.substring(0, email.indexOf("@admin.com"));
+    } else {
+      return "Invalid email format";
+    }
+  }
+
+  Future<void> fetchUploadedContract() async {
+    try {
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('contracts')
+          .where('cinemaId', isEqualTo: cinemaId)
+          .get();
+
+      if (querySnapshot.docs.isNotEmpty) {
+        final sortedDocs = querySnapshot.docs.toList()
+          ..sort((a, b) {
+            final aTime = a['timestamp'] as Timestamp?;
+            final bTime = b['timestamp'] as Timestamp?;
+            return bTime?.compareTo(aTime ?? Timestamp(0, 0)) ?? 0;
+          });
+
+        final data = sortedDocs.first.data();
+        final String base64Content = data['fileContent'];
+        final String fileName = data['fileName'];
+        final int fileSize = data['fileSize'];
+
+        final Uint8List fileBytes = base64Decode(base64Content);
+
+        setState(() {
+          uploadedFile = PlatformFile(
+            name: fileName,
+            size: fileSize,
+            bytes: fileBytes,
+          );
+        });
+
+        print("📥 تم تحميل الملف من Firestore.");
+      } else {
+        print("🚫 لا يوجد ملف مرفوع لهذا المستخدم.");
+      }
+    } catch (e) {
+      print("❌ فشل تحميل الملف: $e");
+    } finally {
+      setState(() {
+        isInitialLoading = false;
+      });
+    }
+  }
+
   Future<void> uploadToFirestoreWeb() async {
     if (selectedFile == null || selectedFile!.bytes == null) {
       print("⚠️ لا يوجد ملف PDF.");
@@ -40,124 +96,30 @@ class _ContractBodyState extends State<ContractBody> {
 
     try {
       setState(() {
-        isLoading = true; // ✅ بدء التحميل
+        isLoading = true;
       });
 
       String base64Content = base64Encode(selectedFile!.bytes!);
-
       final fileInfo = {
         'fileName': selectedFile!.name,
         'fileSize': selectedFile!.size,
         'fileContent': base64Content,
         'timestamp': FieldValue.serverTimestamp(),
+        'cinemaId': cinemaId,
       };
 
-      await FirebaseFirestore.instance
-          .collection('Cinemas')
-          .doc('contract')
-          .collection('uploadedFiles')
-          .add(fileInfo);
-
+      await FirebaseFirestore.instance.collection('contracts').add(fileInfo);
       print("✅ تم رفع الملف بنجاح إلى Firestore!");
     } catch (e) {
       print("❌ فشل رفع الملف.");
       print("🛠️ الخطأ: $e");
     } finally {
       setState(() {
-        isLoading = false; // ✅ إيقاف التحميل بعد الانتهاء
+        isLoading = false;
       });
     }
   }
 
-  // ✅ تحميل الملف الأخير من Firestore وتخزينه محليًا
-  Future<void> fetchUploadedFile() async {
-    try {
-      setState(() {
-        isLoading = true; // ✅ بدء التحميل
-      });
-
-      final snapshot = await FirebaseFirestore.instance
-          .collection('Cinemas')
-          .doc('contract')
-          .collection('uploadedFiles')
-          .orderBy('timestamp', descending: true)
-          .limit(1)
-          .get();
-
-      if (snapshot.docs.isEmpty) {
-        print("❌ لا يوجد ملفات.");
-        return;
-      }
-
-      final data = snapshot.docs.first.data();
-      String fileName = data['fileName'];
-      String base64Content = data['fileContent'];
-      Uint8List fileBytes = base64Decode(base64Content);
-
-      setState(() {
-        uploadedFile = PlatformFile(
-          name: fileName,
-          size: fileBytes.length,
-          bytes: fileBytes,
-        );
-      });
-    } catch (e) {
-      print("❌ حدث خطأ أثناء تحميل الملف من فايرستور: $e");
-    } finally {
-      setState(() {
-        isLoading = false; // ✅ إيقاف التحميل بعد الانتهاء
-      });
-    }
-  }
-
-  // ✅ تحميل الملف وفتحه للمستخدم
-  Future<void> downloadPdfFromFirestore() async {
-    try {
-      setState(() {
-        isLoading = true; // ✅ بدء التحميل
-      });
-
-      final snapshot = await FirebaseFirestore.instance
-          .collection('Cinemas')
-          .doc('contract')
-          .collection('uploadedFiles')
-          .orderBy('timestamp', descending: true)
-          .limit(1)
-          .get();
-
-      if (snapshot.docs.isEmpty) {
-        print("❌ لا يوجد ملفات.");
-        return;
-      }
-
-      final data = snapshot.docs.first.data();
-      String fileName = data['fileName'];
-      String base64Content = data['fileContent'];
-      Uint8List fileBytes = base64Decode(base64Content);
-
-      final blob = html.Blob([fileBytes]);
-      final url = html.Url.createObjectUrlFromBlob(blob);
-      final anchor = html.AnchorElement(href: url)
-        ..setAttribute("download", fileName)
-        ..click();
-
-      html.Url.revokeObjectUrl(url);
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('✅ تم تحميل الملف: $fileName')),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('❌ حدث خطأ أثناء التحميل: $e')),
-      );
-    } finally {
-      setState(() {
-        isLoading = false; // ✅ إيقاف التحميل بعد الانتهاء
-      });
-    }
-  }
-
-  // ✅ اختيار ملف من الجهاز
   Future<void> uploadContract(BuildContext context) async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
@@ -181,7 +143,6 @@ class _ContractBodyState extends State<ContractBody> {
     }
   }
 
-  // ✅ إلغاء التعديلات
   void cancelChanges() {
     if (selectedFile != previousFile) {
       setState(() {
@@ -194,7 +155,6 @@ class _ContractBodyState extends State<ContractBody> {
     }
   }
 
-  // ✅ حفظ التعديلات
   void saveChanges() async {
     if (selectedFile == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -204,8 +164,7 @@ class _ContractBodyState extends State<ContractBody> {
     }
 
     await uploadToFirestoreWeb();
-
-    await fetchUploadedFile(); // ✅ بعد الحفظ مباشرة جيب آخر ملف وحدث الشاشة
+    await fetchUploadedContract();
 
     setState(() {
       previousFile = selectedFile;
@@ -218,8 +177,24 @@ class _ContractBodyState extends State<ContractBody> {
 
   @override
   Widget build(BuildContext context) {
+    if (isInitialLoading) {
+      return const Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircularProgressIndicator(),
+            SizedBox(height: 16),
+            Text(
+             "",
+              style: TextStyle(fontSize: 16),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Padding(
-      padding:  EdgeInsets.all(12.0.sp),
+      padding: EdgeInsets.all(12.0.sp),
       child: Container(
         width: 300.w,
         height: 700.h,
@@ -229,7 +204,7 @@ class _ContractBodyState extends State<ContractBody> {
         ),
         child: Padding(
           padding: EdgeInsets.only(top: 50.h, left: 20.w, right: 20.w),
-          child: SingleChildScrollView( // ✅ أضفنا Scroll
+          child: SingleChildScrollView(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -245,13 +220,26 @@ class _ContractBodyState extends State<ContractBody> {
                   "Update your Contract info here",
                   style: TextStyle(color: Color(0xFF625C5C), fontSize: 5.sp),
                 ),
-                SizedBox(height:20.h),
+                SizedBox(height: 20.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ButtonBuilder(
                       text: 'Download Contract',
-                      onTap: () => downloadPdfFromFirestore(),
+                      onTap: () {
+                        if (uploadedFile != null && uploadedFile!.bytes != null) {
+                          final blob = html.Blob([uploadedFile!.bytes]);
+                          final url = html.Url.createObjectUrlFromBlob(blob);
+                          final anchor = html.AnchorElement(href: url)
+                            ..setAttribute("download", uploadedFile!.name)
+                            ..click();
+                          html.Url.revokeObjectUrl(url);
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('لا يوجد ملف للتحميل')),
+                          );
+                        }
+                      },
                       width: 86.w,
                       height: 78.h,
                       buttonColor: const Color(0xFFF3F3F3),
@@ -283,11 +271,11 @@ class _ContractBodyState extends State<ContractBody> {
                 SizedBox(height: 30.h),
 
                 if (isLoading)
-                  Center(child: CircularProgressIndicator()) // ✅ إظهار لودينج
-                else if (uploadedFile != null)
-                  ContractFileInfo(file: uploadedFile!)
+                  Center(child: CircularProgressIndicator())
                 else if (selectedFile != null)
-                    ContractFileInfo(file: selectedFile!),
+                  ContractFileInfo(file: selectedFile!)
+                else if (uploadedFile != null)
+                    ContractFileInfo(file: uploadedFile!),
 
                 ContractButtons(
                   onSave: saveChanges,
