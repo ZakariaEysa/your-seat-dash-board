@@ -461,12 +461,6 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
     selectedStatus = movie["status"]??"";
     releaseDate = movie['release_date'] ?? ''.toString();
 
-    AppLogs.errorLog("00000000000000000000");
-    print(selectedLanguage);
-    print(selectedCensorship);
-    print(selectedStatus);
-    print(selectedGenre);
-
 
     MovieCubit.get(context).movieNameController.text = movie['name'] ?? '';
     MovieCubit.get(context).durationController.text = movie['duration'] ?? '';
@@ -479,11 +473,7 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
     selectedStatus = statusOptions.contains(movie['status']) ? movie['status'] : statusOptions[0];
     selectedCensorship = censorshipOptions.contains(movie['age_rating']) ? movie['age_rating'] : censorshipOptions[0];
 
-    AppLogs.scussessLog("555555555555555555555");
-    print(selectedLanguage);
-    print(selectedCensorship);
-    print(selectedStatus);
-    print(selectedGenre);
+
     MovieCubit.get(context).selectedLanguage = selectedLanguage ?? languageOptions[0];
     MovieCubit.get(context).selectedGenre = selectedGenre ?? genreOptions[0];
     MovieCubit.get(context).selectedCensorship = selectedCensorship ?? censorshipOptions[0];

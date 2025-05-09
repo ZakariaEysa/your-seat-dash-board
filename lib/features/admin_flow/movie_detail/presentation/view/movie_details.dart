@@ -627,7 +627,7 @@ class _MovieDetailState extends State<MovieDetail> {
 
     return BlocListener<MovieCubit, MovieState>(
       listener: (context, state) {
-        if (state.success) {
+        if (state is MovieSuccess) {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(
               backgroundColor: Colors.green,
@@ -639,12 +639,12 @@ class _MovieDetailState extends State<MovieDetail> {
           );
           navigatePop(context: context);
         }
-        if (state.error != null) {
+        if (state is MovieError) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               backgroundColor: Colors.red,
               content: Text(
-                "Error: ${state.error}",
+                "Error: ${state.message}",
                 style: const TextStyle(color: Colors.white),
               ),
             ),
@@ -653,6 +653,7 @@ class _MovieDetailState extends State<MovieDetail> {
       },
       child: BlocBuilder<MovieCubit, MovieState>(
         builder: (context, state) {
+          bool isLoading = state is MovieLoading;
           return Stack(
             children: [
               WillPopScope(
@@ -751,16 +752,18 @@ class _MovieDetailState extends State<MovieDetail> {
 
                                                   if (isMovieInfoValid && isNamesValid && isStoryLineValid && isCrewValid && promoLinkError == null) {
                                                     if (widget.isEditing) {
-                                                      MovieCubit.get(context).updateMovieInCinemaWithPreparedData(context: context);
+                                                      await MovieCubit.get(context).updateMovieInCinemaWithPreparedData(context: context);
                                                       AppLogs.scussessLog("Finish uploading to cinema");
                                                       print(MovieCubit.get(context).coverPhoto);
-                                                      MovieCubit.get(context).updateMovieDocumentByName(context: context);
+                                                      await MovieCubit.get(context).updateMovieDocumentByName(context: context);
                                                       AppLogs.scussessLog("Finish uploading to playing now");
-
+                                                      await MovieCubit.get(context).fetchUserMovies();
                                                       Navigator.pop(context);
                                                     } else {
-                                                      MovieCubit.get(context).addMovieToCinema();
-                                                      MovieCubit.get(context).uploadMovieToFireStore();
+                                                      await MovieCubit.get(context).addMovieToCinema();
+                                                      await MovieCubit.get(context).uploadMovieToFireStore();
+                                                      Navigator.pop(context);
+
                                                     }
                                                   } else {
                                                     ScaffoldMessenger.of(context).showSnackBar(
@@ -814,7 +817,7 @@ class _MovieDetailState extends State<MovieDetail> {
                   ),
                 ),
               ),
-              if (state.loading)
+              if (isLoading)
                 Positioned.fill(
                   child: Container(
                     color: Colors.black.withOpacity(0.3),
@@ -830,4 +833,6 @@ class _MovieDetailState extends State<MovieDetail> {
     );
   }
 }
+
+
 

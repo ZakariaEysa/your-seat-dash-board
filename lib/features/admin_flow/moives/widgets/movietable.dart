@@ -646,6 +646,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/moives/data/movies_cubit/movies_state.dart';
 import 'package:yourseatgraduationproject/utils/app_logs.dart';
+import '../../../../utils/loading_indicator.dart';
 import '../../movie_detail/presentation/view/movie_details.dart';
 
 class MovieTablePage extends StatefulWidget {
@@ -655,6 +656,7 @@ class MovieTablePage extends StatefulWidget {
 
 class _MovieTablePageState extends State<MovieTablePage> {
   int? selectedRowIndex;
+  bool isDeleting = false; // Track deletion loading state
 
   void navigateToMovieDetail(
       BuildContext context,
@@ -675,21 +677,23 @@ class _MovieTablePageState extends State<MovieTablePage> {
     );
   }
 
-  void deleteMovie(int index,Map<String, dynamic> movie) {
+  Future<void> deleteMovie(int index, Map<String, dynamic> movie) async {
     setState(() {
-       MovieCubit.get(context).deleteMovieCompletely(context: context, movieIndex: selectedRowIndex);
-      //MovieCubit.get(context).deleteMovieFromCinemasCollection(context, selectedRowIndex);
-      //MovieCubit.get(context).fetchedCinemaMovies?.removeAt(selectedRowIndex??0);
-      //selectedRowIndex = null;
+      isDeleting = true; // Show loading during deletion
     });
+
+    await MovieCubit.get(context).deleteMovieCompletely(
+      context: context,
+      movieIndex: index,
+    );
+
+    await MovieCubit.get(context).fetchUserMovies();
   }
 
   @override
   void initState() {
     super.initState();
-    setState(() {
-      MovieCubit.get(context).fetchUserMovies();
-    });
+    MovieCubit.get(context).fetchUserMovies();// Fetch movies on init
   }
 
   Color getStatusColor(String status) {
@@ -707,168 +711,208 @@ class _MovieTablePageState extends State<MovieTablePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: BlocBuilder<MovieCubit, MovieState>(
+      body: BlocConsumer<MovieCubit, MovieState>(
+        listener: (context, state) {
+
+          if (state is MovieDeletedCompletely) {
+            setState(() {
+              isDeleting = false;
+              selectedRowIndex = null;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('Movie deleted successfully')),
+            );
+          } else if (state is MovieError) {
+            setState(() {
+              isDeleting = false;
+            });
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+          }
+        },
         builder: (context, state) {
-
-          var movieCubit = MovieCubit.get(context).fetchedCinemaMovies;
-
-          if ( movieCubit == null) {
-            return const Center(child: CircularProgressIndicator());
+          if (state is MovieError) {
+            return  Center(child: Text('Error:  ${state.message}'));
           }
 
-          return SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: DataTable(
-              showCheckboxColumn: false,
-              columnSpacing: 70,
-              headingRowColor: MaterialStateProperty.all(Colors.white),
-              dividerThickness: 1.0,
-              dataRowColor: MaterialStateProperty.resolveWith<Color?>(
-                    (Set<MaterialState> states) {
-                  if (states.contains(MaterialState.selected)) {
-                    return Colors.grey[300];
-                  }
-                  return Colors.white;
-                },
-              ),
-              columns: const [
-                DataColumn(label: Text('Movie name', style: TextStyle(color: Colors.grey))),
-                DataColumn(label: Text('Duration', style: TextStyle(color: Colors.grey))),
-                DataColumn(label: Text('Movie Genre', style: TextStyle(color: Colors.grey))),
-                DataColumn(label: Text('Language', style: TextStyle(color: Colors.grey))),
-                DataColumn(label: Text('Status', style: TextStyle(color: Colors.grey))),
-                DataColumn(label: Text('Censorship', style: TextStyle(color: Colors.grey))),
-                DataColumn(label: Text('Action', style: TextStyle(color: Colors.grey))),
-              ],
-              rows: movieCubit.map((movie) {
-                final int index = movieCubit.indexOf(movie);
-                final bool isSelected = selectedRowIndex == index;
-                AppLogs.errorLog("00000000000000000");
-                print(selectedRowIndex);
-                return DataRow(
-                  selected: isSelected,
-                  onSelectChanged: (selected) {
-                    setState(() {
-                      selectedRowIndex = isSelected ? null : index;
-                      AppLogs.scussessLog("6666666666666666");
-                      print(selectedRowIndex);
-                    });
-                  },
-                  cells: [
-                    DataCell(Row(children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(30),
-                        child: Image.memory(
-                          base64Decode(movie['poster_image'] ?? ''),
-                          width: 40,
-                          height: 40,
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                      SizedBox(width: 4.w),
-                      Text(movie['name'] ?? '', style: const TextStyle(color: Colors.black))
-                    ])),
-                    DataCell(Text(movie['duration'] ?? '', style: const TextStyle(color: Colors.black))),
-                    DataCell(Text(movie['category'] ?? '', style: const TextStyle(color: Colors.black))),
-                    DataCell(Text(movie['language'] ?? '', style: const TextStyle(color: Colors.black))),
-                    DataCell(Row(children: [
-                      Container(
-                        width: 7.w,
-                        height: 7.h,
-                        decoration: BoxDecoration(
-                          color: getStatusColor(movie['status'] ?? ''),
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      SizedBox(width: 4.w),
-                      Text(movie['status'] ?? '', style: TextStyle(color: getStatusColor(movie['status'] ?? '')))
-                    ])),
-                    DataCell(Text(movie['age_rating'] ?? '', style: const TextStyle(color: Colors.black))),
-                    DataCell(Row(
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.remove_red_eye, color: Colors.purple),
-                          onPressed: isSelected
-                              ? () => showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text("View Movie"),
-                              content: const Text("Do you want to view this movie details?"),
-                              actions: [
-                                TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    navigateToMovieDetail(context, movie, isViewOnly: true);
-                                  },
-                                  child: const Text("View"),
-                                ),
-                              ],
-                            ),
-                          )
-                              : null,
-                          tooltip: 'View Only (No Editing)',
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.edit, color: Colors.green),
-                          onPressed: isSelected
-                              ? () => showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text("Edit Movie"),
-                              content: const Text("Do you want to edit this movie?"),
-                              actions: [
-                                TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    navigateToMovieDetail(context, movie, isEditing: true);
-                                  },
-                                  child: const Text("Edit"),
-                                ),
-                              ],
-                            ),
-                          )
-                              : null,
-                          tooltip: 'Edit Movie Details',
-                        ),
-                        IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.red),
-                          onPressed: isSelected
-                              ? () => showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                              title: const Text("Delete Movie"),
-                              content: const Text("Are you sure you want to delete this movie?"),
-                              actions: [
-                                TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
-                                TextButton(
-                                  onPressed: () {
-                                    setState(() {
-                                      selectedRowIndex;
-                                    });
-                                    Navigator.pop(context);
-                                    deleteMovie(index,movie);
-                                  },
-                                  child: const Text("OK"),
-                                ),
-                              ],
-                            ),
-                          )
-                              : null,
-                          tooltip: 'Delete Movie Details',
-                        ),
-                      ],
-                    )),
+
+          if (state is MovieFetched) {
+
+            MovieCubit.get(context).ahmed = state.movies;
+          }
+          else {
+            MovieCubit.get(context).ahmed = MovieCubit.get(context).fetchedCinemaMovies??[];
+          }
+
+          if(state is MovieLoading){
+            return const Center(
+              child: CircularProgressIndicator(), // Custom loading indicator widget
+            );
+          }
+         if (MovieCubit.get(context).ahmed == null || MovieCubit.get(context).ahmed.isEmpty) {
+            return const Center(
+              child: Text('No movies available', style: TextStyle(color: Color(0xFF5A2D82))),
+            );
+          }
+          return Stack(
+            children: [
+              // DataTable
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: DataTable(
+                  showCheckboxColumn: false,
+                  columnSpacing: 70,
+                  headingRowColor: MaterialStateProperty.all(Colors.white),
+                  dividerThickness: 1.0,
+                  dataRowColor: MaterialStateProperty.resolveWith<Color?>((states) {
+                    if (states.contains(MaterialState.selected)) {
+                      return Colors.grey[300];
+                    }
+                    return Colors.white;
+                  }),
+                  columns: const [
+                    DataColumn(label: Text('Movie name', style: TextStyle(color: Colors.grey))),
+                    DataColumn(label: Text('Duration', style: TextStyle(color: Colors.grey))),
+                    DataColumn(label: Text('Movie Genre', style: TextStyle(color: Colors.grey))),
+                    DataColumn(label: Text('Language', style: TextStyle(color: Colors.grey))),
+                    DataColumn(label: Text('Status', style: TextStyle(color: Colors.grey))),
+                    DataColumn(label: Text('Censorship', style: TextStyle(color: Colors.grey))),
+                    DataColumn(label: Text('Action', style: TextStyle(color: Colors.grey))),
                   ],
-                );
-              }).toList(),
-            ),
+                  rows: MovieCubit.get(context).ahmed.map((movie) {
+                    final int index = MovieCubit.get(context).ahmed!.indexOf(movie);
+                    final bool isSelected = selectedRowIndex == index;
+
+                    return DataRow(
+                      selected: isSelected,
+                      onSelectChanged: (selected) {
+                        setState(() {
+                          selectedRowIndex = isSelected ? null : index;
+                        });
+                      },
+                      cells: [
+                        DataCell(Row(children: [
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(30),
+                            child: Image.memory(
+                              base64Decode(movie['poster_image'] ?? ''),
+                              width: 40,
+                              height: 40,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(movie['name'] ?? '', style: const TextStyle(color: Colors.black)),
+                        ])),
+                        DataCell(Text(movie['duration'] ?? '', style: const TextStyle(color: Colors.black))),
+                        DataCell(Text(movie['category'] ?? '', style: const TextStyle(color: Colors.black))),
+                        DataCell(Text(movie['language'] ?? '', style: const TextStyle(color: Colors.black))),
+                        DataCell(Row(children: [
+                          Container(
+                            width: 10,
+                            height: 10,
+                            decoration: BoxDecoration(
+                              color: getStatusColor(movie['status'] ?? ''),
+                              shape: BoxShape.circle,
+                            ),
+                          ),
+                          const SizedBox(width: 8),
+                          Text(movie['status'] ?? '', style: TextStyle(color: getStatusColor(movie['status'] ?? ''))),
+                        ])),
+                        DataCell(Text(movie['age_rating'] ?? '', style: const TextStyle(color: Colors.black))),
+                        DataCell(Row(
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.remove_red_eye, color: Colors.purple),
+                              onPressed: isSelected
+                                  ? () => showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text("View Movie"),
+                                  content: const Text("Do you want to view this movie details?"),
+                                  actions: [
+                                    TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        navigateToMovieDetail(context, movie, isViewOnly: true);
+                                      },
+                                      child: const Text("View"),
+                                    ),
+                                  ],
+                                ),
+                              )
+                                  : null,
+                              tooltip: 'View Only',
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.edit, color: Colors.green),
+                              onPressed: isSelected
+                                  ? () => showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text("Edit Movie"),
+                                  content: const Text("Do you want to edit this movie?"),
+                                  actions: [
+                                    TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+                                    TextButton(
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                        navigateToMovieDetail(context, movie, isEditing: true);
+                                      },
+                                      child: const Text("Edit"),
+                                    ),
+                                  ],
+                                ),
+                              )
+                                  : null,
+                              tooltip: 'Edit',
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.red),
+                              onPressed: isSelected && !isDeleting
+                                  ? () => showDialog(
+                                context: context,
+                                builder: (context) => AlertDialog(
+                                  title: const Text("Delete Movie"),
+                                  content: const Text("Are you sure you want to delete this movie?"),
+                                  actions: [
+                                    TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+                                    TextButton(
+                                      onPressed: () async {
+                                        Navigator.pop(context);
+                                        await deleteMovie(index, movie);
+                                       isDeleting = false;
+                                      },
+                                      child: const Text("OK"),
+                                    ),
+                                  ],
+                                ),
+                              )
+                                  : null,
+                              tooltip: 'Delete',
+                            ),
+                          ],
+                        )),
+                      ],
+                    );
+                  }).toList(),
+                ),
+              ),
+
+              //Show loading indicator in the center when deleting
+              if (isDeleting)
+                const Center(
+                  child: LoadingIndicator(), // Custom loading indicator widget
+                ),
+            ],
           );
         },
       ),
     );
   }
 }
+
 
 
