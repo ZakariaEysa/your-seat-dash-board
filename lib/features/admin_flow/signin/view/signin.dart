@@ -388,12 +388,10 @@ class _SignInContentState extends State<SignInContent> {
 
                 // Overlay loading in the center of screen
                 if (state is AuthLoading)
-                  Positioned.fill(
-                    child: Container(
-                      color: Colors.black.withOpacity(0.3),
-                      child: const Center(
-                        child: LoadingIndicator(),
-                      ),
+                  Container(
+                    color: Colors.black.withOpacity(0.3),
+                    child: const Center(
+                      child: LoadingIndicator(),
                     ),
                   ),
               ],
