@@ -32,7 +32,7 @@ class _MoviesState extends State<Movies> {
                 height: 44.h,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF560B76),
+                    backgroundColor: const Color(0xFF560B76),
                     padding: EdgeInsets.symmetric(horizontal: 3.h, vertical: 5.w),
                   ),
                   onPressed: () {
