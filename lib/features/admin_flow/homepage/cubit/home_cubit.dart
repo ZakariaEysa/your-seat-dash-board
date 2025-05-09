@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:yourseatgraduationproject/utils/app_logs.dart';
 
+import '../../../../data/local_storage_service/local_storage_service.dart';
 import '../models/ticket_model.dart';
 part 'home_state.dart';
 
@@ -11,8 +12,11 @@ class HomeCubit extends Cubit<HomeState> {
   HomeCubit() : super(HomeInitial());
   static HomeCubit get(context) => BlocProvider.of<HomeCubit>(context);
   List<TicketModel> ticketsList = [];
+  String? cinemaName;
 
-  Future<void> getCinemaTickets(String cinemaName) async {
+  Future<void> getCinemaTickets() async {
+    cinemaName = extractUsername(LocalStorageService.getUserData() ?? "");
+
     emit(TicketsStatesLoading());
     try {
       final firestore = FirebaseFirestore.instance;
@@ -33,7 +37,7 @@ class HomeCubit extends Cubit<HomeState> {
       final data = cinemaDoc.data();
       if (data == null || !data.containsKey('tickets')) {
         print('⚠️ No "tickets" field found in the cinema document.');
-        throw Exception('No "tickets" field found in the cinema document.');
+        throw Exception('No tickets yet .');
       }
 
       final rawTickets = data['tickets'];
@@ -62,6 +66,18 @@ class HomeCubit extends Cubit<HomeState> {
       print('📌 StackTrace:\n$stackTrace');
 
       emit(TicketsStatesError(e.toString()));
+    }
+  }
+
+  String extractUsername(String email) {
+    AppLogs.errorLog(email.toString());
+
+    // نفترض إن الإيميل دايماً بينتهي بـ @admin.com
+    if (email.contains("@")) {
+      // بنشيل الجزء بتاع @admin.com ونرجع الاسم
+      return email.substring(0, email.indexOf("@admin.com"));
+    } else {
+      return "Invalid email format"; // لو الإيميل مش بالصيغة المطلوبة
     }
   }
 }

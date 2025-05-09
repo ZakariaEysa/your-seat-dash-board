@@ -41,6 +41,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../data/local_storage_service/local_storage_service.dart';
+import '../../../../../utils/app_logs.dart';
+
 part 'sales_dash_state.dart';
 
 class SalesDashCubit extends Cubit<SalesDashState> {
@@ -49,7 +52,11 @@ class SalesDashCubit extends Cubit<SalesDashState> {
   int? totalIncome;
   int? totalCustomers;
   int? totalMovies;
+    String? cinemaName;
+
   Future<void> getTotalIncome() async {
+        cinemaName = extractUsername(LocalStorageService.getUserData() ?? "");
+
     if (totalIncome != null && totalCustomers != null) {
       emit(SalesDashSuccess(
         totalIncome: totalIncome ?? 0,
@@ -63,7 +70,7 @@ class SalesDashCubit extends Cubit<SalesDashState> {
     try {
       DocumentSnapshot doc = await FirebaseFirestore.instance
           .collection('Cinemas')
-          .doc("Point 90 Cinema")
+          .doc(cinemaName)
           .get();
 
       List<dynamic> tickets = doc.get('tickets');
@@ -100,7 +107,7 @@ class SalesDashCubit extends Cubit<SalesDashState> {
     try {
       DocumentSnapshot doc = await FirebaseFirestore.instance
           .collection('Cinemas')
-          .doc("Point 90 Cinema")
+          .doc(cinemaName)
           .get();
 
       List<dynamic> movies = doc.get('movies');
@@ -114,6 +121,18 @@ class SalesDashCubit extends Cubit<SalesDashState> {
           totalMovies: totalMovies));
     } catch (e) {
       emit(SalesDashError('Something went wrong :$e'));
+    }
+  }
+
+    String extractUsername(String email) {
+    AppLogs.errorLog(email.toString());
+
+    // نفترض إن الإيميل دايماً بينتهي بـ @admin.com
+    if (email.contains("@")) {
+      // بنشيل الجزء بتاع @admin.com ونرجع الاسم
+      return email.substring(0, email.indexOf("@admin.com"));
+    } else {
+      return "Invalid email format"; // لو الإيميل مش بالصيغة المطلوبة
     }
   }
 }

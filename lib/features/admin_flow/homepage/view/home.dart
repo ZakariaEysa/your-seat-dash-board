@@ -18,7 +18,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    HomeCubit.get(context).getCinemaTickets("Plaza Cinema");
+    HomeCubit.get(context).getCinemaTickets();
   }
 
   @override
