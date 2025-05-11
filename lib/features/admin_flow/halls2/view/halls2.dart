@@ -245,7 +245,7 @@ class _Halls2State extends State<Halls2> {
     return Scaffold(
       body: isLoading
           ? const Center(child: CircularProgressIndicator(
-        color: Colors.whit,
+        color: Colors.white,
       ))
           : Container(
         color: Colors.white,

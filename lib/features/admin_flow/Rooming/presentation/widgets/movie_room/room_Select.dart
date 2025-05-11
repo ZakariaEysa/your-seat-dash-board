@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../../../../data/local_storage_service/local_storage_service.dart';
 
 class RoomDropdownWidget extends StatefulWidget {
   final String? initialValue;
@@ -16,19 +19,52 @@ class RoomDropdownWidget extends StatefulWidget {
 }
 
 class RoomDropdownWidgetState extends State<RoomDropdownWidget> {
-  final List<String> rooms = ['ROOM 1', 'ROOM 2', 'ROOM 3', 'ROOM 4'];
-
+  List<String> rooms = [];
   String? selectedRoom;
   String? lastSavedRoom;
   bool roomError = false;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    if (widget.initialValue != null && rooms.contains(widget.initialValue)) {
-      selectedRoom = widget.initialValue;
+    fetchRoomsFromFirestore();
+  }
+  String extractUsername(String email) {
+    if (email.contains("@")) {
+      return email.substring(0, email.indexOf("@admin.com"));
     } else {
-      selectedRoom = null;
+      return "Invalid email format";
+    }
+  }
+  Future<void> fetchRoomsFromFirestore() async {
+    try {
+      final String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+      final doc = await FirebaseFirestore.instance.collection('Cinemas').doc(cinemaId).get();
+
+      if (doc.exists) {
+        final data = doc.data() as Map<String, dynamic>;
+        final List<dynamic>? halls = data['halls'];
+
+        if (halls != null) {
+          rooms = halls
+              .map((hall) => hall['hallName']?.toString())
+              .where((name) => name != null && name.isNotEmpty)
+              .cast<String>()
+              .toList();
+        }
+      }
+    } catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('⚠️ Error loading rooms: $e'), backgroundColor: Colors.red),
+      );
+    } finally {
+      setState(() {
+        isLoading = false;
+        if (widget.initialValue != null && rooms.contains(widget.initialValue)) {
+          selectedRoom = widget.initialValue;
+        }
+      });
     }
   }
 
@@ -63,7 +99,9 @@ class RoomDropdownWidgetState extends State<RoomDropdownWidget> {
           borderRadius: BorderRadius.circular(8.r),
         ),
         alignment: Alignment.center,
-        child: DropdownButton<String>(
+        child: isLoading
+            ? Center(child: CircularProgressIndicator(strokeWidth: 1.5))
+            : DropdownButton<String>(
           value: selectedRoom,
           hint: Text(
             'Room',
@@ -91,4 +129,6 @@ class RoomDropdownWidgetState extends State<RoomDropdownWidget> {
       ),
     );
   }
+
+
 }

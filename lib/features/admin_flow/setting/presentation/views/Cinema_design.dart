@@ -166,12 +166,12 @@ class _CinemaDesignState extends State<CinemaDesign> {
       if (documentSnapshot.exists) {
         final data = documentSnapshot.data();
         if (data != null &&
-            data['poster_image'] != null &&
+            data['name_image'] != null &&
             data['coverSize'] != null &&
-            data['coverContent'] != null) {
-          final String coverName = data['poster_image'];
+            data['poster_image'] != null) {
+          final String coverName = data['name_image'];
           final int coverSize = data['coverSize'];
-          final String base64Content = data['coverContent'];
+          final String base64Content = data['poster_image'];
 
           Uint8List bytes = base64Decode(base64Content);
 
@@ -207,9 +207,9 @@ class _CinemaDesignState extends State<CinemaDesign> {
       String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
 
       final coverInfo = {
-        'poster_image': pickedCover!.name,
+        'name_image': pickedCover!.name,
         'coverSize': pickedCover!.size,
-        'coverContent': base64Cover,
+        'poster_image': base64Cover,
         'timestamp': FieldValue.serverTimestamp(),
       };
 
