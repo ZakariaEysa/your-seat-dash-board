@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+import '../../../../../../data/local_storage_service/local_storage_service.dart';
+
 
 class MovieDropdownWidget extends StatefulWidget {
   final String? initialValue;
@@ -16,24 +20,37 @@ class MovieDropdownWidget extends StatefulWidget {
 }
 
 class MovieDropdownWidgetState extends State<MovieDropdownWidget> {
-  final List<String> movies = [
-    'Avengers: Infinity War',
-    'Guardians Of The Galaxy',
-    'Shang chi: Legend of the Ten Rings',
-  ];
-
+  List<String> movies = [];
   String? selectedMovie;
   String? lastSavedMovie;
   bool movieError = false;
+  bool isLoading = true;
 
   @override
   void initState() {
     super.initState();
-    // تأكد من أن القيمة الابتدائية موجودة في الليست قبل تعيينها
-    if (widget.initialValue != null && movies.contains(widget.initialValue)) {
-      selectedMovie = widget.initialValue;
+    fetchMovies();
+  }
+
+  Future<void> fetchMovies() async {
+    final String email = LocalStorageService.getUserData() ?? "";
+    final String cinemaId = extractUsername(email);
+    final fetchedMovies = await fetchMoviesFromFirestore(cinemaId);
+
+    setState(() {
+      movies = fetchedMovies;
+      isLoading = false;
+      if (widget.initialValue != null && movies.contains(widget.initialValue)) {
+        selectedMovie = widget.initialValue;
+      }
+    });
+  }
+
+  String extractUsername(String email) {
+    if (email.contains("@")) {
+      return email.substring(0, email.indexOf("@admin.com"));
     } else {
-      selectedMovie = null;
+      return "Invalid email format";
     }
   }
 
@@ -65,7 +82,9 @@ class MovieDropdownWidgetState extends State<MovieDropdownWidget> {
         border: Border.all(color: movieError ? Colors.red : Colors.black),
         borderRadius: BorderRadius.circular(8.r),
       ),
-      child: DropdownButton<String>(
+      child: isLoading
+          ? const Center(child: CircularProgressIndicator())
+          : DropdownButton<String>(
         value: selectedMovie,
         hint: const Text('Movie name', style: TextStyle(color: Colors.black)),
         icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
@@ -88,5 +107,32 @@ class MovieDropdownWidgetState extends State<MovieDropdownWidget> {
         style: const TextStyle(color: Colors.black),
       ),
     );
+  }
+}
+
+// دالة لجلب الأفلام من Firebase
+Future<List<String>> fetchMoviesFromFirestore(String cinemaId) async {
+  try {
+    final docSnapshot = await FirebaseFirestore.instance
+        .collection('Cinemas')
+        .doc(cinemaId)
+        .get();
+
+    final data = docSnapshot.data();
+    if (data == null || !data.containsKey('movies')) return [];
+
+    final List<dynamic> moviesList = data['movies'];
+
+    List<String> movieNames = [];
+    for (var movie in moviesList) {
+      if (movie is Map<String, dynamic> && movie['name'] != null) {
+        movieNames.add(movie['name']);
+      }
+    }
+
+    return movieNames;
+  } catch (e) {
+    print('Error fetching movies: $e');
+    return [];
   }
 }

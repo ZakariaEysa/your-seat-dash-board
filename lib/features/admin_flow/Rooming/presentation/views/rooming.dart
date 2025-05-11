@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:intl/intl.dart';
 
+import '../../../../../data/local_storage_service/local_storage_service.dart';
 import '../../../../../widgets/button/button_builder.dart';
 import '../../../rooming_sechduling/presentation/widgets/schedule_item.dart';
 import '../widgets/date_time/date_screen.dart';
@@ -17,6 +20,84 @@ class Rooming extends StatefulWidget {
 
 class _RoomingState extends State<Rooming> {
   final GlobalKey<DateTimeFieldsState> dateTimeKey = GlobalKey();
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+  String extractUsername(String email) {
+    if (email.contains("@")) {
+      return email.substring(0, email.indexOf("@admin.com"));
+    } else {
+      return "Invalid email format";
+    }
+  }
+
+  Future<void> saveScheduleToFirebase(List<ScheduleItem> items) async {
+    try {
+      final String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+      final List<Map<String, dynamic>> scheduleData = [];
+      final DateFormat inputFormat = DateFormat('dd/MM/yyyy');
+      final DateFormat outputFormat = DateFormat('yyyy-MM-dd');
+
+      for (final item in items) {
+        final DateTime startDate = inputFormat.parse(item.startDate);
+        final DateTime endDate = inputFormat.parse(item.endDate);
+        final String hall = item.room;
+        final String time = item.startTime;
+
+        for (DateTime date = startDate;
+        !date.isAfter(endDate);
+        date = date.add(const Duration(days: 1))) {
+          final formattedDate = outputFormat.format(date);
+
+          final existingEntry = scheduleData.firstWhere(
+                (entry) => entry['date'] == formattedDate && entry['hall'] == hall,
+            orElse: () => {},
+          );
+
+          if (existingEntry.isNotEmpty) {
+            (existingEntry['time'] as List).add({'time': time});
+          } else {
+            scheduleData.add({
+              'date': formattedDate,
+              'hall': hall,
+              'time': [
+                {'time': time}
+              ],
+            });
+          }
+        }
+      }
+
+      final userDoc = _firestore.collection('Cinemas').doc(cinemaId);
+
+      final userSnapshot = await userDoc.get();
+      if (!userSnapshot.exists) {
+        await userDoc.set({'times': []});
+        print("Created new user document with empty schedule list.");
+      }
+
+      await userDoc.update({
+        'times': FieldValue.arrayUnion(scheduleData),
+      });
+
+      print('✅ Schedule saved to Firebase successfully: $scheduleData');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Schedule saved to Firebase successfully!'),
+          backgroundColor: Colors.green,
+        ),
+      );
+    } catch (e) {
+      print('❌ Error saving schedule: $e');
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Error saving schedule: $e'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
+  }
 
   void addSchedule() {
     final dateTimeFieldsState = dateTimeKey.currentState;
@@ -34,7 +115,6 @@ class _RoomingState extends State<Rooming> {
       return;
     }
 
-    // ✅ Validate time correctness
     final validationMessage = RoomingValidator.validateScheduleItems(items);
     if (validationMessage != null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -46,7 +126,6 @@ class _RoomingState extends State<Rooming> {
       return;
     }
 
-    // ✅ Check for conflict with existing schedules
     final conflictMessage = RoomingValidator.checkConflictWithExisting(
         widget.scheduleItems, items);
     if (conflictMessage != null) {
@@ -59,7 +138,6 @@ class _RoomingState extends State<Rooming> {
       return;
     }
 
-    // ✅ Check for exact duplicates
     final existingKeys = widget.scheduleItems.map((item) =>
     '${item.room}|${item.movie}|${item.startDate}|${item.startTime}|${item.endDate}|${item.endTime}'
     ).toSet();
@@ -79,14 +157,15 @@ class _RoomingState extends State<Rooming> {
       return;
     }
 
-    // ✅ Add to schedule
     setState(() {
       widget.scheduleItems.insertAll(0, newItems);
     });
 
+    saveScheduleToFirebase(newItems);
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Tables added successfully!'),
+        content: Text('Schedules added successfully!'),
         backgroundColor: Colors.green,
       ),
     );
