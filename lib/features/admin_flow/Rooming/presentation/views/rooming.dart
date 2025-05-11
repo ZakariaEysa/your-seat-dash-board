@@ -33,22 +33,46 @@ class _RoomingState extends State<Rooming> {
   Future<void> saveScheduleToFirebase(List<ScheduleItem> items) async {
     try {
       final String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
-      final List<Map<String, dynamic>> scheduleData = [];
       final DateFormat inputFormat = DateFormat('dd/MM/yyyy');
       final DateFormat outputFormat = DateFormat('yyyy-MM-dd');
 
+      final DocumentReference cinemaDoc = _firestore.collection('Cinemas').doc(cinemaId);
+      final DocumentSnapshot cinemaSnapshot = await cinemaDoc.get();
+
+      if (!cinemaSnapshot.exists) {
+        throw Exception("Cinema document does not exist.");
+      }
+
+      final Map<String, dynamic> existingData = cinemaSnapshot.data() as Map<String, dynamic>;
+
+      final List<dynamic> moviesList = existingData['movies'] ?? [];
+
       for (final item in items) {
+        final String movieName = item.movie;
         final DateTime startDate = inputFormat.parse(item.startDate);
         final DateTime endDate = inputFormat.parse(item.endDate);
         final String hall = item.room;
         final String time = item.startTime;
+
+        final int movieIndex = moviesList.indexWhere(
+                (movie) => movie is Map && movie['name'] == movieName);
+
+        if (movieIndex == -1) {
+          print('❌ Movie "$movieName" not found in the list.');
+          continue;
+        }
+
+        final movie = Map<String, dynamic>.from(moviesList[movieIndex]);
+
+        List<Map<String, dynamic>> schedule =
+            (movie['times'] as List?)?.cast<Map<String, dynamic>>() ?? [];
 
         for (DateTime date = startDate;
         !date.isAfter(endDate);
         date = date.add(const Duration(days: 1))) {
           final formattedDate = outputFormat.format(date);
 
-          final existingEntry = scheduleData.firstWhere(
+          final existingEntry = schedule.firstWhere(
                 (entry) => entry['date'] == formattedDate && entry['hall'] == hall,
             orElse: () => {},
           );
@@ -56,7 +80,7 @@ class _RoomingState extends State<Rooming> {
           if (existingEntry.isNotEmpty) {
             (existingEntry['time'] as List).add({'time': time});
           } else {
-            scheduleData.add({
+            schedule.add({
               'date': formattedDate,
               'hall': hall,
               'time': [
@@ -65,30 +89,23 @@ class _RoomingState extends State<Rooming> {
             });
           }
         }
+
+        movie['times'] = schedule;
+        moviesList[movieIndex] = movie;
       }
 
-      final userDoc = _firestore.collection('Cinemas').doc(cinemaId);
+      await cinemaDoc.update({'movies': moviesList});
 
-      final userSnapshot = await userDoc.get();
-      if (!userSnapshot.exists) {
-        await userDoc.set({'times': []});
-        print("Created new user document with empty schedule list.");
-      }
-
-      await userDoc.update({
-        'times': FieldValue.arrayUnion(scheduleData),
-      });
-
-      print('✅ Schedule saved to Firebase successfully: $scheduleData');
+      print('✅ Schedule updated inside movies list successfully.');
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Schedule saved to Firebase successfully!'),
+          content: Text('Schedule saved inside movies list!'),
           backgroundColor: Colors.green,
         ),
       );
     } catch (e) {
-      print('❌ Error saving schedule: $e');
+      print('❌ Error saving schedule inside movies list: $e');
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
