@@ -33,62 +33,101 @@ class _RoomingState extends State<Rooming> {
   Future<void> saveScheduleToFirebase(List<ScheduleItem> items) async {
     try {
       final String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
-      final List<Map<String, dynamic>> scheduleData = [];
       final DateFormat inputFormat = DateFormat('dd/MM/yyyy');
       final DateFormat outputFormat = DateFormat('yyyy-MM-dd');
+      final DateFormat timeFormat = DateFormat('HH:mm');
+
+      final DocumentReference cinemaDoc = _firestore.collection('Cinemas').doc(cinemaId);
+      final DocumentSnapshot cinemaSnapshot = await cinemaDoc.get();
+
+      if (!cinemaSnapshot.exists) {
+        throw Exception("Cinema document does not exist.");
+      }
+
+      final Map<String, dynamic> existingData = cinemaSnapshot.data() as Map<String, dynamic>;
+      final List<dynamic> moviesList = existingData['movies'] ?? [];
 
       for (final item in items) {
+        final String movieName = item.movie;
         final DateTime startDate = inputFormat.parse(item.startDate);
         final DateTime endDate = inputFormat.parse(item.endDate);
         final String hall = item.room;
-        final String time = item.startTime;
+        final String startTimeStr = item.startTime;
 
-        for (DateTime date = startDate;
-        !date.isAfter(endDate);
-        date = date.add(const Duration(days: 1))) {
+        final int movieIndex = moviesList.indexWhere(
+              (movie) => movie is Map && movie['name'] == movieName,
+        );
+
+        if (movieIndex == -1) {
+          print('❌ Movie "$movieName" not found in the list.');
+          continue;
+        }
+
+        final movie = Map<String, dynamic>.from(moviesList[movieIndex]);
+
+        // استخراج مدة الفيلم من String مثل "120m"
+        final String? durationStr = movie['duration'] as String?;
+        if (durationStr == null || !RegExp(r'^\d+m$').hasMatch(durationStr)) {
+          print('❌ Invalid or missing duration for movie "$movieName".');
+          continue;
+        }
+        final int duration = int.parse(durationStr.replaceAll('m', ''));
+
+        // المدة النهائية بعد إضافة نصف ساعة
+        final int interval = duration + 30;
+
+        // تحويل وقت البداية إلى DateTime
+        final DateTime startTime = timeFormat.parse(startTimeStr);
+
+        List<Map<String, dynamic>> schedule =
+            (movie['times'] as List?)?.cast<Map<String, dynamic>>() ?? [];
+
+        for (DateTime date = startDate; !date.isAfter(endDate); date = date.add(const Duration(days: 1))) {
           final formattedDate = outputFormat.format(date);
+          DateTime currentTime = DateTime(date.year, date.month, date.day, startTime.hour, startTime.minute);
+          final DateTime endOfDay = DateTime(date.year, date.month, date.day, 23, 59);
 
-          final existingEntry = scheduleData.firstWhere(
+          final existingEntry = schedule.firstWhere(
                 (entry) => entry['date'] == formattedDate && entry['hall'] == hall,
             orElse: () => {},
           );
 
+          List<Map<String, dynamic>> timesList = [];
+
+          // إذا كان هناك مدخل قديم، اجلب الأوقات القديمة
           if (existingEntry.isNotEmpty) {
-            (existingEntry['time'] as List).add({'time': time});
-          } else {
-            scheduleData.add({
-              'date': formattedDate,
-              'hall': hall,
-              'time': [
-                {'time': time}
-              ],
-            });
+            timesList = (existingEntry['time'] as List).cast<Map<String, dynamic>>();
+            schedule.removeWhere((entry) =>
+            entry['date'] == formattedDate && entry['hall'] == hall);
           }
+
+          while (currentTime.isBefore(endOfDay)) {
+            timesList.add({'time': timeFormat.format(currentTime)});
+            currentTime = currentTime.add(Duration(minutes: interval));
+          }
+
+          schedule.add({
+            'date': formattedDate,
+            'hall': hall,
+            'time': timesList,
+          });
         }
+
+        movie['times'] = schedule;
+        moviesList[movieIndex] = movie;
       }
 
-      final userDoc = _firestore.collection('Cinemas').doc(cinemaId);
-
-      final userSnapshot = await userDoc.get();
-      if (!userSnapshot.exists) {
-        await userDoc.set({'times': []});
-        print("Created new user document with empty schedule list.");
-      }
-
-      await userDoc.update({
-        'times': FieldValue.arrayUnion(scheduleData),
-      });
-
-      print('✅ Schedule saved to Firebase successfully: $scheduleData');
+      await cinemaDoc.update({'movies': moviesList});
+      print('✅ Schedule updated inside movies list successfully.');
 
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Schedule saved to Firebase successfully!'),
+          content: Text('Schedule saved inside movies list!'),
           backgroundColor: Colors.green,
         ),
       );
     } catch (e) {
-      print('❌ Error saving schedule: $e');
+      print('❌ Error saving schedule inside movies list: $e');
 
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
