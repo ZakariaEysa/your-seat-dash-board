@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class NewTextField extends StatelessWidget {
   final TextEditingController? controller;
   final String? hintText;
+  final String? initialValue;
   final bool obscureText;
   final Color borderColor;
   final Color errorColor;
@@ -27,6 +28,7 @@ class NewTextField extends StatelessWidget {
     Key? key,
     this.controller,
     this.hintText,
+    this.initialValue,
     this.obscureText = false,
     this.borderColor = Colors.grey,
     this.errorColor = Colors.red,
@@ -55,6 +57,7 @@ class NewTextField extends StatelessWidget {
     isMultiline ? TextInputType.multiline : (keyboardType ?? TextInputType.text);
 
     return TextFormField(
+      initialValue: initialValue,
       controller: controller,
       obscureText: obscureText,
       style: textStyle ?? TextStyle(color: enabled ? Colors.black : Colors.black54),

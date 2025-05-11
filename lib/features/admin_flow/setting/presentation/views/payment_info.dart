@@ -49,32 +49,32 @@ class PaymentInfo extends StatelessWidget {
 
                     SizedBox(height: 50.h,),
 
-                          ButtonBuilder(
-                            text: 'Save',
-                            onTap: () {
-                              if (paymentTextKey.currentState?.validateFields() ?? false) {
-                                paymentTextKey.currentState?.savePaymentDetails();// ✅ حفظ البيانات
-                              } else {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('⚠️ Please fill all fields or fix errors!'),
-                                    backgroundColor: Colors.red,
-                                    duration: Duration(seconds: 2),
-                                  ),
-                                );
-                              }
-                            },
-
-
-                            width: 45.w,
-                            height: 60.h,
-                            buttonColor: const Color(0xFF560B76),
-                            frameColor: const Color(0xFF560B76),
-                            borderShape: BorderRadius.circular(15.r),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 8.sp,
+                          Padding(
+                            padding:EdgeInsets.only(right: 60.w),
+                            child: ButtonBuilder(
+                              text: 'Save',
+                              onTap: () {
+                                if (paymentTextKey.currentState?.validateFields() ?? false) {
+                                  paymentTextKey.currentState?.savePaymentDetails();// ✅ حفظ البيانات
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('⚠️ Please fill all fields or fix errors!'),
+                                      backgroundColor: Colors.red,
+                                      duration: Duration(seconds: 2),
+                                    ),
+                                  );
+                                }
+                              }, width: 45.w,
+                              height: 60.h,
+                              buttonColor: const Color(0xFF560B76),
+                              frameColor: const Color(0xFF560B76),
+                              borderShape: BorderRadius.circular(15.r),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 8.sp,
+                              ),
                             ),
                           ),
 

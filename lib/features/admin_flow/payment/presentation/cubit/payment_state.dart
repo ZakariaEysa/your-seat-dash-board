@@ -24,8 +24,7 @@ final class PaymentError extends PaymentState {
 final class TransactionLoading extends PaymentState {}
 
 final class TransactionSuccess extends PaymentState {
-  final List<TransactionModel> transactions;
-  const TransactionSuccess(this.transactions);
+  const TransactionSuccess();
 }
 
 final class TransactionError extends PaymentState {

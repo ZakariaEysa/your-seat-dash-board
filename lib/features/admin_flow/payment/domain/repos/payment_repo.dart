@@ -6,6 +6,7 @@ abstract class PaymentRepo {
   Future<Either<FailureService, String?>> payWithPayMob(num amount);
   Future<Either<FailureService, String?>> getAuthToken();
   Map<String, int> getTransactionStats();
+  void resetTransactionStats();
 
   Future<Either<FailureService, int>> getOrderId(
       {required String token, required String amount});

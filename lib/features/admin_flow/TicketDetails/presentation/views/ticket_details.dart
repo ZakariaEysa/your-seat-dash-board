@@ -23,7 +23,6 @@ class _TicketDetailsState extends State<TicketDetails> {
 
   @override
   Widget build(BuildContext context) {
-    print('TicketDetails build called');
     return Scaffold(
       backgroundColor: Colors.white,
       body: Scrollbar(
@@ -37,7 +36,7 @@ class _TicketDetailsState extends State<TicketDetails> {
               SizedBox(height: 80.h),
               const TicketId(),
               SizedBox(height: 50.h),
-              const TicketInfo(),
+               TicketInfo(),
               SizedBox(height: 80.h),
             ],
           ),

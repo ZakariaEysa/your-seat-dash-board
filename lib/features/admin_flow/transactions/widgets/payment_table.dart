@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:yourseatgraduationproject/utils/app_logs.dart';
 
 import '../../../../widgets/button/button_builder.dart';
 import '../../payment/data/model/transaction_model.dart';
+import '../../payment/presentation/cubit/payment_cubit.dart';
 
 class PaymentTable extends StatefulWidget {
   final List<TransactionModel> transactions;
@@ -15,7 +18,6 @@ class PaymentTable extends StatefulWidget {
 
 class _PaymentTableState extends State<PaymentTable> {
   String? selectedStatus;
-  int _visibleRows = 10; // عدد الصفوف المرئية حالياً
   final int _rowsPerLoad = 10; // عدد الصفوف التي ستضاف عند الضغط على "See More"
   final List<String> paymentStatuses = ['Complete', 'Refund', 'Rejected'];
 
@@ -23,9 +25,9 @@ class _PaymentTableState extends State<PaymentTable> {
   Widget build(BuildContext context) {
     List<TransactionModel> filteredTransactions = (selectedStatus == null
         ? widget.transactions
-        : widget.transactions.where((t) => t.status == selectedStatus).toList())
-        .take(_visibleRows) // أخذ فقط الصفوف المرئية
-        .toList();
+        : widget.transactions
+            .where((t) => t.status == selectedStatus)
+            .toList());
 
     return Container(
       color: Colors.white,
@@ -49,9 +51,9 @@ class _PaymentTableState extends State<PaymentTable> {
                   itemBuilder: (context) => <PopupMenuEntry<String>>[
                     const PopupMenuItem(value: 'All', child: Text('All')),
                     ...paymentStatuses.map((status) => PopupMenuItem(
-                      value: status,
-                      child: Text(status),
-                    )),
+                          value: status,
+                          child: Text(status),
+                        )),
                   ],
                 ),
               ],
@@ -130,32 +132,38 @@ class _PaymentTableState extends State<PaymentTable> {
                 }).toList(),
               ),
             ),
-          // In your PaymentTable widget's build method, replace the TextButton with:
-          if (widget.transactions.length > _visibleRows ||
-              (selectedStatus != null &&
-                  widget.transactions.where((t) => t.status == selectedStatus).length >
-                      _visibleRows))
-            Padding(
-              padding: EdgeInsets.only(top: 16.h), // Add some spacing
-              child: ButtonBuilder(
-                text: 'See More',
-                onTap: () {
-                  setState(() {
-                    _visibleRows += _rowsPerLoad;
-                  });
-                },
-                width: 35.w, // Custom width
-                height: 40.h, // Custom height
-                buttonColor: const Color(0xFF560B76),                // Transparent background
-                frameColor: Color(0xFF560B76), // Grey border
-                borderRadius: 20.0, // Less rounded corners
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 6.sp,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-            ),
+          BlocBuilder<PaymentCubit, PaymentState>(
+            builder: (context, state) {
+              if (state is TransactionLoading) {
+                return const Center(child: CircularProgressIndicator());
+              } else {
+                return Padding(
+                  padding: EdgeInsets.only(top: 16.h), // Add some spacing
+                  child: ButtonBuilder(
+                    text: 'See More',
+                    onTap: () {
+                      PaymentCubit.get(context).getAllTransactions();
+
+                      // setState(() {
+                      //   _visibleRows += _rowsPerLoad;
+                      // });
+                    },
+                    width: 35.w, // Custom width
+                    height: 40.h, // Custom height
+                    buttonColor:
+                        const Color(0xFF560B76), // Transparent background
+                    frameColor: Color(0xFF560B76), // Grey border
+                    borderRadius: 20.0, // Less rounded corners
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 6.sp,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
         ],
       ),
     );

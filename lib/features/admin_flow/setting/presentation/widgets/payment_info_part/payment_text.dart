@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../../../data/local_storage_service/local_storage_service.dart';
@@ -122,7 +122,7 @@ class PaymentTextState extends State<PaymentText> {
       _beneficiaryError = _validateName(_beneficiaryController.text.trim(), min: 3, max: 70);
       _countryError = _validateName(_countryController.text.trim(), min: 2, max: 40);
       _bankNameError = _validateName(_bankNameController.text.trim(), min: 3, max: 50);
-      _accountNumberError = _validateNumber(_accountNumberController.text.trim(), min: 8, max: 16);
+      _accountNumberError = _validateNumber(_accountNumberController.text.trim(), min: 13, max: 16);
       _ibanError = _validateIBAN(_ibanController.text.trim(), min: 15, max: 34);
       _swiftCodeError = _validateSwift(_swiftCodeController.text.trim(), min: 8, max: 11);
     });
@@ -142,26 +142,42 @@ class PaymentTextState extends State<PaymentText> {
     return null;
   }
 
-  String? _validateNumber(String value, {int min = 1, int max = 16}) {
+  String? _validateNumber(String value, {int min = 13, int max = 16}) {
     if (value.isEmpty) return "⚠️ This field is required!";
     if (!_numberRegExp.hasMatch(value)) return "⚠️ Only numbers allowed!";
     if (value.length < min || value.length > max) return "⚠️ Length must be $min - $max digits!";
     return null;
   }
 
-  String? _validateIBAN(String value, {int min = 15, int max = 34}) {
+
+
+  String? _validateIBAN(String value, {int min = 29, int max = 29}) {
     if (value.isEmpty) return "⚠️ This field is required!";
+    if (!value.startsWith('EG')) return "⚠️ IBAN must start with 'EG'!";
     if (!_ibanRegExp.hasMatch(value)) return "⚠️ IBAN must be uppercase letters and numbers!";
-    if (value.length < min || value.length > max) return "⚠️ Length must be $min - $max characters!";
+    if (value.length != 29) return "⚠️ IBAN must be exactly 29 characters!";
+
     return null;
   }
 
+
   String? _validateSwift(String value, {int min = 8, int max = 11}) {
     if (value.isEmpty) return "⚠️ This field is required!";
-    if (!_swiftCodeRegExp.hasMatch(value)) return "⚠️ Swift Code must be uppercase letters & numbers!";
-    if (value.length < min || value.length > max) return "⚠️ Length must be $min - $max characters!";
+
+    final RegExp swiftPattern = RegExp(r'^[A-Z0-9]+$');
+    if (!swiftPattern.hasMatch(value)) {
+      return "⚠️ Swift Code must be uppercase letters & numbers!";
+    }
+    if (value.length < min || value.length > max) {
+      return "⚠️ Length must be $min - $max characters!";
+    }
+    if (value.length >= 6 && value.substring(4, 6) != "EG") {
+      return "⚠️ Swift Code must contain 'EG' at position 5-6!";
+    }
+
     return null;
   }
+
 
   @override
   Widget build(BuildContext context) {

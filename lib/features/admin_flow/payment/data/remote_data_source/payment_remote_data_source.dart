@@ -11,6 +11,7 @@ abstract class PaymentRemoteDataSource {
   Future<String?> payWithPayMob(num amount);
   Future<String?> getAuthToken();
   Map<String, int> getTransactionStats();
+  void resetTransactionStats();
   Future<int> getOrderId({required String token, required String amount});
 
   Future<String> getPaymentKey(
@@ -28,6 +29,8 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
   int total = 0;
   int completed = 0;
   int refunded = 0;
+  int transactionPage = 1;
+
   Dio dio = Dio(BaseOptions(
     validateStatus: (status) => true, // يقبل أي status code
   ));
@@ -170,65 +173,66 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
   Future<List<TransactionModel>> getAllTransactions(
       {int limit = 10, int page = 1}) async {
     List<TransactionModel> allTransactions = [];
-    int page = 1;
-    int limit = 2;
+
+    int limit = 0;
     bool hasMore = true;
 
     try {
       final token = await getAuthToken(); // جلب التوكن
 
-      while (hasMore) {
-        final response = await dio.get(
-          "https://accept.paymob.com/api/acceptance/transactions",
-          queryParameters: {
-            "page": page,
-            "limit": limit,
+      // while (hasMore) {
+      final response = await dio.get(
+        "https://accept.paymob.com/api/acceptance/transactions",
+        queryParameters: {
+          "page": transactionPage,
+          "limit": limit,
+        },
+        options: Options(
+          headers: {
+            "Authorization": "Bearer $token",
+            "Content-Type": "application/json",
           },
-          options: Options(
-            headers: {
-              "Authorization": "Bearer $token",
-              "Content-Type": "application/json",
-            },
-          ),
-        );
+        ),
+      );
 
-        if (response.statusCode == 200) {
-          final results = response.data["results"] as List;
-          AppLogs.scussessLog(
-              "Page $page - Fetched ${results.length} transactions");
+      if (response.statusCode == 200) {
+        final results = response.data["results"] as List;
+        AppLogs.scussessLog(
+            "Page $transactionPage - Fetched ${results.length} transactions");
 
-          if (results.isEmpty) {
-            hasMore = false;
-          } else {
-            final transactions =
-                results.map((item) => TransactionModel.fromJson(item)).toList();
-
-            for (var tx in transactions) {
-              if (tx.success == true) completed++;
-              if (tx.isRefund == true || tx.isRefunded == true) refunded++;
-            }
-
-            allTransactions.addAll(transactions);
-            AppLogs.errorLog(results.length.toString());
-            AppLogs.errorLog(limit.toString());
-            if (page > limit) {
-              hasMore = false;
-            } else {
-              page++;
-            }
-          }
-        } else {
-          AppLogs.errorLog("Error fetching transactions: ${response.data}");
+        if (results.isEmpty) {
           hasMore = false;
+        } else {
+          final transactions =
+              results.map((item) => TransactionModel.fromJson(item)).toList();
+
+          for (var tx in transactions) {
+            if (tx.success == true) completed++;
+            if (tx.isRefund == true || tx.isRefunded == true) refunded++;
+          }
+
+          allTransactions.addAll(transactions);
+          AppLogs.errorLog(results.length.toString());
+          AppLogs.errorLog(limit.toString());
+          // if (page > limit) {
+          //   hasMore = false;
+          // } else {
+          //   page++;
+          // }
+          transactionPage++;
         }
+      } else {
+        AppLogs.errorLog("Error fetching transactions: ${response.data}");
+        hasMore = false;
       }
+      // }
 
       AppLogs.scussessLog(
           "✅ Total transactions fetched: ${allTransactions.length}");
       AppLogs.scussessLog("✔️ Successful transactions: $completed");
       AppLogs.scussessLog("↩️ Refunded transactions: $refunded");
 
-      total = allTransactions.length;
+      total += allTransactions.length;
     } catch (e) {
       AppLogs.errorLog("❌ Failed to fetch transactions: ${e.toString()}");
     }
@@ -238,5 +242,11 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
 
   Map<String, int> getTransactionStats() {
     return {"total": total, "completed": completed, "refunded": refunded};
+  }
+
+  void resetTransactionStats() {
+    total = 0;
+    completed = 0;
+    refunded = 0;
   }
 }

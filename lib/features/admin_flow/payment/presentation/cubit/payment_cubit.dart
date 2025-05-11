@@ -14,6 +14,7 @@ class PaymentCubit extends Cubit<PaymentState> {
   PaymentCubit(this.paymentRepo) : super(PaymentInitial());
   static PaymentCubit get(context) => BlocProvider.of<PaymentCubit>(context);
 
+  List<TransactionModel> transactions = [];
   Future<void> getAllTransactions({int limit = 10, int page = 1}) async {
     emit(TransactionLoading());
     final result =
@@ -21,9 +22,10 @@ class PaymentCubit extends Cubit<PaymentState> {
 
     result.fold(
       (failure) => emit(TransactionError(failure.errorMsg)),
-      (transactions) {
-        print(transactions[0]);
-        emit(TransactionSuccess(transactions));
+      (newTransactions) {
+        transactions.addAll(newTransactions);
+        print(newTransactions[0]);
+        emit(TransactionSuccess());
       },
     );
   }
@@ -126,4 +128,5 @@ class PaymentCubit extends Cubit<PaymentState> {
   }
 
   Map<String, int> getTransactionStats() => paymentRepo.getTransactionStats();
+  void resetTransactionStats() => paymentRepo.resetTransactionStats();
 }

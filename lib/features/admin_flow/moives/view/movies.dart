@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/moives/widgets/movietable.dart';
 import '../../movie_detail/presentation/view/movie_details.dart';
 
@@ -31,7 +32,7 @@ class _MoviesState extends State<Movies> {
                 height: 44.h,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Color(0xFF560B76),
+                    backgroundColor: const Color(0xFF560B76),
                     padding: EdgeInsets.symmetric(horizontal: 3.h, vertical: 5.w),
                   ),
                   onPressed: () {
@@ -43,6 +44,7 @@ class _MoviesState extends State<Movies> {
                         ),
                       ),
                     );
+                    print(MovieCubit.get(context).versionController.text);
                   },
 
                   child: Row(

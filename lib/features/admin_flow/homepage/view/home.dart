@@ -1,12 +1,25 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../cubit/home_cubit.dart';
 import '../widgets/MoviStates.dart';
 import '../widgets/booking_states.dart';
 import '../widgets/sales-overview.dart';
 
-class Home extends StatelessWidget {
+class Home extends StatefulWidget {
   const Home({super.key});
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    super.initState();
+    HomeCubit.get(context).getCinemaTickets();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,9 +60,26 @@ class Home extends StatelessWidget {
               ),
               SalesOverview(),
               SizedBox(height: 30.h),
-              BookingStates(),
+              BlocBuilder<HomeCubit, HomeState>(
+                builder: (context, state) {
+                  if (state is TicketsStatesSuccess ||
+                      HomeCubit.get(context).ticketsList.isNotEmpty) {
+                    return BookingStates(
+                      tickets: HomeCubit.get(context).ticketsList,
+                    );
+                  } else if (state is TicketsStatesError) {
+                    return Center(
+                      child: Text(state.errorMsg),
+                    );
+                  } else {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                },
+              ),
               SizedBox(height: 30.h),
-              MovieStates(),
+              const MovieStates(),
             ],
           ),
         ),

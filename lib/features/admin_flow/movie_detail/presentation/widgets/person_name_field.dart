@@ -5,6 +5,7 @@ import '../../../../../widgets/text_field/text_field/new_text_field_builder.dart
 
 class PersonNameField extends StatelessWidget {
   final String label;
+  final String? initialValue;
   final Uint8List? imageBytes;
   final VoidCallback? onUpload;
   final VoidCallback? onDeleteImage;
@@ -21,6 +22,7 @@ class PersonNameField extends StatelessWidget {
 
   const PersonNameField({
     Key? key,
+    this.initialValue,
     required this.label,
     this.imageBytes,
     this.onUpload,
@@ -106,6 +108,7 @@ class PersonNameField extends StatelessWidget {
               width: 120.w,
               height: 70.h,
               child: NewTextField(
+                initialValue: initialValue,
                 controller: controller,
                 keyboardType: TextInputType.text,
                 borderColor: isViewOnly

@@ -9,7 +9,8 @@ class PaymentRepoImpl implements PaymentRepo {
 
   PaymentRepoImpl(this.paymentRemoteDataSource);
 
-  Map<String, int> getTransactionStats() => paymentRemoteDataSource.getTransactionStats();
+  Map<String, int> getTransactionStats() =>
+      paymentRemoteDataSource.getTransactionStats();
   @override
   Future<Either<FailureService, List<TransactionModel>>> getAllTransactions(
       {int limit = 10, int page = 1}) async {
@@ -84,5 +85,9 @@ class PaymentRepoImpl implements PaymentRepo {
     } catch (e) {
       return Left(ServiceFailure(e.toString()));
     }
+  }
+
+  void resetTransactionStats() {
+    paymentRemoteDataSource.resetTransactionStats();
   }
 }

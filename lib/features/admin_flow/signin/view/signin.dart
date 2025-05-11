@@ -222,8 +222,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/signin/auth_cubit/auth_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/signin/auth_cubit/auth_state.dart';
+import 'package:yourseatgraduationproject/utils/app_logs.dart';
 import 'package:yourseatgraduationproject/widgets/loading_indicator.dart';
 import '../../../../data/local_storage_service/local_storage_service.dart';
 import '../../../../widgets/button/button_builder.dart';
@@ -334,7 +336,7 @@ class _SignInContentState extends State<SignInContent> {
                               SizedBox(height: 40.h),
                               Center(
                                 child: BlocConsumer<AuthCubit, AuthState>(
-                                  listener: (context, state) {
+                                  listener: (context, state) async {
                                     if (state is AuthSuccess) {
                                       Navigator.pushAndRemoveUntil(
                                         context,
@@ -342,6 +344,9 @@ class _SignInContentState extends State<SignInContent> {
                                             builder: (context) => NavigationList()),
                                             (route) => false,
                                       );
+                                      //print(LocalStorageService.getUserData());
+                                      print(MovieCubit.get(context).fetchUserMovies());
+
                                     } else if (state is AuthFailure) {
                                       ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
@@ -383,12 +388,10 @@ class _SignInContentState extends State<SignInContent> {
 
                 // Overlay loading in the center of screen
                 if (state is AuthLoading)
-                  Positioned.fill(
-                    child: Container(
-                      color: Colors.black.withOpacity(0.3),
-                      child: const Center(
-                        child: LoadingIndicator(),
-                      ),
+                  Container(
+                    color: Colors.black.withOpacity(0.3),
+                    child: const Center(
+                      child: LoadingIndicator(),
                     ),
                   ),
               ],
