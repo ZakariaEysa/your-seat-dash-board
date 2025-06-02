@@ -52,7 +52,7 @@ class PersonNameField extends StatelessWidget {
             children: [
               CircleAvatar(
                 backgroundImage:
-                    imageBytes != null ? MemoryImage(imageBytes!) : null,
+                imageBytes != null ? MemoryImage(imageBytes!) : null,
                 radius: 24.r,
                 backgroundColor: Colors.grey[400],
                 child: imageBytes == null

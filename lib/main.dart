@@ -23,6 +23,7 @@ import 'package:yourseatgraduationproject/features/admin_flow/signin/view/signin
 import 'features/admin_flow/homepage/cubit/home_cubit.dart';
 import 'features/admin_flow/homepage/cubit/sales_dash_cubit/sales_dash_cubit.dart';
 import 'features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
+import 'features/admin_flow/moives/view/movies.dart';
 import 'features/admin_flow/payment/data/remote_data_source/payment_remote_data_source.dart';
 import 'firebase_options.dart';
 import 'services/simple_bloc_observer_service.dart';
@@ -87,7 +88,7 @@ class MyApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             title: "Admin Dashboard",
             theme: ThemeData.dark(),
-            home: const SignIn(),
+            home:  SignIn(),
           ),
         );
       },

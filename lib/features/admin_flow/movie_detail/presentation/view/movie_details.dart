@@ -704,6 +704,7 @@ class _MovieDetailState extends State<MovieDetail> {
                                           key: MovieDetail._movieInfoKey,
                                           movieData: widget.movieData,
                                           isViewOnly: widget.isViewOnly,
+                                          isEditing: widget.isEditing, // هذا ما أضفناه
                                         ),
                                         Padding(
                                           padding: EdgeInsets.only(left: 70.w, top: 30.h, bottom: 10.h),
