@@ -127,7 +127,7 @@ class Logo extends StatefulWidget {
   final Color errorColor;
   final bool isViewOnly;
   final String? base64Image;
-
+  final bool readOnly;
   const Logo({
     super.key,
     required this.pickedCover,
@@ -135,6 +135,7 @@ class Logo extends StatefulWidget {
     required this.onDelete,
     required this.errorColor,
     this.isViewOnly = false,
+    this.readOnly = false,
     this.base64Image, Uint8List? imageBytes,
   });
 
@@ -170,7 +171,7 @@ class _LogoState extends State<Logo> {
         imageBytes = null;
       }
     }
-     MovieCubit.get(context).pickedCover = widget.pickedCover;
+    MovieCubit.get(context).pickedCover = widget.pickedCover;
 
     return Column(
       children: [
@@ -200,10 +201,10 @@ class _LogoState extends State<Logo> {
         SizedBox(height: 25.h),
 
         // Upload & Delete buttons
-        if (!widget.isViewOnly) ...[
+        if (!widget.isViewOnly && !widget.readOnly) ...[
           Row(
             children: [
-              SizedBox(width: 15.w),
+              SizedBox(width: 3.w),
               ButtonBuilder(
                 text: widget.pickedCover == null ? 'Upload' : 'Change',
                 onTap: () => pickCover(context),

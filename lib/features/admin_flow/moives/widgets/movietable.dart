@@ -662,7 +662,7 @@ class _MovieTablePageState extends State<MovieTablePage> {
       BuildContext context,
       Map<String, dynamic> movie, {
         bool isViewOnly = false,
-        bool isEditing = false,
+        bool isEditing = true,
       }) {
     Navigator.push(
       context,
@@ -750,7 +750,7 @@ class _MovieTablePageState extends State<MovieTablePage> {
               child: CircularProgressIndicator(), // Custom loading indicator widget
             );
           }
-         if (MovieCubit.get(context).ahmed == null || MovieCubit.get(context).ahmed.isEmpty) {
+          if (MovieCubit.get(context).ahmed == null || MovieCubit.get(context).ahmed.isEmpty) {
             return const Center(
               child: Text('No movies available', style: TextStyle(color: Color(0xFF5A2D82))),
             );
@@ -883,7 +883,7 @@ class _MovieTablePageState extends State<MovieTablePage> {
                                       onPressed: () async {
                                         Navigator.pop(context);
                                         await deleteMovie(index, movie);
-                                       isDeleting = false;
+                                        isDeleting = false;
                                       },
                                       child: const Text("OK"),
                                     ),
@@ -913,6 +913,3 @@ class _MovieTablePageState extends State<MovieTablePage> {
     );
   }
 }
-
-
-

@@ -401,11 +401,12 @@ import 'movie_text_field_label.dart';
 class MovieInfoScreen extends StatefulWidget {
   final Map<String, dynamic> movieData;
   final bool isViewOnly;
-
+  final bool isEditing;
   const MovieInfoScreen({
     Key? key,
     required this.movieData,
     this.isViewOnly = false,
+    this.isEditing = false,
   }) : super(key: key);
 
   @override
@@ -503,6 +504,7 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
     setState(() => pickedCover = null);
   }
 
+
   bool validateFields() {
     setState(() {
       _movieNameError = Validators.validateRequired(MovieCubit.get(context).movieNameController.text, 'Movie name');
@@ -558,6 +560,8 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                   controller: MovieCubit.get(context).movieNameController,
                                   errorText: _movieNameError,
                                   errorColor: errorColor,
+                                  readOnly: widget.isViewOnly || widget.isEditing, // جعل الحقل للقراءة فقط عند التحرير
+
                                   onChanged: (value) {
                                     setState(() {
                                       _movieNameError = Validators.validateRequired(value, 'Movie name');
@@ -573,6 +577,7 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                   controller: MovieCubit.get(context).durationController,
                                   errorText: _durationError,
                                   errorColor: errorColor,
+                                  readOnly: widget.isViewOnly,
                                   onChanged: (value) {
                                     setState(() {
                                       _durationError = Validators.validateDurationFormat(value);
@@ -592,6 +597,8 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                   controller: MovieCubit.get(context).promoLinkController,
                                   errorText: _promoLinkError,
                                   errorColor: errorColor,
+                                  readOnly: widget.isViewOnly,
+
                                   onChanged: (value) {
                                     setState(() {
                                       _promoLinkError = Validators.validateYouTubeLink(value);
@@ -607,6 +614,8 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                   controller: MovieCubit.get(context).versionController,
                                   errorText: _versionError,
                                   errorColor: errorColor,
+                                  readOnly: widget.isViewOnly,
+
                                   onChanged: (value) {
                                     setState(() {
                                       _versionError = Validators.validateVersionNumber(value);
@@ -629,13 +638,12 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                     NewDropdownField(
                                       value: selectedLanguage,
                                       items: languageOptions,
-                                      hintText: selectedLanguage??"Language",
+                                      hintText: 'English',
                                       errorText: _languageError,
                                       errorColor: errorColor,
                                       onChanged: (value) {
                                         setState(() {
                                           selectedLanguage = value;
-                                          MovieCubit.get(context).selectedLanguage = selectedLanguage;
                                           _languageError = Validators.validateRequired(value, 'Language');
                                         });
                                       },
@@ -657,6 +665,7 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                       hintText: 'TV-Y7',
                                       errorText: _censorshipError,
                                       errorColor: errorColor,
+                                      readOnly: widget.isViewOnly,
                                       onChanged: (value) {
                                         setState(() {
                                           selectedCensorship = value;
@@ -684,6 +693,8 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                       value: selectedStatus??"",
                                       items: statusOptions,
                                       hintText: 'Playing now',
+                                      readOnly: widget.isViewOnly || widget.isEditing, // جعل الحقل للقراءة فقط عند التحرير
+
                                       errorText: _statusError,
                                       errorColor: errorColor,
                                       onChanged: (value) {
@@ -711,6 +722,8 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                                       hintText: 'Action',
                                       errorText: _movieGenreError,
                                       errorColor: errorColor,
+                                      readOnly: widget.isViewOnly,
+
                                       onChanged: (value) {
                                         setState(() {
                                           selectedGenre = value;
@@ -746,6 +759,7 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
                             });
                           },
                           errorColor: errorColor,
+                            readOnly: widget.isViewOnly,
                         ),
                       ],
                     ),
@@ -759,7 +773,5 @@ class MovieInfoScreenState extends State<MovieInfoScreen> {
     );
   }
 }
-
-
 
 
