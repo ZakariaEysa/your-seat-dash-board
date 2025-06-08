@@ -26,10 +26,10 @@ class _MoviesState extends State<Movies> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.only(top: 15.h, left: 270.w),
+              padding: EdgeInsets.only(top: 18.h, left: 270.w),
               child: SizedBox(
                 width: 32.w,
-                height: 44.h,
+                height: 50.h,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     backgroundColor: const Color(0xFF560B76),
@@ -52,15 +52,12 @@ class _MoviesState extends State<Movies> {
                     children: [
                       Icon(Icons.add_circle_outline, color: Colors.white, size: 7.sp),
                       SizedBox(width: 3.w),
-                      Padding(
-                        padding:  EdgeInsets.only(right: 4.w,top: 2.h),
-                        child: Text(
-                          'Add',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 5.sp,
-                          ),
+                      Text(
+                        'Add',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 5.sp,
                         ),
                       ),
                     ],
