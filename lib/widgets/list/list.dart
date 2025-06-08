@@ -29,13 +29,13 @@ class _NavigationListState extends State<NavigationList> {
     double sideBarWidth = 45.w;
 
     final List<Widget> _pages = [
-      Home(),
-      Transactions(),
-      Halls2(),
+      const Home(),
+      const Transactions(),
+      const  Halls2(),
       Movies(),
       TicketDetails(),
       Rooming(scheduleItems: _scheduleItems),
-      RoomingScheduling(scheduleItems: _scheduleItems),
+      RoomingScheduling(),
       App(),
     ];
 
