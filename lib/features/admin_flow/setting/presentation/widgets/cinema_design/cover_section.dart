@@ -32,7 +32,9 @@ class CoverSection extends StatelessWidget {
       children: [
         Column(
           children: [
-            Text("upload cover", style: TextStyle(color: const Color(0xFF6A6767), fontSize: 5.sp)),
+            Text("upload cover",
+                style:
+                    TextStyle(color: const Color(0xFF6A6767), fontSize: 5.sp)),
             SizedBox(height: 10.h),
             Container(
               width: 65.w,
@@ -43,7 +45,9 @@ class CoverSection extends StatelessWidget {
                   : Image.asset("assets/icons/cinema.png", fit: BoxFit.cover),
             ),
             SizedBox(height: 10.h),
-            Text("*Cover size (342×120) pixels , max 1 MB", style: TextStyle(fontSize: 3.sp, color: const Color(0xFF6A6767))),
+            Text("*Cover size (342×120) pixels , max 1 MB",
+                style:
+                    TextStyle(fontSize: 3.sp, color: const Color(0xFF6A6767))),
           ],
         ),
         SizedBox(width: 5.w),
@@ -60,17 +64,23 @@ class CoverSection extends StatelessWidget {
                   buttonColor: const Color(0xFF292D32),
                   frameColor: const Color(0xFF560B76),
                   borderShape: BorderRadius.circular(15.r),
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 5.sp),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 5.sp),
                 ),
-                SizedBox(width:3.w),
+                SizedBox(width: 3.w),
                 ButtonBuilder(
                   text: 'Delete',
                   onTap: onDelete,
                   width: 25.w,
                   height: 40.h,
-                  buttonColor:  const Color(0xFFFF0000),
+                  buttonColor: const Color(0xFFFF0000),
                   borderShape: BorderRadius.circular(15.r),
-                  style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 5.sp),
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 5.sp),
                 ),
               ],
             ),

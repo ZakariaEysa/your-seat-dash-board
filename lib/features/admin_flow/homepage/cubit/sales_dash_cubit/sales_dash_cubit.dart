@@ -52,10 +52,10 @@ class SalesDashCubit extends Cubit<SalesDashState> {
   int? totalIncome;
   int? totalCustomers;
   int? totalMovies;
-    String? cinemaName;
+  String? cinemaName;
 
   Future<void> getTotalIncome() async {
-        cinemaName = extractUsername(LocalStorageService.getUserData() ?? "");
+    cinemaName = extractUsername(LocalStorageService.getUserData() ?? "");
 
     if (totalIncome != null && totalCustomers != null) {
       emit(SalesDashSuccess(
@@ -124,7 +124,7 @@ class SalesDashCubit extends Cubit<SalesDashState> {
     }
   }
 
-    String extractUsername(String email) {
+  String extractUsername(String email) {
     AppLogs.errorLog(email.toString());
 
     // نفترض إن الإيميل دايماً بينتهي بـ @admin.com

@@ -36,7 +36,6 @@ class TextFiled extends StatelessWidget {
               ),
             ),
           ),
-
         Padding(
           padding: EdgeInsets.only(top: 5.h, left: 10.w, right: 60.w),
           child: SizedBox(
@@ -63,8 +62,6 @@ class TextFiled extends StatelessWidget {
                     color: Color(0XFFEB68E3),
                   ),
                 ),
-
-
                 errorBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.r),
                   borderSide: const BorderSide(
@@ -79,7 +76,6 @@ class TextFiled extends StatelessWidget {
                     width: 1.0,
                   ),
                 ),
-
                 hintText: hintText,
                 hintStyle: TextStyle(
                   color: const Color(0xFF837D7D),

@@ -7,5 +7,4 @@ abstract class TicketDetailsRepo {
     required String cinemaId,
     required String orderId,
   });
-
 }

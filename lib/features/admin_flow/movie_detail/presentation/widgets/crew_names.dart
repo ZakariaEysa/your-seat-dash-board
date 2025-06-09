@@ -166,7 +166,6 @@
 //   }
 // }
 
-
 // import 'dart:typed_data';
 // import 'package:file_picker/file_picker.dart';
 // import 'package:flutter/material.dart';
@@ -401,7 +400,8 @@ class CrewNames extends StatefulWidget {
   final bool isViewOnly;
   final Map<String, dynamic> movieData;
 
-  static final GlobalKey<_CrewNamesState> crewKey = GlobalKey<_CrewNamesState>();
+  static final GlobalKey<_CrewNamesState> crewKey =
+      GlobalKey<_CrewNamesState>();
 
   bool validate() {
     return crewKey.currentState?._validateFields() ?? false;
@@ -437,7 +437,9 @@ class _CrewNamesState extends State<CrewNames> {
         'Producer Name',
       );
     });
-    return _directorError == null && _writerError == null && _producerError == null;
+    return _directorError == null &&
+        _writerError == null &&
+        _producerError == null;
   }
 
   @override
@@ -455,7 +457,8 @@ class _CrewNamesState extends State<CrewNames> {
       final imageBytes = base64Decode(crewImages["director"]);
       _directorImage = imageBytes;
       cubit.pickedDirectorImages = [
-        PlatformFile(name: "director.png", size: imageBytes.length, bytes: imageBytes)
+        PlatformFile(
+            name: "director.png", size: imageBytes.length, bytes: imageBytes)
       ];
     }
 
@@ -463,7 +466,8 @@ class _CrewNamesState extends State<CrewNames> {
       final imageBytes = base64Decode(crewImages["writer"]);
       _writerImage = imageBytes;
       cubit.pickedWriterImages = [
-        PlatformFile(name: "writer.png", size: imageBytes.length, bytes: imageBytes)
+        PlatformFile(
+            name: "writer.png", size: imageBytes.length, bytes: imageBytes)
       ];
     }
 
@@ -471,7 +475,8 @@ class _CrewNamesState extends State<CrewNames> {
       final imageBytes = base64Decode(crewImages["producer"]);
       _producerImage = imageBytes;
       cubit.pickedProducerImages = [
-        PlatformFile(name: "producer.png", size: imageBytes.length, bytes: imageBytes)
+        PlatformFile(
+            name: "producer.png", size: imageBytes.length, bytes: imageBytes)
       ];
     }
   }
@@ -597,5 +602,3 @@ class _CrewNamesState extends State<CrewNames> {
     );
   }
 }
-
-

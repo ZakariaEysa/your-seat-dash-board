@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/services.dart' show rootBundle;
 import 'dart:html' as html;
 import 'dart:typed_data';
 import 'dart:convert';
@@ -185,7 +184,7 @@ class _ContractBodyState extends State<ContractBody> {
             CircularProgressIndicator(),
             SizedBox(height: 16),
             Text(
-             "",
+              "",
               style: TextStyle(fontSize: 16),
             ),
           ],
@@ -218,7 +217,8 @@ class _ContractBodyState extends State<ContractBody> {
                 ),
                 Text(
                   "Update your Contract info here",
-                  style: TextStyle(color: Color(0xFF625C5C), fontSize: 5.sp),
+                  style:
+                      TextStyle(color: const Color(0xFF625C5C), fontSize: 5.sp),
                 ),
                 SizedBox(height: 20.h),
                 Row(
@@ -227,7 +227,8 @@ class _ContractBodyState extends State<ContractBody> {
                     ButtonBuilder(
                       text: 'Download Contract',
                       onTap: () {
-                        if (uploadedFile != null && uploadedFile!.bytes != null) {
+                        if (uploadedFile != null &&
+                            uploadedFile!.bytes != null) {
                           final blob = html.Blob([uploadedFile!.bytes]);
                           final url = html.Url.createObjectUrlFromBlob(blob);
                           final anchor = html.AnchorElement(href: url)
@@ -236,7 +237,8 @@ class _ContractBodyState extends State<ContractBody> {
                           html.Url.revokeObjectUrl(url);
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('لا يوجد ملف للتحميل')),
+                            const SnackBar(
+                                content: Text('لا يوجد ملف للتحميل')),
                           );
                         }
                       },
@@ -253,7 +255,9 @@ class _ContractBodyState extends State<ContractBody> {
                     ),
                     SizedBox(width: 40.w),
                     ButtonBuilder(
-                      text: selectedFile == null ? 'Upload Contract' : 'Change File',
+                      text: selectedFile == null
+                          ? 'Upload Contract'
+                          : 'Change File',
                       onTap: () => uploadContract(context),
                       width: 86.w,
                       height: 78.h,
@@ -269,14 +273,12 @@ class _ContractBodyState extends State<ContractBody> {
                   ],
                 ),
                 SizedBox(height: 30.h),
-
                 if (isLoading)
-                  Center(child: CircularProgressIndicator())
+                  const Center(child: CircularProgressIndicator())
                 else if (selectedFile != null)
                   ContractFileInfo(file: selectedFile!)
                 else if (uploadedFile != null)
-                    ContractFileInfo(file: uploadedFile!),
-
+                  ContractFileInfo(file: uploadedFile!),
                 ContractButtons(
                   onSave: saveChanges,
                   onCancel: cancelChanges,

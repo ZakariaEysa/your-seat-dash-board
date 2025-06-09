@@ -388,10 +388,8 @@
 // movie_cubit.dart
 
 import 'dart:convert';
-import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:file_picker/file_picker.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/moives/data/movies_cubit/movies_state.dart';
@@ -440,7 +438,8 @@ class MovieCubit extends Cubit<MovieState> {
     }
   }
 
-  Future<List<String>> convertImagesListToBase64(List<PlatformFile?> images) async {
+  Future<List<String>> convertImagesListToBase64(
+      List<PlatformFile?> images) async {
     List<String> base64List = [];
     for (final imageFile in images) {
       if (imageFile != null) {
@@ -456,7 +455,8 @@ class MovieCubit extends Cubit<MovieState> {
     if (pickedCover != null) {
       coverBase64 = await convertImageToBase64(pickedCover!);
     }
-    List<String> actorImagesBase64 = await convertImagesListToBase64(pickedActorImages);
+    List<String> actorImagesBase64 =
+        await convertImagesListToBase64(pickedActorImages);
     List<String> crewImagesBase64 = [
       ...(await convertImagesListToBase64(pickedDirectorImages)),
       ...(await convertImagesListToBase64(pickedWriterImages)),
@@ -496,7 +496,8 @@ class MovieCubit extends Cubit<MovieState> {
     try {
       emit(MovieLoading());
 
-      String collectionName = selectedStatus == 'Playing now' ? 'playing now films' : 'Movies';
+      String collectionName =
+          selectedStatus == 'Playing now' ? 'playing now films' : 'Movies';
       final movieData = await prepareMovieData();
 
       await FirebaseFirestore.instance
@@ -528,7 +529,8 @@ class MovieCubit extends Cubit<MovieState> {
       }
 
       Map<String, dynamic>? data = docSnapshot.data();
-      List<dynamic> moviesList = data?['movies'] != null ? List.from(data!['movies']) : [];
+      List<dynamic> moviesList =
+          data?['movies'] != null ? List.from(data!['movies']) : [];
 
       final movieData = await prepareMovieData();
 
@@ -537,7 +539,7 @@ class MovieCubit extends Cubit<MovieState> {
       await cinemaRef.update({'movies': moviesList});
 
       emit(MovieSuccess());
-     ahmed.add(movieData);
+      ahmed.add(movieData);
     } catch (e) {
       AppLogs.errorLog("Error adding movie to cinema: $e");
       emit(MovieError(e.toString()));
@@ -548,14 +550,16 @@ class MovieCubit extends Cubit<MovieState> {
     emit(MovieLoading());
     try {
       var cinemaId = extractUsername(LocalStorageService.getUserData()!);
-      final DocumentReference cinemaRef = FirebaseFirestore.instance.collection('Cinemas').doc(cinemaId);
+      final DocumentReference cinemaRef =
+          FirebaseFirestore.instance.collection('Cinemas').doc(cinemaId);
       final DocumentSnapshot docSnapshot = await cinemaRef.get();
 
       if (docSnapshot.exists) {
         final data = docSnapshot.data() as Map<String, dynamic>;
 
         if (data.containsKey('movies') && data['movies'] is List) {
-          final List<Map<String, dynamic>> movies = List<Map<String, dynamic>>.from(data['movies']);
+          final List<Map<String, dynamic>> movies =
+              List<Map<String, dynamic>>.from(data['movies']);
           fetchedCinemaMovies = movies;
 
           emit(MovieFetched(fetchedCinemaMovies!));
@@ -573,11 +577,13 @@ class MovieCubit extends Cubit<MovieState> {
     }
   }
 
-  Future<void> updateMovieInCinemaWithPreparedData({required BuildContext context}) async {
+  Future<void> updateMovieInCinemaWithPreparedData(
+      {required BuildContext context}) async {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => Center(child: Positioned.fill(
+      builder: (context) => Center(
+          child: Positioned.fill(
         child: Container(
           color: Colors.black.withOpacity(0.3),
           child: const Center(child: LoadingIndicator()),
@@ -588,7 +594,8 @@ class MovieCubit extends Cubit<MovieState> {
     var cinemaId = extractUsername(LocalStorageService.getUserData()!);
 
     try {
-      final docRef = FirebaseFirestore.instance.collection('Cinemas').doc(cinemaId);
+      final docRef =
+          FirebaseFirestore.instance.collection('Cinemas').doc(cinemaId);
       final snapshot = await docRef.get();
 
       if (!snapshot.exists) throw Exception('Document not found');
@@ -606,18 +613,26 @@ class MovieCubit extends Cubit<MovieState> {
       ahmed = movies;
       Navigator.of(context, rootNavigator: true).pop();
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Your data is updated successfully', style: TextStyle(color: Colors.white)), backgroundColor: Colors.green),
+        const SnackBar(
+            content: Text('Your data is updated successfully',
+                style: TextStyle(color: Colors.white)),
+            backgroundColor: Colors.green),
       );
     } catch (e) {
       Navigator.of(context, rootNavigator: true).pop();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Something went wrong : $e', style: const TextStyle(color: Colors.white)), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('Something went wrong : $e',
+                style: const TextStyle(color: Colors.white)),
+            backgroundColor: Colors.red),
       );
     }
   }
 
-  Future<void> updateMovieDocumentByName({required BuildContext context}) async {
-    String collectionName = selectedStatus == "Playing now" ? "playing now films" : "Movies";
+  Future<void> updateMovieDocumentByName(
+      {required BuildContext context}) async {
+    String collectionName =
+        selectedStatus == "Playing now" ? "playing now films" : "Movies";
 
     showDialog(
       context: context,
@@ -631,7 +646,8 @@ class MovieCubit extends Cubit<MovieState> {
     );
 
     try {
-      final collectionRef = FirebaseFirestore.instance.collection(collectionName);
+      final collectionRef =
+          FirebaseFirestore.instance.collection(collectionName);
       final querySnapshot = await collectionRef
           .where('name', isEqualTo: movieNameController.text)
           .get();
@@ -639,7 +655,10 @@ class MovieCubit extends Cubit<MovieState> {
       if (querySnapshot.docs.isEmpty) {
         Navigator.of(context, rootNavigator: true).pop();
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Sorry something went wrong', style: TextStyle(color: Colors.white)), backgroundColor: Colors.red),
+          const SnackBar(
+              content: Text('Sorry something went wrong',
+                  style: TextStyle(color: Colors.white)),
+              backgroundColor: Colors.red),
         );
         return;
       }
@@ -653,22 +672,28 @@ class MovieCubit extends Cubit<MovieState> {
     } catch (e) {
       Navigator.of(context, rootNavigator: true).pop();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Row(
-          children: [
-            Icon(Icons.error, color: Colors.white),
-            SizedBox(width: 8),
-            Expanded(child: Text('Something went wrong : $e', style: const TextStyle(color: Colors.white))),
-          ],
-        ), backgroundColor: Colors.red),
+        SnackBar(
+            content: Row(
+              children: [
+                const Icon(Icons.error, color: Colors.white),
+                const SizedBox(width: 8),
+                Expanded(
+                    child: Text('Something went wrong : $e',
+                        style: const TextStyle(color: Colors.white))),
+              ],
+            ),
+            backgroundColor: Colors.red),
       );
     }
   }
 
-  Future<void> deleteMovieCompletely({required BuildContext context, required int? movieIndex}) async {
+  Future<void> deleteMovieCompletely(
+      {required BuildContext context, required int? movieIndex}) async {
     try {
-      final String username = extractUsername(LocalStorageService.getUserData()!);
+      final String username =
+          extractUsername(LocalStorageService.getUserData()!);
       DocumentReference cinemaDocRef =
-      FirebaseFirestore.instance.collection('Cinemas').doc(username);
+          FirebaseFirestore.instance.collection('Cinemas').doc(username);
 
       DocumentSnapshot cinemaSnapshot = await cinemaDocRef.get();
 
@@ -684,10 +709,11 @@ class MovieCubit extends Cubit<MovieState> {
           await cinemaDocRef.update({'movies': movies});
 
           final targetCollection =
-          (status == 'Playing now') ? 'playing now films' : 'Movies';
+              (status == 'Playing now') ? 'playing now films' : 'Movies';
 
-          QuerySnapshot targetSnapshot =
-          await FirebaseFirestore.instance.collection(targetCollection).get();
+          QuerySnapshot targetSnapshot = await FirebaseFirestore.instance
+              .collection(targetCollection)
+              .get();
 
           for (QueryDocumentSnapshot doc in targetSnapshot.docs) {
             if (doc['name'] == movieName) {
@@ -700,7 +726,11 @@ class MovieCubit extends Cubit<MovieState> {
           }
 
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(backgroundColor: Colors.green, content: Text('Movie deleted successfully', style: TextStyle(color: Colors.white)), duration: Duration(seconds: 2)),
+            const SnackBar(
+                backgroundColor: Colors.green,
+                content: Text('Movie deleted successfully',
+                    style: TextStyle(color: Colors.white)),
+                duration: Duration(seconds: 2)),
           );
         } else {
           print('Invalid movie index');
@@ -713,7 +743,3 @@ class MovieCubit extends Cubit<MovieState> {
     }
   }
 }
-
-
-
-

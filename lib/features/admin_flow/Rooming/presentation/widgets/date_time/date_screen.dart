@@ -38,7 +38,8 @@ class DateTimeFieldsState extends State<DateTimeFields> {
           Align(
             alignment: Alignment.centerLeft,
             child: IconButton(
-              icon: Icon(Icons.add_circle_outline, color: Colors.black, size: 5.sp),
+              icon: Icon(Icons.add_circle_outline,
+                  color: Colors.black, size: 5.sp),
               onPressed: () {
                 setState(() {
                   controller.addDateTimePair();

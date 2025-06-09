@@ -24,7 +24,7 @@ class PaymentInfo extends StatelessWidget {
                 borderRadius: BorderRadius.circular(5.r),
               ),
               child: Padding(
-                padding: EdgeInsets.only(top: 20.h, left:10.w),
+                padding: EdgeInsets.only(top: 20.h, left: 10.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -43,45 +43,45 @@ class PaymentInfo extends StatelessWidget {
                         fontSize: 3.sp,
                       ),
                     ),
-                    SizedBox(height: 50.h,),
+                    SizedBox(
+                      height: 50.h,
+                    ),
                     PaymentText(key: paymentTextKey),
-
-
-                    SizedBox(height: 50.h,),
-
-                          Padding(
-                            padding:EdgeInsets.only(right: 60.w),
-                            child: ButtonBuilder(
-                              text: 'Save',
-                              onTap: () {
-                                if (paymentTextKey.currentState?.validateFields() ?? false) {
-                                  paymentTextKey.currentState?.savePaymentDetails();// ✅ حفظ البيانات
-                                } else {
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text('⚠️ Please fill all fields or fix errors!'),
-                                      backgroundColor: Colors.red,
-                                      duration: Duration(seconds: 2),
-                                    ),
-                                  );
-                                }
-                              }, width: 45.w,
-                              height: 60.h,
-                              buttonColor: const Color(0xFF560B76),
-                              frameColor: const Color(0xFF560B76),
-                              borderShape: BorderRadius.circular(15.r),
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontWeight: FontWeight.bold,
-                                fontSize: 8.sp,
+                    SizedBox(
+                      height: 50.h,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(right: 60.w),
+                      child: ButtonBuilder(
+                        text: 'Save',
+                        onTap: () {
+                          if (paymentTextKey.currentState?.validateFields() ??
+                              false) {
+                            paymentTextKey.currentState
+                                ?.savePaymentDetails(); // ✅ حفظ البيانات
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text(
+                                    '⚠️ Please fill all fields or fix errors!'),
+                                backgroundColor: Colors.red,
+                                duration: Duration(seconds: 2),
                               ),
-                            ),
-                          ),
-
-
-
-
-
+                            );
+                          }
+                        },
+                        width: 45.w,
+                        height: 60.h,
+                        buttonColor: const Color(0xFF560B76),
+                        frameColor: const Color(0xFF560B76),
+                        borderShape: BorderRadius.circular(15.r),
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 8.sp,
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),

@@ -20,4 +20,3 @@ final class TicketsStatesError extends HomeState {
   final String errorMsg;
   const TicketsStatesError(this.errorMsg);
 }
-

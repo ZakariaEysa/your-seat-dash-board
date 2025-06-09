@@ -9,6 +9,7 @@ class PaymentRepoImpl implements PaymentRepo {
 
   PaymentRepoImpl(this.paymentRemoteDataSource);
 
+  @override
   Map<String, int> getTransactionStats() =>
       paymentRemoteDataSource.getTransactionStats();
   @override
@@ -87,6 +88,7 @@ class PaymentRepoImpl implements PaymentRepo {
     }
   }
 
+  @override
   void resetTransactionStats() {
     paymentRemoteDataSource.resetTransactionStats();
   }

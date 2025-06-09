@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yourseatgraduationproject/utils/app_logs.dart';
 
 import '../../../../widgets/button/button_builder.dart';
 import '../../payment/data/model/transaction_model.dart';
@@ -97,7 +96,7 @@ class _PaymentTableState extends State<PaymentTable> {
 
                   return DataRow(cells: [
                     DataCell(Text(
-                      "#" + transaction.id.toString(),
+                      "#${transaction.id}",
                       style: const TextStyle(color: Colors.black),
                     )),
                     DataCell(Row(
@@ -152,7 +151,7 @@ class _PaymentTableState extends State<PaymentTable> {
                     height: 40.h, // Custom height
                     buttonColor:
                         const Color(0xFF560B76), // Transparent background
-                    frameColor: Color(0xFF560B76), // Grey border
+                    frameColor: const Color(0xFF560B76), // Grey border
                     borderRadius: 20.0, // Less rounded corners
                     style: TextStyle(
                       color: Colors.white,
@@ -178,8 +177,6 @@ String parseDate(String createdAt) {
   int year = date.year; // 2025
 
   return "$month , $day, $year";
-
-  ;
 }
 
 String _getMonthName(int monthNumber) {

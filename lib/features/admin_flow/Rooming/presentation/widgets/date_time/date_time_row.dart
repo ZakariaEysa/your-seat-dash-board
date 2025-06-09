@@ -30,7 +30,7 @@ class DateTimeRow extends StatelessWidget {
     final key = '$date|$time';
 
     final isDuplicate = dateTimePairs.asMap().entries.any((entry) =>
-    entry.key != index &&
+        entry.key != index &&
         '${entry.value['date']}|${entry.value['time']}' == key);
 
     final selectedDate = _parseDate(date);
@@ -46,13 +46,16 @@ class DateTimeRow extends StatelessWidget {
               initialValue: date,
               errorText: dateErrors[index]
                   ? (date.isEmpty
-                  ? 'Please enter the date'
-                  : (isDuplicate ? 'This date has already been added.' : null))
+                      ? 'Please enter the date'
+                      : (isDuplicate
+                          ? 'This date has already been added.'
+                          : null))
                   : null,
               onChanged: (value) {
                 dateTimePairs[index]['date'] = value;
                 onUpdate();
-              }, label: '',
+              },
+              label: '',
             ),
           ),
         ),
@@ -67,13 +70,14 @@ class DateTimeRow extends StatelessWidget {
               selectedDate: selectedDate ?? DateTime.now(),
               errorText: timeErrors[index]
                   ? (time.isEmpty
-                  ? 'Please enter the timing'
-                  : (isDuplicate ? 'This timing is already added.' : null))
+                      ? 'Please enter the timing'
+                      : (isDuplicate ? 'This timing is already added.' : null))
                   : null,
               onChanged: (value) {
                 dateTimePairs[index]['time'] = value;
                 onUpdate();
-              }, label: '',
+              },
+              label: '',
             ),
           ),
         ),

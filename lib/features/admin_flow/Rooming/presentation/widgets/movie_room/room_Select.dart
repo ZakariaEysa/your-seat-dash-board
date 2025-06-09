@@ -30,6 +30,7 @@ class RoomDropdownWidgetState extends State<RoomDropdownWidget> {
     super.initState();
     fetchRoomsFromFirestore();
   }
+
   String extractUsername(String email) {
     if (email.contains("@")) {
       return email.substring(0, email.indexOf("@admin.com"));
@@ -37,10 +38,15 @@ class RoomDropdownWidgetState extends State<RoomDropdownWidget> {
       return "Invalid email format";
     }
   }
+
   Future<void> fetchRoomsFromFirestore() async {
     try {
-      final String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
-      final doc = await FirebaseFirestore.instance.collection('Cinemas').doc(cinemaId).get();
+      final String cinemaId =
+          extractUsername(LocalStorageService.getUserData() ?? "");
+      final doc = await FirebaseFirestore.instance
+          .collection('Cinemas')
+          .doc(cinemaId)
+          .get();
 
       if (doc.exists) {
         final data = doc.data() as Map<String, dynamic>;
@@ -56,12 +62,15 @@ class RoomDropdownWidgetState extends State<RoomDropdownWidget> {
       }
     } catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('⚠️ Error loading rooms: $e'), backgroundColor: Colors.red),
+        SnackBar(
+            content: Text('⚠️ Error loading rooms: $e'),
+            backgroundColor: Colors.red),
       );
     } finally {
       setState(() {
         isLoading = false;
-        if (widget.initialValue != null && rooms.contains(widget.initialValue)) {
+        if (widget.initialValue != null &&
+            rooms.contains(widget.initialValue)) {
           selectedRoom = widget.initialValue;
         }
       });
@@ -100,35 +109,34 @@ class RoomDropdownWidgetState extends State<RoomDropdownWidget> {
         ),
         alignment: Alignment.center,
         child: isLoading
-            ? Center(child: CircularProgressIndicator(strokeWidth: 1.5))
+            ? const Center(child: CircularProgressIndicator(strokeWidth: 1.5))
             : DropdownButton<String>(
-          value: selectedRoom,
-          hint: Text(
-            'Room',
-            style: TextStyle(color: Colors.black, fontSize: 4.sp),
-          ),
-          icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
-          items: rooms.map((String room) {
-            return DropdownMenuItem<String>(
-              value: room,
-              child: Text(room, style: const TextStyle(color: Colors.black)),
-            );
-          }).toList(),
-          onChanged: (String? value) {
-            setState(() {
-              selectedRoom = value;
-              roomError = false;
-            });
-            widget.onChanged(value);
-          },
-          isExpanded: true,
-          underline: const SizedBox.shrink(),
-          dropdownColor: Colors.white,
-          style: const TextStyle(color: Colors.black),
-        ),
+                value: selectedRoom,
+                hint: Text(
+                  'Room',
+                  style: TextStyle(color: Colors.black, fontSize: 4.sp),
+                ),
+                icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+                items: rooms.map((String room) {
+                  return DropdownMenuItem<String>(
+                    value: room,
+                    child:
+                        Text(room, style: const TextStyle(color: Colors.black)),
+                  );
+                }).toList(),
+                onChanged: (String? value) {
+                  setState(() {
+                    selectedRoom = value;
+                    roomError = false;
+                  });
+                  widget.onChanged(value);
+                },
+                isExpanded: true,
+                underline: const SizedBox.shrink(),
+                dropdownColor: Colors.white,
+                style: const TextStyle(color: Colors.black),
+              ),
       ),
     );
   }
-
-
 }

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/TicketDetails/presentation/cubit/ticket_details_cubit.dart';
-import '../../../data/model/ticket_details_model.dart';
 import 'movie_info.dart';
 import 'ticket_details_widgets.dart';
 

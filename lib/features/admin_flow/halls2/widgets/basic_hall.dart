@@ -6,7 +6,7 @@ import '../../../../widgets/text_field/text_field/new_text_field_builder.dart';
 import '../../../../widgets/validators/validators.dart';
 
 class BasicHall extends StatefulWidget {
-  const BasicHall({Key? key}) : super(key: key);
+  const BasicHall({super.key});
 
   @override
   BasicHallState createState() => BasicHallState();
@@ -15,11 +15,15 @@ class BasicHall extends StatefulWidget {
 class BasicHallState extends State<BasicHall> {
   final TextEditingController _hallNameController = TextEditingController();
   final TextEditingController _vipSeatCountController = TextEditingController();
-  final TextEditingController _premiumSeatCountController = TextEditingController();
-  final TextEditingController _standardSeatCountController = TextEditingController();
+  final TextEditingController _premiumSeatCountController =
+      TextEditingController();
+  final TextEditingController _standardSeatCountController =
+      TextEditingController();
   final TextEditingController _vipSeatPriceController = TextEditingController();
-  final TextEditingController _premiumSeatPriceController = TextEditingController();
-  final TextEditingController _standardSeatPriceController = TextEditingController();
+  final TextEditingController _premiumSeatPriceController =
+      TextEditingController();
+  final TextEditingController _standardSeatPriceController =
+      TextEditingController();
 
   String? _hallNameError;
   String? _vipSeatCountError;
@@ -155,7 +159,7 @@ class BasicHallState extends State<BasicHall> {
                     controller: _hallNameController,
                     errorText: _hallNameError,
                     borderColor:
-                    _hallNameError != null ? Colors.red : Colors.black,
+                        _hallNameError != null ? Colors.red : Colors.black,
                     onChanged: (value) {
                       setState(() {
                         _hallNameError =

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 class Filters extends StatefulWidget {
   final Function(String) onFilterChanged;
 
-  const Filters({Key? key, required this.onFilterChanged}) : super(key: key);
+  const Filters({super.key, required this.onFilterChanged});
 
   @override
   State<Filters> createState() => _FiltersState();
@@ -27,7 +27,7 @@ class _FiltersState extends State<Filters> {
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
           // النص "Filter"
-          Text(
+          const Text(
             'Filter',
             style: TextStyle(color: Colors.black, fontSize: 16),
           ),
@@ -36,9 +36,10 @@ class _FiltersState extends State<Filters> {
           GestureDetector(
             onTap: () {
               // عند النقر على الأيقونة، يتم تغيير الفلتر إلى القيمة المحددة
-              _changeFilter('All'); // يمكنك تغيير القيمة هنا إذا كنت تريد قيمة أخرى
+              _changeFilter(
+                  'All'); // يمكنك تغيير القيمة هنا إذا كنت تريد قيمة أخرى
             },
-            child: Icon(Icons.filter_list, color: Colors.black),
+            child: const Icon(Icons.filter_list, color: Colors.black),
           ),
           const SizedBox(width: 8), // مسافة بين الأيقونة والقائمة المنسدلة
           // القائمة المنسدلة للفلترة
@@ -49,9 +50,9 @@ class _FiltersState extends State<Filters> {
             underline: Container(height: 2, color: Colors.grey),
             items: ['All', 'Complete', 'Refund', 'Rejected']
                 .map((filter) => DropdownMenuItem(
-              value: filter,
-              child: Text(filter),
-            ))
+                      value: filter,
+                      child: Text(filter),
+                    ))
                 .toList(),
             onChanged: (value) {
               if (value != null) {

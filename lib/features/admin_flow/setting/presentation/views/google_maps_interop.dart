@@ -20,7 +20,6 @@ class MapOptions {
   });
 }
 
-
 @JS('google.maps.LatLng')
 class LatLng {
   external LatLng(num lat, num lng);
@@ -34,12 +33,11 @@ class Marker {
   external void setMap(GMap? map); // ← دي الميثود الصح من Google Maps API
 }
 
-
 @JS()
 @anonymous
 class MarkerOptions {
   external factory MarkerOptions();
-  
+
   external LatLng? get position;
   external set position(LatLng? p);
 
@@ -47,18 +45,18 @@ class MarkerOptions {
   external set map(GMap? m);
 }
 
-
 @JS()
 class MapsEventListener {
   external void remove();
 }
+
 @JS('google.maps.LatLngBounds')
 class LatLngBounds {
   external LatLngBounds(LatLng southwest, LatLng northeast);
 }
+
 @JS()
 @anonymous
 class MapRestriction {
   external factory MapRestriction({LatLngBounds? latLngBounds});
 }
-

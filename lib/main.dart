@@ -1,11 +1,9 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
-import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/homepage/view/home.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/signin/auth_cubit/auth_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/signin/view/signin.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/payment/data/repos_impl/payment_repo_impl.dart';
@@ -13,17 +11,11 @@ import 'package:yourseatgraduationproject/features/admin_flow/payment/data/remot
 import 'package:yourseatgraduationproject/features/admin_flow/payment/presentation/cubit/payment_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/cubit/settings_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/transactions/view/transactions.dart';
-import 'package:yourseatgraduationproject/widgets/list/list.dart';
 import 'features/admin_flow/TicketDetails/data/remote_data_source/ticket_details_remote_data_source.dart';
 import 'features/admin_flow/TicketDetails/data/repos_impl/ticket_details_repo_impl.dart';
 import 'features/admin_flow/TicketDetails/presentation/cubit/ticket_details_cubit.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/signin/auth_cubit/auth_cubit.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/signin/view/signin.dart';
 import 'features/admin_flow/homepage/cubit/home_cubit.dart';
 import 'features/admin_flow/homepage/cubit/sales_dash_cubit/sales_dash_cubit.dart';
-import 'features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
-import 'features/admin_flow/payment/data/remote_data_source/payment_remote_data_source.dart';
 import 'firebase_options.dart';
 import 'services/simple_bloc_observer_service.dart';
 

@@ -17,11 +17,10 @@ class PersonNameField extends StatelessWidget {
   final VoidCallback? onAdd;
   final VoidCallback? onDelete;
 
-
   final bool isFirst;
 
   const PersonNameField({
-    Key? key,
+    super.key,
     this.initialValue,
     required this.label,
     this.imageBytes,
@@ -35,7 +34,7 @@ class PersonNameField extends StatelessWidget {
     this.onAdd,
     this.onDelete,
     this.isFirst = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +59,6 @@ class PersonNameField extends StatelessWidget {
                     : null,
               ),
               SizedBox(width: 5.w),
-
               Expanded(
                 child: Text(
                   label,
@@ -71,33 +69,31 @@ class PersonNameField extends StatelessWidget {
                   ),
                 ),
               ),
-
               if (!isViewOnly) ...[
                 if (onUpload != null)
                   IconButton(
-                    icon: Icon(Icons.upload, color: Colors.black),
+                    icon: const Icon(Icons.upload, color: Colors.black),
                     tooltip: 'Upload Image',
                     onPressed: onUpload,
                   ),
                 if (imageBytes != null && onDeleteImage != null)
                   IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
+                    icon: const Icon(Icons.delete, color: Colors.red),
                     tooltip: 'Delete Image',
                     onPressed: onDeleteImage,
                   ),
               ],
-
               if (!isViewOnly && onDelete != null)
                 IconButton(
-                  icon: Icon(Icons.remove_circle_outline, color: Colors.red),
+                  icon: const Icon(Icons.remove_circle_outline,
+                      color: Colors.red),
                   tooltip: 'Remove',
                   onPressed: onDelete,
                 ),
-
-
               if (!isViewOnly && isFirst && onAdd != null)
                 IconButton(
-                  icon: Icon(Icons.add_circle_outline, color: Colors.green),
+                  icon:
+                      const Icon(Icons.add_circle_outline, color: Colors.green),
                   tooltip: 'Add',
                   onPressed: onAdd,
                 ),

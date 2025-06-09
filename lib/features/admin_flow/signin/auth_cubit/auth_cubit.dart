@@ -28,9 +28,9 @@ class AuthCubit extends Cubit<AuthState> {
       }
 
       final adminUsersRef =
-      FirebaseFirestore.instance.collection('admin_users');
+          FirebaseFirestore.instance.collection('admin_users');
       final querySnapshot =
-      await adminUsersRef.where('email', isEqualTo: email).get();
+          await adminUsersRef.where('email', isEqualTo: email).get();
 
       if (querySnapshot.docs.isEmpty) {
         emit(AuthFailure(Errors.emailNotFound));
@@ -50,4 +50,3 @@ class AuthCubit extends Cubit<AuthState> {
     }
   }
 }
-

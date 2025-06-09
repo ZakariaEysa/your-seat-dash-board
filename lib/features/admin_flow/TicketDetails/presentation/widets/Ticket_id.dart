@@ -4,10 +4,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/TicketDetails/presentation/cubit/ticket_details_cubit.dart';
 
 import '../../../../../widgets/button/button_builder.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:equatable/equatable.dart';
-
-import '../../data/model/ticket_details_model.dart';
 
 class TicketId extends StatefulWidget {
   const TicketId({super.key});

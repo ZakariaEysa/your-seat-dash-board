@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
@@ -40,13 +39,13 @@ class SettingsCubit extends Cubit<SettingsState> {
         managerController.text = data['manager'] ?? '';
         selectedCountry = data['country'] ?? "Cairo";
 
-        lat = data['lat'] ?? null;
-        lng = data['lng'] ?? null;
-        emit(SettingsLoaded());
+        lat = data['lat'];
+        lng = data['lng'];
+        emit(const SettingsLoaded());
       } else {
         selectedCountry = "Cairo";
         // إذا لم يتم العثور على السينما، قم بتحميل الصفحة بدون بيانات
-        emit(SettingsLoaded());
+        emit(const SettingsLoaded());
       }
     } catch (e) {
       emit(SettingsError('Error getting cinema data: $e'));
@@ -88,7 +87,7 @@ class SettingsCubit extends Cubit<SettingsState> {
         AppLogs.debugLog("Added document with ID: $cinemaId");
       }
 
-      emit(SettingsLoaded());
+      emit(const SettingsLoaded());
     } catch (e) {
       emit(SettingsError('Error adding/updating cinema data: $e'));
     }

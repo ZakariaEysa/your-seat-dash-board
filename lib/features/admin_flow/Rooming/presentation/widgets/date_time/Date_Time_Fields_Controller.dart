@@ -39,10 +39,19 @@ class DateTimeFieldsController {
       final movie = dateTimePairs[i]['movie'] ?? '';
       final startDate = dateTimePairs[i]['date'] ?? '';
       final startTime = dateTimePairs[i]['time'] ?? '';
-      final endDate = (i + 1 < dateTimePairs.length) ? dateTimePairs[i + 1]['date'] ?? '' : '';
-      final endTime = (i + 1 < dateTimePairs.length) ? dateTimePairs[i + 1]['time'] ?? '' : '';
+      final endDate = (i + 1 < dateTimePairs.length)
+          ? dateTimePairs[i + 1]['date'] ?? ''
+          : '';
+      final endTime = (i + 1 < dateTimePairs.length)
+          ? dateTimePairs[i + 1]['time'] ?? ''
+          : '';
 
-      if (room.isNotEmpty && movie.isNotEmpty && startDate.isNotEmpty && startTime.isNotEmpty && endDate.isNotEmpty && endTime.isNotEmpty) {
+      if (room.isNotEmpty &&
+          movie.isNotEmpty &&
+          startDate.isNotEmpty &&
+          startTime.isNotEmpty &&
+          endDate.isNotEmpty &&
+          endTime.isNotEmpty) {
         final key = '$room|$movie|$startDate|$startTime|$endDate|$endTime';
         if (!seenEntries.contains(key)) {
           seenEntries.add(key);

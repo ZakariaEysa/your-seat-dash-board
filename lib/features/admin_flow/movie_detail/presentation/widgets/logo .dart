@@ -109,14 +109,12 @@
 //   }
 // }
 
-
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:yourseatgraduationproject/widgets/text_field/text_field/new_text_field_builder.dart';
 import '../../../../../widgets/button/button_builder.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
 
@@ -135,7 +133,8 @@ class Logo extends StatefulWidget {
     required this.onDelete,
     required this.errorColor,
     this.isViewOnly = false,
-    this.base64Image, Uint8List? imageBytes,
+    this.base64Image,
+    Uint8List? imageBytes,
   });
 
   @override
@@ -170,7 +169,7 @@ class _LogoState extends State<Logo> {
         imageBytes = null;
       }
     }
-     MovieCubit.get(context).pickedCover = widget.pickedCover;
+    MovieCubit.get(context).pickedCover = widget.pickedCover;
 
     return Column(
       children: [
@@ -241,4 +240,3 @@ class _LogoState extends State<Logo> {
     );
   }
 }
-

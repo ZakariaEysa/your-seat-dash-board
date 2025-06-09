@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import '../features/admin_flow/halls2/widgets/basic_hall.dart';

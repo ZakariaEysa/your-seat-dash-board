@@ -136,47 +136,51 @@ class _ButtonBuilderState extends State<ButtonBuilder> {
         child: Center(
           child: AnimatedScale(
             scale: isHovered ? 1.03 : 1.0,
-            duration: Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 200),
             child: AnimatedContainer(
-              duration: Duration(milliseconds: 200),
+              duration: const Duration(milliseconds: 200),
               width: widget.width ?? screenWidth * 0.50,
               height: widget.height ?? screenHeight * 0.07,
               decoration: BoxDecoration(
                 color: !widget.isActivated
-                    ? (widget.buttonColor ?? ColorManager.primaryW).withOpacity(0.8)
+                    ? (widget.buttonColor ?? ColorManager.primaryW)
+                        .withOpacity(0.8)
                     : widget.buttonColor ?? ColorManager.primaryW,
-                borderRadius: widget.borderShape ?? BorderRadius.circular(widget.borderRadius),
+                borderRadius: widget.borderShape ??
+                    BorderRadius.circular(widget.borderRadius),
                 border: Border.all(
-                  color: widget.frameColor ?? widget.buttonColor ?? ColorManager.primaryW,
+                  color: widget.frameColor ??
+                      widget.buttonColor ??
+                      ColorManager.primaryW,
                   width: widget.isActivated ? 1 : 0,
                 ),
                 boxShadow: isHovered
                     ? [
-                  const BoxShadow(
-                    color: Colors.black26,
-                    blurRadius: 15,
-                    offset: Offset(3, 6),
-                  )
-                ]
+                        const BoxShadow(
+                          color: Colors.black26,
+                          blurRadius: 15,
+                          offset: Offset(3, 6),
+                        )
+                      ]
                     : [],
               ),
               child: widget.isLoading
                   ? const Center(child: CircularProgressIndicator())
                   : Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (widget.image != null && widget.image!.isNotEmpty)
-                    Image.asset(
-                      widget.image!,
-                      width: 75.w,
-                      height: 75.h,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        if (widget.image != null && widget.image!.isNotEmpty)
+                          Image.asset(
+                            widget.image!,
+                            width: 75.w,
+                            height: 75.h,
+                          ),
+                        Text(
+                          widget.text,
+                          style: widget.style ?? theme.textTheme.labelLarge,
+                        ),
+                      ],
                     ),
-                  Text(
-                    widget.text,
-                    style: widget.style ?? theme.textTheme.labelLarge,
-                  ),
-                ],
-              ),
             ),
           ),
         ),

@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -36,7 +35,7 @@ class _TicketDetailsState extends State<TicketDetails> {
               SizedBox(height: 80.h),
               const TicketId(),
               SizedBox(height: 50.h),
-               TicketInfo(),
+              const TicketInfo(),
               SizedBox(height: 80.h),
             ],
           ),

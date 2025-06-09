@@ -23,14 +23,17 @@ class PDFSection extends StatelessWidget {
       children: [
         Column(
           children: [
-            Text("upload PDF", style: TextStyle(color: const Color(0xFF6A6767), fontSize: 5.sp)),
+            Text("upload PDF",
+                style:
+                    TextStyle(color: const Color(0xFF6A6767), fontSize: 5.sp)),
             SizedBox(height: 5.h),
-            Container(
+            SizedBox(
               width: 50.w,
               height: 130.h,
               child: pickedPdf != null
                   ? Icon(Icons.picture_as_pdf, size: 30.sp, color: Colors.red)
-                  : Image.asset("assets/icons/download 1.png", fit: BoxFit.contain),
+                  : Image.asset("assets/icons/download 1.png",
+                      fit: BoxFit.contain),
             ),
             if (pickedPdf != null) ...[
               SizedBox(height: 5.h),
@@ -38,7 +41,10 @@ class PDFSection extends StatelessWidget {
                 width: 50.w,
                 child: Text(
                   pickedPdf!.name,
-                  style: TextStyle(fontSize: 4.sp, color: Colors.black, fontWeight: FontWeight.w500),
+                  style: TextStyle(
+                      fontSize: 4.sp,
+                      color: Colors.black,
+                      fontWeight: FontWeight.w500),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -49,12 +55,14 @@ class PDFSection extends StatelessWidget {
               ),
             ],
             SizedBox(height: 10.h),
-            Text("*PDF maximum 10 MB .", style: TextStyle(fontSize: 3.sp, color: const Color(0xFF6A6767))),
+            Text("*PDF maximum 10 MB .",
+                style:
+                    TextStyle(fontSize: 3.sp, color: const Color(0xFF6A6767))),
           ],
         ),
-        SizedBox(width:3.w),
+        SizedBox(width: 3.w),
         Padding(
-          padding:  EdgeInsets.only(top: 60.h),
+          padding: EdgeInsets.only(top: 60.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -68,7 +76,10 @@ class PDFSection extends StatelessWidget {
                     buttonColor: const Color(0xFF292D32),
                     frameColor: const Color(0xFF560B76),
                     borderShape: BorderRadius.circular(15.r),
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 5.sp),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 5.sp),
                   ),
                   SizedBox(width: 3.w),
                   ButtonBuilder(
@@ -78,7 +89,10 @@ class PDFSection extends StatelessWidget {
                     height: 40.h,
                     buttonColor: const Color(0xFFFF0000),
                     borderShape: BorderRadius.circular(15.r),
-                    style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold, fontSize: 5.sp),
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 5.sp),
                   ),
                 ],
               ),

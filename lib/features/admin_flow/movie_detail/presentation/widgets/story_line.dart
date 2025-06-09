@@ -42,7 +42,8 @@ class _StoryLineState extends State<StoryLine> {
       key: StoryLine.formKey,
       child: Center(
         child: Padding(
-          padding: EdgeInsets.only(left: 70.w, right: 70.w, top: 8.h, bottom: 28.h),
+          padding:
+              EdgeInsets.only(left: 70.w, right: 70.w, top: 8.h, bottom: 28.h),
           child: NewTextField(
             controller: MovieCubit.get(context).storyLineController,
             hintText: '\n\n Write story line here ...',
@@ -50,7 +51,8 @@ class _StoryLineState extends State<StoryLine> {
             errorText: null,
             keyboardType: TextInputType.multiline,
             obscureText: false,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 12),
             errorStyle: const TextStyle(fontSize: 12, color: Colors.red),
             isMultiline: true,
             maxLines: 5,

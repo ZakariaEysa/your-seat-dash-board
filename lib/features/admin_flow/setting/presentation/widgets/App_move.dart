@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/cubit/settings_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/views/cinema_design.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/views/contract.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/setting/presentation/views/payment_info.dart';
@@ -55,12 +53,12 @@ class _AppState extends State<App> {
             ),
           ),
         ),
-        body: TabBarView(
+        body: const TabBarView(
           children: [
-            const CinemaInfo(),
-            const CinemaDesign(),
-            const PaymentInfo(),
-            const Contract(),
+            CinemaInfo(),
+            CinemaDesign(),
+            PaymentInfo(),
+            Contract(),
           ],
         ),
       ),

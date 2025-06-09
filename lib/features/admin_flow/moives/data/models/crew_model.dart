@@ -8,16 +8,16 @@ class Crew extends Equatable {
   const Crew({this.director, this.producer, this.writer});
 
   factory Crew.fromJson(Map<String, dynamic> json) => Crew(
-    director: json['director'] as String?,
-    producer: json['producer'] as String?,
-    writer: json['writer'] as String?,
-  );
+        director: json['director'] as String?,
+        producer: json['producer'] as String?,
+        writer: json['writer'] as String?,
+      );
 
   Map<String, dynamic> toJson() => {
-    'director': director,
-    'producer': producer,
-    'writer': writer,
-  };
+        'director': director,
+        'producer': producer,
+        'writer': writer,
+      };
 
   @override
   List<Object?> get props => [director, producer, writer];

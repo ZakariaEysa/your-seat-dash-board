@@ -8,12 +8,12 @@ class SalesCard extends StatelessWidget {
   final String imagePath;
 
   const SalesCard({
-    Key? key,
+    super.key,
     required this.title,
     required this.value,
     required this.color,
     required this.imagePath,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +31,7 @@ class SalesCard extends StatelessWidget {
             Container(
               width: 60.w,
               height: 60.h,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
                 color: Colors.black,
               ),
@@ -69,6 +69,5 @@ class SalesCard extends StatelessWidget {
         ),
       ),
     );
-
   }
 }

@@ -13,7 +13,7 @@ class MovieTextFieldLabel extends StatelessWidget {
   final bool readOnly;
 
   const MovieTextFieldLabel({
-    Key? key,
+    super.key,
     this.initialValue,
     required this.label,
     required this.controller,
@@ -22,7 +22,7 @@ class MovieTextFieldLabel extends StatelessWidget {
     this.hintText,
     this.onChanged,
     this.readOnly = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,16 +40,16 @@ class MovieTextFieldLabel extends StatelessWidget {
         SizedBox(height: 5.h),
         NewTextField(
           initialValue: initialValue,
-            controller: controller,
-            keyboardType: TextInputType.text, // يجب أن يكون text وليس multiline إذا كنت تريد سطر واحد
-            hintText: hintText,
-            borderColor: errorText != null ? errorColor : Colors.black,
-            errorText: errorText,
-            readOnly: readOnly,
-            onChanged: onChanged,
-            // تأكد من عدم وجود أي قيود إضافية هنا
-          ),
-
+          controller: controller,
+          keyboardType: TextInputType
+              .text, // يجب أن يكون text وليس multiline إذا كنت تريد سطر واحد
+          hintText: hintText,
+          borderColor: errorText != null ? errorColor : Colors.black,
+          errorText: errorText,
+          readOnly: readOnly,
+          onChanged: onChanged,
+          // تأكد من عدم وجود أي قيود إضافية هنا
+        ),
       ],
     );
   }

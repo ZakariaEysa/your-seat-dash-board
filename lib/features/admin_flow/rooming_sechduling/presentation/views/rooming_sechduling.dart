@@ -11,15 +11,18 @@ class RoomingScheduling extends StatefulWidget {
 
   Future<List<Map<String, dynamic>>> fetchScheduleSummaryFromFirebase() async {
     try {
-      final String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
-      final DocumentReference cinemaDoc = _firestore.collection('Cinemas').doc(cinemaId);
+      final String cinemaId =
+          extractUsername(LocalStorageService.getUserData() ?? "");
+      final DocumentReference cinemaDoc =
+          _firestore.collection('Cinemas').doc(cinemaId);
       final DocumentSnapshot cinemaSnapshot = await cinemaDoc.get();
 
       if (!cinemaSnapshot.exists) {
         throw Exception("Cinema document does not exist.");
       }
 
-      final Map<String, dynamic> data = cinemaSnapshot.data() as Map<String, dynamic>;
+      final Map<String, dynamic> data =
+          cinemaSnapshot.data() as Map<String, dynamic>;
       final List<dynamic> moviesList = data['movies'] ?? [];
 
       List<Map<String, dynamic>> scheduleSummaries = [];
@@ -48,11 +51,15 @@ class RoomingScheduling extends StatefulWidget {
             final String startDate = hallTimes.first['date'];
             final String endDate = hallTimes.last['date'];
 
-            final firstDayTimes = (hallTimes.first['time'] as List).map((t) => t['time'].toString()).toList();
+            final firstDayTimes = (hallTimes.first['time'] as List)
+                .map((t) => t['time'].toString())
+                .toList();
             firstDayTimes.sort();
             final String startTime = firstDayTimes.first;
 
-            final lastDayTimes = (hallTimes.last['time'] as List).map((t) => t['time'].toString()).toList();
+            final lastDayTimes = (hallTimes.last['time'] as List)
+                .map((t) => t['time'].toString())
+                .toList();
             lastDayTimes.sort();
             final String endTime = lastDayTimes.last;
 
@@ -78,19 +85,22 @@ class RoomingScheduling extends StatefulWidget {
 
   Future<void> deleteScheduleFromFirebase(String movieName, String hall) async {
     try {
-      final String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
-      final DocumentReference cinemaDoc = _firestore.collection('Cinemas').doc(cinemaId);
+      final String cinemaId =
+          extractUsername(LocalStorageService.getUserData() ?? "");
+      final DocumentReference cinemaDoc =
+          _firestore.collection('Cinemas').doc(cinemaId);
       final DocumentSnapshot cinemaSnapshot = await cinemaDoc.get();
 
       if (!cinemaSnapshot.exists) {
         throw Exception("Cinema document does not exist.");
       }
 
-      final Map<String, dynamic> data = cinemaSnapshot.data() as Map<String, dynamic>;
+      final Map<String, dynamic> data =
+          cinemaSnapshot.data() as Map<String, dynamic>;
       final List<dynamic> moviesList = data['movies'] ?? [];
 
       final int movieIndex = moviesList.indexWhere(
-            (movie) => movie is Map && movie['name'] == movieName,
+        (movie) => movie is Map && movie['name'] == movieName,
       );
 
       if (movieIndex == -1) {
@@ -139,14 +149,16 @@ class _RoomingSchedulingState extends State<RoomingScheduling> {
   void loadSchedule() async {
     final schedulesData = await widget.fetchScheduleSummaryFromFirebase();
     setState(() {
-      _scheduleItems = schedulesData.map((e) => ScheduleItem(
-        room: e['hall'] ?? '',
-        movie: e['movie'] ?? '',
-        startDate: e['startDate'] ?? '',
-        startTime: e['startTime'] ?? '',
-        endDate: e['endDate'] ?? '',
-        endTime: e['endTime'] ?? '',
-      )).toList();
+      _scheduleItems = schedulesData
+          .map((e) => ScheduleItem(
+                room: e['hall'] ?? '',
+                movie: e['movie'] ?? '',
+                startDate: e['startDate'] ?? '',
+                startTime: e['startTime'] ?? '',
+                endDate: e['endDate'] ?? '',
+                endTime: e['endTime'] ?? '',
+              ))
+          .toList();
       _isLoading = false;
     });
   }
@@ -193,12 +205,17 @@ class _RoomingSchedulingState extends State<RoomingScheduling> {
         child: Padding(
           padding: EdgeInsets.all(16.sp),
           child: ConstrainedBox(
-            constraints: BoxConstraints(minWidth: MediaQuery.of(context).size.width * 0.75),
+            constraints: BoxConstraints(
+                minWidth: MediaQuery.of(context).size.width * 0.75),
             child: DataTable(
-              headingRowColor: MaterialStateProperty.all(Colors.grey.withOpacity(0.1)),
+              headingRowColor:
+                  WidgetStateProperty.all(Colors.grey.withOpacity(0.1)),
               dataRowMaxHeight: 50,
               columnSpacing: 1,
-              headingTextStyle: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 5.sp),
+              headingTextStyle: TextStyle(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 5.sp),
               dataTextStyle: const TextStyle(color: Colors.black),
               columns: const [
                 DataColumn(label: Text('Room')),

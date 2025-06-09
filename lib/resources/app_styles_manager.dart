@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'color_manager.dart';
 
-
 class AppStylesManager {
   final double fontSize;
   final FontWeight fontWeight;
@@ -30,7 +29,6 @@ class AppStylesManager {
     color: ColorManager.primaryBL2,
     // fontFamily: HiveStorage.get(HiveKeys.isArabic) ? 'GE Dinar One' : 'Manrope',
     fontFamily: 'Manrope',
-
   );
 
   // example

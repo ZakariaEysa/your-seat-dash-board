@@ -51,6 +51,7 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
     }
   }
 
+  @override
   Future<String?> getAuthToken() async {
     try {
       final response = await dio.post(
@@ -69,6 +70,7 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
     }
   }
 
+  @override
   Future<int> getOrderId(
       {required String token, required String amount}) async {
     try {
@@ -91,6 +93,7 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
     }
   }
 
+  @override
   Future<String> getPaymentKey(
       {required String token,
       required int orderId,
@@ -140,6 +143,7 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
     }
   }
 
+  @override
   Future<void> refundPayment(
       {required String transactionId, required int amount}) async {
     try {
@@ -170,6 +174,7 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
     }
   }
 
+  @override
   Future<List<TransactionModel>> getAllTransactions(
       {int limit = 10, int page = 1}) async {
     List<TransactionModel> allTransactions = [];
@@ -240,10 +245,12 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
     return allTransactions;
   }
 
+  @override
   Map<String, int> getTransactionStats() {
     return {"total": total, "completed": completed, "refunded": refunded};
   }
 
+  @override
   void resetTransactionStats() {
     total = 0;
     completed = 0;

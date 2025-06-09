@@ -1,13 +1,13 @@
 class Validators {
   static String? validateRequired(
-      String? value,
-      String fieldName, {
-        int maxLength = 30,
-        int minLength = 1,
-        bool lettersOnly = false,
-        bool numbersOnly = false,
-        bool allowSpaces = true,
-      }) {
+    String? value,
+    String fieldName, {
+    int maxLength = 30,
+    int minLength = 1,
+    bool lettersOnly = false,
+    bool numbersOnly = false,
+    bool allowSpaces = true,
+  }) {
     if (value == null || value.isEmpty) {
       return '$fieldName is required';
     }
@@ -32,13 +32,12 @@ class Validators {
     return null;
   }
 
-
   static String? validateAnyText(
-      String? value,
-      String fieldName, {
-        int maxLength = 100,
-        int minLength = 1,
-      }) {
+    String? value,
+    String fieldName, {
+    int maxLength = 100,
+    int minLength = 1,
+  }) {
     if (value == null || value.isEmpty) {
       return '$fieldName is required';
     }
@@ -53,6 +52,7 @@ class Validators {
 
     return null;
   }
+
   static String? _validateNumbersOnly(String value, String fieldName) {
     final numericRegex = RegExp(r'^[0-9]+$');
     if (!numericRegex.hasMatch(value)) {
@@ -134,6 +134,7 @@ class Validators {
 
     return null;
   }
+
   static String? validateDurationFormat(String? value) {
     if (value == null || value.isEmpty) {
       return 'Duration is required';

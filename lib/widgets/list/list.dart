@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../features/admin_flow/Rooming/presentation/views/rooming.dart';
@@ -28,18 +27,18 @@ class _NavigationListState extends State<NavigationList> {
   Widget build(BuildContext context) {
     double sideBarWidth = 45.w;
 
-    final List<Widget> _pages = [
+    final List<Widget> pages = [
       const Home(),
       const Transactions(),
-      const  Halls2(),
-      Movies(),
-      TicketDetails(),
+      const Halls2(),
+      const Movies(),
+      const TicketDetails(),
       Rooming(scheduleItems: _scheduleItems),
       RoomingScheduling(),
-      App(),
+      const App(),
     ];
 
-    final List<Map<String, dynamic>> _menuItems = [
+    final List<Map<String, dynamic>> menuItems = [
       {'icon': Icons.grid_view, 'title': 'Home'},
       {'icon': Icons.receipt, 'title': 'Transactions'},
       {'icon': Icons.apartment, 'title': 'Halls'},
@@ -62,17 +61,15 @@ class _NavigationListState extends State<NavigationList> {
               children: [
                 Image.asset("assets/images/yourseat.png", width: 80.w),
                 SizedBox(height: 15.h),
-                for (int i = 0; i < _menuItems.length; i++)
-                  buildNavItem(i, _menuItems, _pages),
+                for (int i = 0; i < menuItems.length; i++)
+                  buildNavItem(i, menuItems, pages),
               ],
             ),
           ),
           Expanded(
             child: PrimaryScrollController(
               controller: ScrollController(),
-              child: _pages[
-              _currentIndex >= _pages.length ? 0 : _currentIndex
-              ],
+              child: pages[_currentIndex >= pages.length ? 0 : _currentIndex],
             ),
           ),
         ],
@@ -80,7 +77,8 @@ class _NavigationListState extends State<NavigationList> {
     );
   }
 
-  Widget buildNavItem(int index, List<Map<String, dynamic>> menuItems, List<Widget> pages) {
+  Widget buildNavItem(
+      int index, List<Map<String, dynamic>> menuItems, List<Widget> pages) {
     bool isSelected = index == _currentIndex;
 
     return Padding(
@@ -92,8 +90,9 @@ class _NavigationListState extends State<NavigationList> {
               context: context,
               builder: (BuildContext context) {
                 return AlertDialog(
-                  backgroundColor: Color(0xFF5A2D82),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+                  backgroundColor: const Color(0xFF5A2D82),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15)),
                   title: const Text(
                     "Are you sure you want to log out?",
                     style: TextStyle(color: Colors.white, fontSize: 18),
@@ -106,8 +105,9 @@ class _NavigationListState extends State<NavigationList> {
                         Navigator.of(context).pop();
                         Navigator.pushAndRemoveUntil(
                           context,
-                          MaterialPageRoute(builder: (context) => SignIn()),
-                              (route) => false,
+                          MaterialPageRoute(
+                              builder: (context) => const SignIn()),
+                          (route) => false,
                         );
                       },
                       child: const Text(
@@ -128,14 +128,13 @@ class _NavigationListState extends State<NavigationList> {
                 );
               },
             );
-          } else { // لو ضغط على أي صفحة تانية
+          } else {
+            // لو ضغط على أي صفحة تانية
             setState(() {
               _currentIndex = index;
             });
           }
         },
-
-
         child: Stack(
           children: [
             Container(
