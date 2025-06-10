@@ -1,7 +1,7 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../data/model/transaction_model.dart';
 import '../../domain/repos/payment_repo.dart';
 
 part 'payment_state.dart';
@@ -13,13 +13,19 @@ class PaymentCubit extends Cubit<PaymentState> {
   PaymentCubit(this.paymentRepo) : super(PaymentInitial());
   static PaymentCubit get(context) => BlocProvider.of<PaymentCubit>(context);
 
+  List<TransactionModel> transactions = [];
   Future<void> getAllTransactions({int limit = 10, int page = 1}) async {
     emit(TransactionLoading());
     final result =
         await paymentRepo.getAllTransactions(limit: limit, page: page);
+
     result.fold(
       (failure) => emit(TransactionError(failure.errorMsg)),
-      (transactions) => emit(TransactionSuccess(transactions)),
+      (newTransactions) {
+        transactions.addAll(newTransactions);
+        print(newTransactions[0]);
+        emit(const TransactionSuccess());
+      },
     );
   }
 
@@ -119,4 +125,7 @@ class PaymentCubit extends Cubit<PaymentState> {
       (paymentKey) => emit(PaymentKeySuccess(paymentKey)),
     );
   }
+
+  Map<String, int> getTransactionStats() => paymentRepo.getTransactionStats();
+  void resetTransactionStats() => paymentRepo.resetTransactionStats();
 }

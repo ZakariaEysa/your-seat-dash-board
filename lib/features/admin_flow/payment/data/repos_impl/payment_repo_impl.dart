@@ -1,4 +1,5 @@
 import 'package:dartz/dartz.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/payment/data/model/transaction_model.dart';
 import '../../../../../services/failure_service.dart';
 import '../../domain/repos/payment_repo.dart';
 import '../remote_data_source/payment_remote_data_source.dart';
@@ -9,7 +10,10 @@ class PaymentRepoImpl implements PaymentRepo {
   PaymentRepoImpl(this.paymentRemoteDataSource);
 
   @override
-  Future<Either<FailureService, List>> getAllTransactions(
+  Map<String, int> getTransactionStats() =>
+      paymentRemoteDataSource.getTransactionStats();
+  @override
+  Future<Either<FailureService, List<TransactionModel>>> getAllTransactions(
       {int limit = 10, int page = 1}) async {
     try {
       final transactions = await paymentRemoteDataSource.getAllTransactions(
@@ -82,5 +86,10 @@ class PaymentRepoImpl implements PaymentRepo {
     } catch (e) {
       return Left(ServiceFailure(e.toString()));
     }
+  }
+
+  @override
+  void resetTransactionStats() {
+    paymentRemoteDataSource.resetTransactionStats();
   }
 }

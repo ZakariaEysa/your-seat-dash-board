@@ -3,14 +3,15 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 
 import 'package:yourseatgraduationproject/core/Network/end_points.dart';
+import 'package:yourseatgraduationproject/features/admin_flow/payment/data/model/transaction_model.dart';
 
 import '../../../../../utils/app_logs.dart';
-
 
 abstract class PaymentRemoteDataSource {
   Future<String?> payWithPayMob(num amount);
   Future<String?> getAuthToken();
-
+  Map<String, int> getTransactionStats();
+  void resetTransactionStats();
   Future<int> getOrderId({required String token, required String amount});
 
   Future<String> getPaymentKey(
@@ -19,11 +20,17 @@ abstract class PaymentRemoteDataSource {
   Future<void> refundPayment(
       {required String transactionId, required int amount});
 
-  Future<List<dynamic>> getAllTransactions({int limit = 10, int page = 1});
+  Future<List<TransactionModel>> getAllTransactions(
+      {int limit = 10, int page = 1});
 }
 
 class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
   PaymentRemoteDataSourceImpl();
+  int total = 0;
+  int completed = 0;
+  int refunded = 0;
+  int transactionPage = 1;
+
   Dio dio = Dio(BaseOptions(
     validateStatus: (status) => true, // يقبل أي status code
   ));
@@ -34,7 +41,7 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
       AppLogs.errorLog("token : $token");
       final orderId =
           await getOrderId(token: token!, amount: (100 * amount).toString());
-     
+
       final paymentKey = await getPaymentKey(
           token: token, orderId: orderId, amount: (100 * amount).toString());
       AppLogs.scussessLog(paymentKey.toString());
@@ -44,6 +51,7 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
     }
   }
 
+  @override
   Future<String?> getAuthToken() async {
     try {
       final response = await dio.post(
@@ -62,6 +70,7 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
     }
   }
 
+  @override
   Future<int> getOrderId(
       {required String token, required String amount}) async {
     try {
@@ -84,6 +93,7 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
     }
   }
 
+  @override
   Future<String> getPaymentKey(
       {required String token,
       required int orderId,
@@ -133,6 +143,7 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
     }
   }
 
+  @override
   Future<void> refundPayment(
       {required String transactionId, required int amount}) async {
     try {
@@ -163,16 +174,23 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
     }
   }
 
-  Future<List<dynamic>> getAllTransactions(
+  @override
+  Future<List<TransactionModel>> getAllTransactions(
       {int limit = 10, int page = 1}) async {
+    List<TransactionModel> allTransactions = [];
+
+    int limit = 0;
+    bool hasMore = true;
+
     try {
       final token = await getAuthToken(); // جلب التوكن
 
+      // while (hasMore) {
       final response = await dio.get(
         "https://accept.paymob.com/api/acceptance/transactions",
         queryParameters: {
-          "page": page, // تحديد رقم الصفحة
-          "limit": limit, // عدد النتائج في كل صفحة
+          "page": transactionPage,
+          "limit": limit,
         },
         options: Options(
           headers: {
@@ -181,19 +199,61 @@ class PaymentRemoteDataSourceImpl implements PaymentRemoteDataSource {
           },
         ),
       );
-      AppLogs.scussessLog("Transactions: ${response.data["results"].length}");
-      AppLogs.scussessLog("Transactions: ${response.data["results"][0]}");
 
       if (response.statusCode == 200) {
-        AppLogs.scussessLog("Transactions: ${response.data["results"].length}");
-        return response.data["results"] ?? []; // إرجاع المعاملات
+        final results = response.data["results"] as List;
+        AppLogs.scussessLog(
+            "Page $transactionPage - Fetched ${results.length} transactions");
+
+        if (results.isEmpty) {
+          hasMore = false;
+        } else {
+          final transactions =
+              results.map((item) => TransactionModel.fromJson(item)).toList();
+
+          for (var tx in transactions) {
+            if (tx.success == true) completed++;
+            if (tx.isRefund == true || tx.isRefunded == true) refunded++;
+          }
+
+          allTransactions.addAll(transactions);
+          AppLogs.errorLog(results.length.toString());
+          AppLogs.errorLog(limit.toString());
+          // if (page > limit) {
+          //   hasMore = false;
+          // } else {
+          //   page++;
+          // }
+          transactionPage++;
+        }
       } else {
         AppLogs.errorLog("Error fetching transactions: ${response.data}");
-        return [];
+        hasMore = false;
       }
+      // }
+
+      AppLogs.scussessLog(
+          "✅ Total transactions fetched: ${allTransactions.length}");
+      AppLogs.scussessLog("✔️ Successful transactions: $completed");
+      AppLogs.scussessLog("↩️ Refunded transactions: $refunded");
+
+      total += allTransactions.length;
     } catch (e) {
-      AppLogs.errorLog("Failed to fetch transactions: ${e.toString()}");
-      return [];
+      AppLogs.errorLog("❌ Failed to fetch transactions: ${e.toString()}");
     }
+
+    return allTransactions;
+  }
+
+  @override
+  Map<String, int> getTransactionStats() {
+    return {"total": total, "completed": completed, "refunded": refunded};
+  }
+
+  @override
+  void resetTransactionStats() {
+    total = 0;
+    completed = 0;
+    refunded = 0;
   }
 }
