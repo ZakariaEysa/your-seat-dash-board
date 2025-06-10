@@ -109,12 +109,14 @@
 //   }
 // }
 
+
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:yourseatgraduationproject/widgets/text_field/text_field/new_text_field_builder.dart';
 import '../../../../../widgets/button/button_builder.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/moives/data/movies_cubit/movies_cubit.dart';
 
@@ -125,7 +127,7 @@ class Logo extends StatefulWidget {
   final Color errorColor;
   final bool isViewOnly;
   final String? base64Image;
-
+  final bool readOnly;
   const Logo({
     super.key,
     required this.pickedCover,
@@ -133,8 +135,8 @@ class Logo extends StatefulWidget {
     required this.onDelete,
     required this.errorColor,
     this.isViewOnly = false,
-    this.base64Image,
-    Uint8List? imageBytes,
+    this.readOnly = false,
+    this.base64Image, Uint8List? imageBytes,
   });
 
   @override
@@ -199,10 +201,10 @@ class _LogoState extends State<Logo> {
         SizedBox(height: 25.h),
 
         // Upload & Delete buttons
-        if (!widget.isViewOnly) ...[
+        if (!widget.isViewOnly && !widget.readOnly) ...[
           Row(
             children: [
-              SizedBox(width: 15.w),
+              SizedBox(width: 3.w),
               ButtonBuilder(
                 text: widget.pickedCover == null ? 'Upload' : 'Change',
                 onTap: () => pickCover(context),
@@ -240,3 +242,4 @@ class _LogoState extends State<Logo> {
     );
   }
 }
+

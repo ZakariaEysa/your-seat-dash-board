@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class NewDropdownField extends StatelessWidget {
   final String? value;
-  final bool isEnabled;
+  final bool readOnly; // تغيير من isEnabled إلى readOnly
   final List<String> items;
   final String? errorText;
   final String hintText;
@@ -13,7 +13,7 @@ class NewDropdownField extends StatelessWidget {
   const NewDropdownField({
     super.key,
     this.value,
-    this.isEnabled = true,
+    this.readOnly = false, // قيمة افتراضية
     required this.items,
     required this.hintText,
     this.errorText,
@@ -27,33 +27,42 @@ class NewDropdownField extends StatelessWidget {
       value: value,
       items: items
           .map((item) => DropdownMenuItem(
-                value: item,
-                child: Text(
-                  item,
-                  style: TextStyle(fontSize: 5.sp, color: Colors.black),
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ))
+        value: item,
+        child: Text(
+          item,
+          style: TextStyle(
+            fontSize: 5.sp,
+            color: Colors.black, // تعديل اللون عند القراءة فقط
+          ),
+          overflow: TextOverflow.ellipsis,
+        ),
+      ))
           .toList(),
-      onChanged: isEnabled ? onChanged : null,
+      onChanged: readOnly ? null : onChanged, // التعطيل عند القراءة فقط
       dropdownColor: Colors.white,
       style: TextStyle(fontSize: 5.sp, color: Colors.black),
       decoration: InputDecoration(
         hintText: hintText,
-        hintStyle: TextStyle(fontSize: 5.sp, color: Colors.grey),
+        // hintStyle: TextStyle(
+        //   fontSize: 5.sp,
+        //   color: readOnly ? Colors.grey[400] : Colors.grey,
+        // ),
         filled: true,
-        fillColor: Colors.white,
+        fillColor : Colors.white,
         contentPadding: EdgeInsets.symmetric(horizontal: 3.w, vertical: 10.h),
         border: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.black),
+          borderSide: BorderSide(
+              color: Colors.black),
           borderRadius: BorderRadius.circular(8.r),
         ),
         enabledBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.black),
+          borderSide: BorderSide(
+              color:  Colors.black),
           borderRadius: BorderRadius.circular(8.r),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: const BorderSide(color: Colors.black, width: 1.5),
+          borderSide: BorderSide(
+              color:  Colors.black, width: 1.5),
           borderRadius: BorderRadius.circular(8.r),
         ),
         errorBorder: OutlineInputBorder(
