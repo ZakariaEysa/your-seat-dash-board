@@ -6,6 +6,11 @@ class LoadingIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Image.asset("assets/images/loading1.gif",width: 50.w,height: 50.h,));
+    return Center(
+        child: Image.asset(
+      "assets/images/loading1.gif",
+      width: 50.w,
+      height: 50.h,
+    ));
   }
 }

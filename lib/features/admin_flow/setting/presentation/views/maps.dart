@@ -9,7 +9,6 @@ import 'package:js/js_util.dart';
 
 import '../cubit/settings_cubit.dart';
 import 'google_maps_interop.dart';
-import 'user_location_service .dart';
 
 class MapPickerPage extends StatefulWidget {
   const MapPickerPage({super.key});
@@ -126,7 +125,7 @@ class _MapPickerPageState extends State<MapPickerPage> {
       appBar: AppBar(title: const Text("حدد موقع السينما")),
       body: Column(
         children: [
-          Expanded(
+          const Expanded(
             child: HtmlElementView(viewType: 'map-element'),
           ),
           if (selectedAddress != null)

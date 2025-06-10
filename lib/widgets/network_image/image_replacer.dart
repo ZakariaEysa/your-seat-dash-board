@@ -10,7 +10,8 @@ class ImageReplacer extends StatelessWidget {
     this.fit = BoxFit.fill,
     this.placeholder,
     this.errorWidget,
-    this.placeholderUrl, this.isCircle = false,
+    this.placeholderUrl,
+    this.isCircle = false,
   });
 
   final String imageUrl;
@@ -21,7 +22,6 @@ class ImageReplacer extends StatelessWidget {
   final Widget? placeholder;
   final Widget? errorWidget;
   final bool? isCircle;
-
 
   @override
   Widget build(BuildContext context) {
@@ -47,15 +47,17 @@ class ImageReplacer extends StatelessWidget {
     return Container(
       width: width,
       height: height,
-      decoration: isCircle! ? BoxDecoration(
-        shape: BoxShape.circle ,
-        border: Border.all(
-          color: Colors.transparent, // Border color
-          width: 2.0, // Border width
-        ),
-      ):null,
+      decoration: isCircle!
+          ? BoxDecoration(
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.transparent, // Border color
+                width: 2.0, // Border width
+              ),
+            )
+          : null,
       child: ClipOval(
-        clipBehavior: isCircle! ? Clip.antiAliasWithSaveLayer :   Clip.none,
+        clipBehavior: isCircle! ? Clip.antiAliasWithSaveLayer : Clip.none,
         child: CachedNetworkImage(
           imageUrl: imageUrl,
           width: width,
@@ -80,7 +82,6 @@ class ImageReplacer extends StatelessWidget {
         ),
       ),
     );
-
   }
 }
 

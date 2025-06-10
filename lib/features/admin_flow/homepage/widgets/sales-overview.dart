@@ -85,14 +85,11 @@ import 'package:yourseatgraduationproject/features/admin_flow/homepage/widgets/s
 import '../cubit/sales_dash_cubit/sales_dash_cubit.dart';
 
 class SalesOverview extends StatefulWidget {
-
-
   const SalesOverview({super.key});
 
   @override
   State<SalesOverview> createState() => _SalesOverviewState();
 }
-
 
 class _SalesOverviewState extends State<SalesOverview> {
   @override
@@ -131,11 +128,13 @@ class _SalesOverviewState extends State<SalesOverview> {
               String totalCustomers = "0";
 
               if (state is SalesDashLoading) {
-                    return const Center(child: CircularProgressIndicator(),);
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
               } else if (state is SalesDashSuccess) {
                 totalIncome = '\$${state.totalIncome ?? 0}';
-                customers = "${state.totalCustomers??0}";
-                totalCustomers = "${state.totalMovies??0}";
+                customers = "${state.totalCustomers ?? 0}";
+                totalCustomers = "${state.totalMovies ?? 0}";
               } else if (state is SalesDashError) {
                 totalIncome = 'Error';
               }
@@ -160,7 +159,7 @@ class _SalesOverviewState extends State<SalesOverview> {
                     colorContainer: "#FF947A",
                   ),
                   SizedBox(width: 5.w),
-                   SalesDash(
+                  SalesDash(
                     imagePath: "assets/images/salesdashbord3.png",
                     colorHex: '#DCFCE7',
                     value: totalCustomers,

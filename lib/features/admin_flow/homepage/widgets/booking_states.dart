@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import '../cubit/home_cubit.dart';
 import '../models/ticket_model.dart';
 import 'ColorRingWidget.dart';
 import 'booking_Item.dart';
@@ -94,22 +93,22 @@ class _BookingStatesState extends State<BookingStates> {
                       children: [
                         Item(
                           percentage: widget.tickets.length.toString(),
-                          color: Color(0xFF7F33CC),
+                          color: const Color(0xFF7F33CC),
                           label: "Total Booking",
                         ),
                         Item(
                           percentage: activeCount.toString(),
-                          color: Color(0xFFC69CFF),
+                          color: const Color(0xFFC69CFF),
                           label: "Active States",
                         ),
                         Item(
                           percentage: usedCount.toString(),
-                          color: Color(0xFFE4C4FF),
+                          color: const Color(0xFFE4C4FF),
                           label: "Used States",
                         ),
                         Item(
                           percentage: cancelledCount.toString(),
-                          color: Color(0xFF490073),
+                          color: const Color(0xFF490073),
                           label: "Cancel States",
                         ),
                       ],

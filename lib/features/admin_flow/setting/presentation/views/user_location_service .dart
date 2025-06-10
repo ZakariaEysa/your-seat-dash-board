@@ -1,7 +1,6 @@
 import 'dart:html';
 
 import 'package:flutter/material.dart';
-import 'package:http/http.dart';
 import 'package:yourseatgraduationproject/utils/app_logs.dart';
 
 import '../cubit/settings_cubit.dart';

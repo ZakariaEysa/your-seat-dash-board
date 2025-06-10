@@ -2,12 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:yourseatgraduationproject/utils/app_logs.dart';
-import 'package:yourseatgraduationproject/utils/navigation.dart';
 import '../../../../../widgets/button/button_builder.dart';
 import '../cubit/settings_cubit.dart';
 import '../widgets/cinema_info_text/cinema_text.dart';
 import '../widgets/cinema_info_text/country.dart';
-import 'maps.dart';
 import 'user_location_service .dart';
 
 class CinemaInfo extends StatefulWidget {
@@ -139,7 +137,6 @@ class _CinemaInfoState extends State<CinemaInfo> {
                                     //     ),
                                     //   ),
                                     // ),
-
                                   ],
                                 )
                               ],
@@ -172,10 +169,10 @@ class _CinemaInfoState extends State<CinemaInfo> {
                             AppLogs.debugLog(cubit.emailController.toString());
 
                             ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
+                              const SnackBar(
                                 content: Text('⚠️ Please select a location!'),
                                 backgroundColor: Colors.red,
-                                duration: const Duration(seconds: 2),
+                                duration: Duration(seconds: 2),
                               ),
                             );
                           } else {

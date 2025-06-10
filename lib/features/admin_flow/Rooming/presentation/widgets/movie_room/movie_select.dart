@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 import '../../../../../../data/local_storage_service/local_storage_service.dart';
 
-
 class MovieDropdownWidget extends StatefulWidget {
   final String? initialValue;
   final void Function(String?) onChanged;
@@ -85,27 +84,29 @@ class MovieDropdownWidgetState extends State<MovieDropdownWidget> {
       child: isLoading
           ? const Center(child: CircularProgressIndicator())
           : DropdownButton<String>(
-        value: selectedMovie,
-        hint: const Text('Movie name', style: TextStyle(color: Colors.black)),
-        icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
-        items: movies.map((String movie) {
-          return DropdownMenuItem<String>(
-            value: movie,
-            child: Text(movie, style: const TextStyle(color: Colors.black)),
-          );
-        }).toList(),
-        onChanged: (String? value) {
-          setState(() {
-            selectedMovie = value;
-            movieError = false;
-          });
-          widget.onChanged(value);
-        },
-        isExpanded: true,
-        underline: const SizedBox.shrink(),
-        dropdownColor: Colors.white,
-        style: const TextStyle(color: Colors.black),
-      ),
+              value: selectedMovie,
+              hint: const Text('Movie name',
+                  style: TextStyle(color: Colors.black)),
+              icon: const Icon(Icons.arrow_drop_down, color: Colors.black),
+              items: movies.map((String movie) {
+                return DropdownMenuItem<String>(
+                  value: movie,
+                  child:
+                      Text(movie, style: const TextStyle(color: Colors.black)),
+                );
+              }).toList(),
+              onChanged: (String? value) {
+                setState(() {
+                  selectedMovie = value;
+                  movieError = false;
+                });
+                widget.onChanged(value);
+              },
+              isExpanded: true,
+              underline: const SizedBox.shrink(),
+              dropdownColor: Colors.white,
+              style: const TextStyle(color: Colors.black),
+            ),
     );
   }
 }

@@ -1,8 +1,6 @@
-
 import 'package:equatable/equatable.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/payment/data/model/merchant.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/payment/data/model/shipping_data.dart';
-
 
 class Order extends Equatable {
   final num id;

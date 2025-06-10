@@ -25,7 +25,7 @@ class NewTextField extends StatelessWidget {
   final bool readOnly;
 
   const NewTextField({
-    Key? key,
+    super.key,
     this.controller,
     this.hintText,
     this.initialValue,
@@ -48,19 +48,21 @@ class NewTextField extends StatelessWidget {
     this.expands = false,
     this.enabled = true,
     this.readOnly = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     final effectiveMaxLines = isMultiline ? (maxLines ?? 5) : 1;
-    final effectiveKeyboardType =
-    isMultiline ? TextInputType.multiline : (keyboardType ?? TextInputType.text);
+    final effectiveKeyboardType = isMultiline
+        ? TextInputType.multiline
+        : (keyboardType ?? TextInputType.text);
 
     return TextFormField(
       initialValue: initialValue,
       controller: controller,
       obscureText: obscureText,
-      style: textStyle ?? TextStyle(color: enabled ? Colors.black : Colors.black54),
+      style: textStyle ??
+          TextStyle(color: enabled ? Colors.black : Colors.black54),
       textAlign: textAlign,
       keyboardType: effectiveKeyboardType,
       maxLines: expands ? null : effectiveMaxLines,
@@ -74,7 +76,7 @@ class NewTextField extends StatelessWidget {
         filled: true,
         fillColor: enabled ? Colors.white : Colors.grey[200],
         hintText: hintText,
-        hintStyle: hintStyle ?? TextStyle(color: Colors.grey),
+        hintStyle: hintStyle ?? const TextStyle(color: Colors.grey),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8),
           borderSide: BorderSide(color: borderColor),
@@ -88,8 +90,7 @@ class NewTextField extends StatelessWidget {
             OutlineInputBorder(
               borderRadius: BorderRadius.circular(8),
               borderSide: BorderSide(
-                  color: enabled ? borderColor : Colors.grey,
-                  width: 1.5),
+                  color: enabled ? borderColor : Colors.grey, width: 1.5),
             ),
         errorText: errorText,
         errorStyle: errorStyle ??

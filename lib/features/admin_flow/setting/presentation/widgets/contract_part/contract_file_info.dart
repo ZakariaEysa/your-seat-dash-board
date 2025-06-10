@@ -7,7 +7,6 @@ class ContractFileInfo extends StatelessWidget {
 
   const ContractFileInfo({super.key, required this.file});
 
-
   @override
   Widget build(BuildContext context) {
     return Padding(

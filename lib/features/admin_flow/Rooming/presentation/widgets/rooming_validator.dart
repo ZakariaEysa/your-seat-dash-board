@@ -33,6 +33,7 @@ class RoomingValidator {
     }
     return null;
   }
+
   static String? checkConflictWithExisting(
       List<ScheduleItem> existing, List<ScheduleItem> newItems) {
     for (var newItem in newItems) {
@@ -44,9 +45,9 @@ class RoomingValidator {
       for (var existingItem in existing) {
         if (newItem.room == existingItem.room) {
           final existStart =
-          _parseDateTime(existingItem.startDate, existingItem.startTime);
+              _parseDateTime(existingItem.startDate, existingItem.startTime);
           final existEnd =
-          _parseDateTime(existingItem.endDate, existingItem.endTime);
+              _parseDateTime(existingItem.endDate, existingItem.endTime);
 
           if (existStart == null || existEnd == null) continue;
 
@@ -60,8 +61,6 @@ class RoomingValidator {
     }
     return null;
   }
-
-
 
   static DateTime? _parseDateTime(String date, String time) {
     try {

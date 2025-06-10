@@ -22,7 +22,7 @@ class MoviePhoto extends StatelessWidget {
           image: isNetworkImage
               ? NetworkImage(imagePath)
               : AssetImage(imagePath) as ImageProvider,
-         // fit: BoxFit.cover,
+          // fit: BoxFit.cover,
         ),
       ),
     );

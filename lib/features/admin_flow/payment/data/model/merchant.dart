@@ -1,6 +1,5 @@
-
-
 import 'package:equatable/equatable.dart';
+
 class Merchant extends Equatable {
   final num id;
   final DateTime createdAt;

@@ -14,7 +14,8 @@ class TimeField extends StatefulWidget {
     required this.onChanged,
     required this.placeholder,
     this.initialValue,
-    this.selectedDate, required String label,
+    this.selectedDate,
+    required String label,
   });
 
   @override
@@ -90,7 +91,6 @@ class _TimeFieldState extends State<TimeField> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     final bool hasError = widget.errorText != null;
@@ -107,7 +107,7 @@ class _TimeFieldState extends State<TimeField> {
             decoration: BoxDecoration(
               color: Colors.white,
               border: Border.all(
-                color:  Colors.black,
+                color: Colors.black,
               ),
               borderRadius: BorderRadius.circular(8.r),
             ),

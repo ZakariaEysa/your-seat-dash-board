@@ -70,7 +70,7 @@ class _MoviesState extends State<Movies> {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(left: 10.w),
-                child:  MovieTablePage(),
+                child: const MovieTablePage(),
               ),
             ),
           ],

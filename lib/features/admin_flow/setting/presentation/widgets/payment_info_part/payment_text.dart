@@ -1,4 +1,4 @@
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../../../../../../data/local_storage_service/local_storage_service.dart';
@@ -17,7 +17,8 @@ class PaymentTextState extends State<PaymentText> {
   final TextEditingController _beneficiaryController = TextEditingController();
   final TextEditingController _countryController = TextEditingController();
   final TextEditingController _bankNameController = TextEditingController();
-  final TextEditingController _accountNumberController = TextEditingController();
+  final TextEditingController _accountNumberController =
+      TextEditingController();
   final TextEditingController _ibanController = TextEditingController();
   final TextEditingController _swiftCodeController = TextEditingController();
 
@@ -45,7 +46,8 @@ class PaymentTextState extends State<PaymentText> {
     try {
       await Future.delayed(const Duration(seconds: 2)); // تأخير 2 ثواني
 
-      String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+      String cinemaId =
+          extractUsername(LocalStorageService.getUserData() ?? "");
 
       DocumentSnapshot snapshot = await FirebaseFirestore.instance
           .collection('Cinemas')
@@ -73,12 +75,12 @@ class PaymentTextState extends State<PaymentText> {
 
   Future<void> savePaymentDetails() async {
     try {
-      CollectionReference cinemas = FirebaseFirestore.instance.collection('Cinemas');
-      String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+      CollectionReference cinemas =
+          FirebaseFirestore.instance.collection('Cinemas');
+      String cinemaId =
+          extractUsername(LocalStorageService.getUserData() ?? "");
 
-      await cinemas
-          .doc(cinemaId)
-          .update({
+      await cinemas.doc(cinemaId).update({
         'beneficiaryName': _beneficiaryController.text.trim(),
         'country': _countryController.text.trim(),
         'bankName': _bankNameController.text.trim(),
@@ -100,7 +102,7 @@ class PaymentTextState extends State<PaymentText> {
         SnackBar(
           content: Text('⚠️ Error: ${e.toString()}'),
           backgroundColor: Colors.red,
-          duration: Duration(seconds: 2),
+          duration: const Duration(seconds: 2),
         ),
       );
     }
@@ -117,14 +119,22 @@ class PaymentTextState extends State<PaymentText> {
       return "Invalid email format"; // لو الإيميل مش بالصيغة المطلوبة
     }
   }
+
   bool validateFields() {
     setState(() {
-      _beneficiaryError = _validateName(_beneficiaryController.text.trim(), min: 3, max: 70);
-      _countryError = _validateName(_countryController.text.trim(), min: 2, max: 40);
-      _bankNameError = _validateName(_bankNameController.text.trim(), min: 3, max: 50);
-      _accountNumberError = _validateNumber(_accountNumberController.text.trim(), min: 13, max: 16);
+      _beneficiaryError =
+          _validateName(_beneficiaryController.text.trim(), min: 3, max: 70);
+      _countryError =
+          _validateName(_countryController.text.trim(), min: 2, max: 40);
+      _bankNameError =
+          _validateName(_bankNameController.text.trim(), min: 3, max: 50);
+      _accountNumberError = _validateNumber(
+          _accountNumberController.text.trim(),
+          min: 13,
+          max: 16);
       _ibanError = _validateIBAN(_ibanController.text.trim(), min: 15, max: 34);
-      _swiftCodeError = _validateSwift(_swiftCodeController.text.trim(), min: 8, max: 11);
+      _swiftCodeError =
+          _validateSwift(_swiftCodeController.text.trim(), min: 8, max: 11);
     });
 
     return _beneficiaryError == null &&
@@ -138,28 +148,31 @@ class PaymentTextState extends State<PaymentText> {
   String? _validateName(String value, {int min = 1, int max = 70}) {
     if (value.isEmpty) return "⚠️ This field is required!";
     if (!_nameRegExp.hasMatch(value)) return "⚠️ Only letters allowed!";
-    if (value.length < min || value.length > max) return "⚠️ Length must be $min - $max characters!";
+    if (value.length < min || value.length > max) {
+      return "⚠️ Length must be $min - $max characters!";
+    }
     return null;
   }
 
   String? _validateNumber(String value, {int min = 13, int max = 16}) {
     if (value.isEmpty) return "⚠️ This field is required!";
     if (!_numberRegExp.hasMatch(value)) return "⚠️ Only numbers allowed!";
-    if (value.length < min || value.length > max) return "⚠️ Length must be $min - $max digits!";
+    if (value.length < min || value.length > max) {
+      return "⚠️ Length must be $min - $max digits!";
+    }
     return null;
   }
-
-
 
   String? _validateIBAN(String value, {int min = 29, int max = 29}) {
     if (value.isEmpty) return "⚠️ This field is required!";
     if (!value.startsWith('EG')) return "⚠️ IBAN must start with 'EG'!";
-    if (!_ibanRegExp.hasMatch(value)) return "⚠️ IBAN must be uppercase letters and numbers!";
+    if (!_ibanRegExp.hasMatch(value)) {
+      return "⚠️ IBAN must be uppercase letters and numbers!";
+    }
     if (value.length != 29) return "⚠️ IBAN must be exactly 29 characters!";
 
     return null;
   }
-
 
   String? _validateSwift(String value, {int min = 8, int max = 11}) {
     if (value.isEmpty) return "⚠️ This field is required!";
@@ -178,7 +191,6 @@ class PaymentTextState extends State<PaymentText> {
     return null;
   }
 
-
   @override
   Widget build(BuildContext context) {
     if (_isLoading) {
@@ -191,29 +203,48 @@ class PaymentTextState extends State<PaymentText> {
       children: [
         Row(
           children: [
-            Expanded(child: _buildTextField("Beneficiary Name*", _beneficiaryController, _beneficiaryError,hint: "Mohamed Ahmed ")),
-            Expanded(child: _buildTextField("Country*", _countryController, _countryError,hint: "Egypt")),
+            Expanded(
+                child: _buildTextField("Beneficiary Name*",
+                    _beneficiaryController, _beneficiaryError,
+                    hint: "Mohamed Ahmed ")),
+            Expanded(
+                child: _buildTextField(
+                    "Country*", _countryController, _countryError,
+                    hint: "Egypt")),
           ],
         ),
         SizedBox(height: 10.h),
         Row(
           children: [
-            Expanded(child: _buildTextField("Bank Name*", _bankNameController, _bankNameError,hint: "Banque Misr")),
-            Expanded(child: _buildTextField("Account Number", _accountNumberController, _accountNumberError,hint: "1234567890123456")),
+            Expanded(
+                child: _buildTextField(
+                    "Bank Name*", _bankNameController, _bankNameError,
+                    hint: "Banque Misr")),
+            Expanded(
+                child: _buildTextField("Account Number",
+                    _accountNumberController, _accountNumberError,
+                    hint: "1234567890123456")),
           ],
         ),
         SizedBox(height: 10.h),
         Row(
           children: [
-            Expanded(child: _buildTextField("IBAN", _ibanController, _ibanError,hint:"EG380019000500000000263180002")),
-            Expanded(child: _buildTextField("Swift Code", _swiftCodeController, _swiftCodeError,hint: "BMISEGCX")),
+            Expanded(
+                child: _buildTextField("IBAN", _ibanController, _ibanError,
+                    hint: "EG380019000500000000263180002")),
+            Expanded(
+                child: _buildTextField(
+                    "Swift Code", _swiftCodeController, _swiftCodeError,
+                    hint: "BMISEGCX")),
           ],
         ),
       ],
     );
   }
 
-  Widget _buildTextField(String label, TextEditingController controller, String? error,{String hint = ""}) {
+  Widget _buildTextField(
+      String label, TextEditingController controller, String? error,
+      {String hint = ""}) {
     return TextFiled(
       label: label,
       controller: controller,

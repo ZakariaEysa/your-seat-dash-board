@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -43,8 +42,8 @@ class _HomeState extends State<Home> {
                     children: [
                       Text(
                         "Musfiq",
-                        style:
-                            TextStyle(fontSize: 5.sp, color: Color(0xFF151D48)),
+                        style: TextStyle(
+                            fontSize: 5.sp, color: const Color(0xFF151D48)),
                       ),
                       Text("Admin",
                           style: TextStyle(
@@ -58,7 +57,7 @@ class _HomeState extends State<Home> {
               SizedBox(
                 height: 40.h,
               ),
-              SalesOverview(),
+              const SalesOverview(),
               SizedBox(height: 30.h),
               BlocBuilder<HomeCubit, HomeState>(
                 builder: (context, state) {

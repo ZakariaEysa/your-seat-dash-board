@@ -1,4 +1,3 @@
-import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -25,7 +24,7 @@ class PaymentCubit extends Cubit<PaymentState> {
       (newTransactions) {
         transactions.addAll(newTransactions);
         print(newTransactions[0]);
-        emit(TransactionSuccess());
+        emit(const TransactionSuccess());
       },
     );
   }

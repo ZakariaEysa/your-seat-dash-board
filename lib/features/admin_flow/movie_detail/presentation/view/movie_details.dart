@@ -243,7 +243,6 @@
 //   }
 // }
 
-
 // import 'package:flutter/material.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 // import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -552,8 +551,6 @@
 //   }
 // }
 
-
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -582,7 +579,8 @@ class MovieDetail extends StatefulWidget {
     this.isEditing = false,
   });
 
-  static final GlobalKey<MovieInfoScreenState> _movieInfoKey = GlobalKey<MovieInfoScreenState>();
+  static final GlobalKey<MovieInfoScreenState> _movieInfoKey =
+      GlobalKey<MovieInfoScreenState>();
 
   @override
   State<MovieDetail> createState() => _MovieDetailState();
@@ -670,17 +668,21 @@ class _MovieDetailState extends State<MovieDetail> {
                           builder: (context, constraints) {
                             return SingleChildScrollView(
                               child: ConstrainedBox(
-                                constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                                constraints: BoxConstraints(
+                                    minHeight: constraints.maxHeight),
                                 child: IntrinsicHeight(
                                   child: Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 9.w),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 9.w),
                                     child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.stretch,
                                       children: [
                                         Align(
                                           alignment: Alignment.topLeft,
                                           child: Padding(
-                                            padding: EdgeInsets.only(right: 270.w, top: 20.h),
+                                            padding: EdgeInsets.only(
+                                                right: 270.w, top: 20.h),
                                             child: ButtonBuilder(
                                               text: 'Back',
                                               onTap: () {
@@ -689,8 +691,10 @@ class _MovieDetailState extends State<MovieDetail> {
                                               },
                                               width: 30.w,
                                               height: 40.h,
-                                              buttonColor: const Color(0xFF560B76),
-                                              borderShape: BorderRadius.circular(10.r),
+                                              buttonColor:
+                                                  const Color(0xFF560B76),
+                                              borderShape:
+                                                  BorderRadius.circular(10.r),
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontWeight: FontWeight.bold,
@@ -707,7 +711,10 @@ class _MovieDetailState extends State<MovieDetail> {
                                           isEditing: widget.isEditing, // هذا ما أضفناه
                                         ),
                                         Padding(
-                                          padding: EdgeInsets.only(left: 70.w, top: 30.h, bottom: 10.h),
+                                          padding: EdgeInsets.only(
+                                              left: 70.w,
+                                              top: 30.h,
+                                              bottom: 10.h),
                                           child: Text(
                                             "Story Line",
                                             style: TextStyle(
@@ -718,11 +725,14 @@ class _MovieDetailState extends State<MovieDetail> {
                                           ),
                                         ),
                                         StoryLine(
-                                          initialValue: widget.movieData['description'] ?? '',
+                                          initialValue:
+                                              widget.movieData['description'] ??
+                                                  '',
                                           readOnly: widget.isViewOnly,
                                         ),
                                         Padding(
-                                          padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 30.h),
+                                          padding: EdgeInsets.symmetric(
+                                              horizontal: 8.w, vertical: 30.h),
                                           child: ActorNames(
                                             movieData: widget.movieData,
                                             actors: actors,
@@ -741,44 +751,86 @@ class _MovieDetailState extends State<MovieDetail> {
                                         SizedBox(height: 60.h),
                                         if (!widget.isViewOnly)
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
                                             children: [
                                               ButtonBuilder(
-                                                text: widget.isEditing ? 'Save' : 'Add Movie',
+                                                text: widget.isEditing
+                                                    ? 'Save'
+                                                    : 'Add Movie',
                                                 onTap: () async {
-                                                  final isMovieInfoValid = MovieDetail._movieInfoKey.currentState?.validateFields() ?? false;
-                                                  final isNamesValid = ActorNames.validate();
-                                                  final isStoryLineValid = StoryLine.validate();
-                                                  final isCrewValid = CrewNames.crewKey.currentState?.widget.validate() ?? false;
+                                                  final isMovieInfoValid =
+                                                      MovieDetail._movieInfoKey
+                                                              .currentState
+                                                              ?.validateFields() ??
+                                                          false;
+                                                  final isNamesValid =
+                                                      ActorNames.validate();
+                                                  final isStoryLineValid =
+                                                      StoryLine.validate();
+                                                  final isCrewValid = CrewNames
+                                                          .crewKey
+                                                          .currentState
+                                                          ?.widget
+                                                          .validate() ??
+                                                      false;
 
-                                                  if (isMovieInfoValid && isNamesValid && isStoryLineValid && isCrewValid && promoLinkError == null) {
+                                                  if (isMovieInfoValid &&
+                                                      isNamesValid &&
+                                                      isStoryLineValid &&
+                                                      isCrewValid &&
+                                                      promoLinkError == null) {
                                                     if (widget.isEditing) {
-                                                      await MovieCubit.get(context).updateMovieInCinemaWithPreparedData(context: context);
-                                                      AppLogs.scussessLog("Finish uploading to cinema");
-                                                      print(MovieCubit.get(context).coverPhoto);
-                                                      await MovieCubit.get(context).updateMovieDocumentByName(context: context);
-                                                      AppLogs.scussessLog("Finish uploading to playing now");
-                                                      await MovieCubit.get(context).fetchUserMovies();
+                                                      await MovieCubit.get(
+                                                              context)
+                                                          .updateMovieInCinemaWithPreparedData(
+                                                              context: context);
+                                                      AppLogs.scussessLog(
+                                                          "Finish uploading to cinema");
+                                                      print(MovieCubit.get(
+                                                              context)
+                                                          .coverPhoto);
+                                                      await MovieCubit.get(
+                                                              context)
+                                                          .updateMovieDocumentByName(
+                                                              context: context);
+                                                      AppLogs.scussessLog(
+                                                          "Finish uploading to playing now");
+                                                      await MovieCubit.get(
+                                                              context)
+                                                          .fetchUserMovies();
                                                       Navigator.pop(context);
                                                     } else {
-                                                      await MovieCubit.get(context).addMovieToCinema();
-                                                      await MovieCubit.get(context).uploadMovieToFireStore();
+                                                      await MovieCubit.get(
+                                                              context)
+                                                          .addMovieToCinema();
+                                                      await MovieCubit.get(
+                                                              context)
+                                                          .uploadMovieToFireStore();
                                                       Navigator.pop(context);
-
                                                     }
                                                   } else {
-                                                    ScaffoldMessenger.of(context).showSnackBar(
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
                                                       const SnackBar(
-                                                        backgroundColor: Colors.red,
-                                                        content: Text("Oops Something went wrong please try again", style: TextStyle(color: Colors.white)),
+                                                        backgroundColor:
+                                                            Colors.red,
+                                                        content: Text(
+                                                            "Oops Something went wrong please try again",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .white)),
                                                       ),
                                                     );
                                                   }
                                                 },
                                                 width: 40.w,
                                                 height: 50.h,
-                                                buttonColor: const Color(0xFF560B76),
-                                                borderShape: BorderRadius.circular(10.r),
+                                                buttonColor:
+                                                    const Color(0xFF560B76),
+                                                borderShape:
+                                                    BorderRadius.circular(10.r),
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -789,13 +841,16 @@ class _MovieDetailState extends State<MovieDetail> {
                                               ButtonBuilder(
                                                 text: 'Cancel',
                                                 onTap: () {
-                                                  StoryLine.clearFields(context);
+                                                  StoryLine.clearFields(
+                                                      context);
                                                   Navigator.pop(context);
                                                 },
                                                 width: 40.w,
                                                 height: 50.h,
-                                                buttonColor: const Color(0xFF560B76),
-                                                borderShape: BorderRadius.circular(10.r),
+                                                buttonColor:
+                                                    const Color(0xFF560B76),
+                                                borderShape:
+                                                    BorderRadius.circular(10.r),
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontWeight: FontWeight.bold,
@@ -834,6 +889,3 @@ class _MovieDetailState extends State<MovieDetail> {
     );
   }
 }
-
-
-

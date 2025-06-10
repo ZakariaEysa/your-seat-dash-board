@@ -19,7 +19,8 @@ class CinemaDesign extends StatefulWidget {
 }
 
 class _CinemaDesignState extends State<CinemaDesign> {
-  final GlobalKey<DescriptionCinemaState> _descriptionKey = GlobalKey<DescriptionCinemaState>();
+  final GlobalKey<DescriptionCinemaState> _descriptionKey =
+      GlobalKey<DescriptionCinemaState>();
 
   String? cinemaId;
   PlatformFile? pickedPdf;
@@ -86,7 +87,8 @@ class _CinemaDesignState extends State<CinemaDesign> {
 
   Future<void> fetchLastUploadedPdf() async {
     try {
-      String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+      String cinemaId =
+          extractUsername(LocalStorageService.getUserData() ?? "");
 
       final documentSnapshot = await FirebaseFirestore.instance
           .collection('Tax_Cinema_design')
@@ -133,7 +135,8 @@ class _CinemaDesignState extends State<CinemaDesign> {
     }
     try {
       String base64Content = base64Encode(pickedPdf!.bytes!);
-      String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+      String cinemaId =
+          extractUsername(LocalStorageService.getUserData() ?? "");
 
       final fileInfo = {
         'fileName': pickedPdf!.name,
@@ -156,7 +159,8 @@ class _CinemaDesignState extends State<CinemaDesign> {
 
   Future<void> fetchLastUploadedCover() async {
     try {
-      String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+      String cinemaId =
+          extractUsername(LocalStorageService.getUserData() ?? "");
 
       final documentSnapshot = await FirebaseFirestore.instance
           .collection('Cinemas')
@@ -204,7 +208,8 @@ class _CinemaDesignState extends State<CinemaDesign> {
 
     try {
       String base64Cover = base64Encode(pickedCover!.bytes!);
-      String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+      String cinemaId =
+          extractUsername(LocalStorageService.getUserData() ?? "");
 
       final coverInfo = {
         'name_image': pickedCover!.name,
@@ -232,7 +237,8 @@ class _CinemaDesignState extends State<CinemaDesign> {
     }
 
     try {
-      String cinemaId = extractUsername(LocalStorageService.getUserData() ?? "");
+      String cinemaId =
+          extractUsername(LocalStorageService.getUserData() ?? "");
 
       final descriptionInfo = {
         'description': descriptionText.trim(),
@@ -257,7 +263,8 @@ class _CinemaDesignState extends State<CinemaDesign> {
     if (pickedPdf == null || pickedCover == null || descriptionText.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: Text('Please upload all required files and fill cinema description❗',
+          content: Text(
+              'Please upload all required files and fill cinema description❗',
               style: TextStyle(fontSize: 3.sp)),
           backgroundColor: Colors.red,
         ),
@@ -283,109 +290,115 @@ class _CinemaDesignState extends State<CinemaDesign> {
       backgroundColor: Colors.white,
       body: isLoading
           ? Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const CircularProgressIndicator(),
-            SizedBox(height: 20.h),
-          ],
-        ),
-      )
-          : Center(
-        child: Padding(
-          padding: EdgeInsets.all(12.0.sp),
-          child: SingleChildScrollView(
-            child: Container(
-              width: 880.w,
-              height: 770.h,
-              decoration: BoxDecoration(
-                color: const Color(0xFFF3F3F3),
-                borderRadius: BorderRadius.circular(5.r),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const CircularProgressIndicator(),
+                  SizedBox(height: 20.h),
+                ],
               ),
+            )
+          : Center(
               child: Padding(
-                padding: EdgeInsets.only(top: 40.h, left: 10.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("update Cinema Tax Register here",
-                        style: TextStyle(color: const Color(0xFF6A6767), fontSize: 5.sp)),
-                    SizedBox(height: 50.h),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Expanded(
-                          child: PDFSection(
-                            pickedPdf: pickedPdf,
-                            onPick: () async {
-                              FilePickerResult? result = await FilePicker.platform.pickFiles(
-                                type: FileType.custom,
-                                allowedExtensions: ['pdf'],
-                                withData: true,
-                              );
-                              if (result != null && result.files.single.bytes != null) {
-                                setState(() {
-                                  pickedPdf = result.files.single;
-                                });
-                              }
-                            },
-                            onDelete: () {
-                              setState(() {
-                                pickedPdf = null;
-                              });
-                            },
-                          ),
-                        ),
-                        SizedBox(width: 20.w),
-                        Expanded(
-                          child: CoverSection(
-                            pickedCover: pickedCover,
-                            onPick: setPickedCover,
-                            onDelete: () => setPickedCover(null),
-                          ),
-                        ),
-                      ],
+                padding: EdgeInsets.all(12.0.sp),
+                child: SingleChildScrollView(
+                  child: Container(
+                    width: 880.w,
+                    height: 770.h,
+                    decoration: BoxDecoration(
+                      color: const Color(0xFFF3F3F3),
+                      borderRadius: BorderRadius.circular(5.r),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 90.h, left: 40.w),
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 40.h, left: 10.w),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "Description Cinema",
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 5.sp,
+                          Text("update Cinema Tax Register here",
+                              style: TextStyle(
+                                  color: const Color(0xFF6A6767),
+                                  fontSize: 5.sp)),
+                          SizedBox(height: 50.h),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Expanded(
+                                child: PDFSection(
+                                  pickedPdf: pickedPdf,
+                                  onPick: () async {
+                                    FilePickerResult? result =
+                                        await FilePicker.platform.pickFiles(
+                                      type: FileType.custom,
+                                      allowedExtensions: ['pdf'],
+                                      withData: true,
+                                    );
+                                    if (result != null &&
+                                        result.files.single.bytes != null) {
+                                      setState(() {
+                                        pickedPdf = result.files.single;
+                                      });
+                                    }
+                                  },
+                                  onDelete: () {
+                                    setState(() {
+                                      pickedPdf = null;
+                                    });
+                                  },
+                                ),
+                              ),
+                              SizedBox(width: 20.w),
+                              Expanded(
+                                child: CoverSection(
+                                  pickedCover: pickedCover,
+                                  onPick: setPickedCover,
+                                  onDelete: () => setPickedCover(null),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(top: 90.h, left: 40.w),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Description Cinema",
+                                  style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 5.sp,
+                                  ),
+                                ),
+                                DescriptionCinema(
+                                  key: _descriptionKey,
+                                  width: 180.w,
+                                  height: 100.h,
+                                  hintText:
+                                      'Write your cinema description here',
+                                ),
+                              ],
                             ),
                           ),
-                          DescriptionCinema(
-                            key: _descriptionKey,
-                            width: 180.w,
-                            height: 100.h,
-                            hintText: 'Write your cinema description here',
+                          Padding(
+                            padding: EdgeInsets.only(
+                                top: 100.h, right: 20.w, left: 80.w),
+                            child: Row(
+                              children: [
+                                Center(
+                                  child: SaveCancelButtons(
+                                    onSave: saveFiles,
+                                    onCancel: cancelChanges,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(top: 100.h, right: 20.w, left: 80.w),
-                      child: Row(
-                        children: [
-                          Center(
-                            child: SaveCancelButtons(
-                              onSave: saveFiles,
-                              onCancel: cancelChanges,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ),
-      ),
     );
   }
 }

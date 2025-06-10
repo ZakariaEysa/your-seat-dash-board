@@ -11,7 +11,7 @@ class NewDropdownField extends StatelessWidget {
   final Color errorColor;
 
   const NewDropdownField({
-    Key? key,
+    super.key,
     this.value,
     this.readOnly = false, // قيمة افتراضية
     required this.items,
@@ -19,7 +19,7 @@ class NewDropdownField extends StatelessWidget {
     this.errorText,
     this.onChanged,
     this.errorColor = Colors.red,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -19,16 +19,16 @@ class ColorRingWidget extends StatelessWidget {
 class SegmentedCirclePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    final double strokeWidth = 24;
-    final double gapSize = 0.2;
-    final int segments = 5;
+    const double strokeWidth = 24;
+    const double gapSize = 0.2;
+    const int segments = 5;
 
     final List<Color> colors = [
-      Color(0xFF490073),
-      Color(0xFFC69CFF),
-      Color(0xFFE4C4FF),
-      Color(0xFFA464F2),
-      Color(0xFF7F33CC),
+      const Color(0xFF490073),
+      const Color(0xFFC69CFF),
+      const Color(0xFFE4C4FF),
+      const Color(0xFFA464F2),
+      const Color(0xFF7F33CC),
     ];
 
     final Paint paint = Paint()
@@ -43,8 +43,8 @@ class SegmentedCirclePainter extends CustomPainter {
       size.height - strokeWidth,
     );
 
-    final double totalAngle = 2 * 3.141592653589793;
-    final double sweepAngle = (totalAngle - (segments * gapSize)) / segments;
+    const double totalAngle = 2 * 3.141592653589793;
+    const double sweepAngle = (totalAngle - (segments * gapSize)) / segments;
 
     for (int i = 0; i < segments; i++) {
       paint.color = colors[i];

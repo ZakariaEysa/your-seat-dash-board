@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:yourseatgraduationproject/features/admin_flow/homepage/widgets/status_cell.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/homepage/widgets/user_cell.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/moives/widgets/movie_photo.dart';
 
 import 'DetailsButton.dart';
 import 'movie_cell.dart';
@@ -71,7 +70,14 @@ class _MovieStatesState extends State<MovieStates> {
   }
 
   List<DataColumn> _buildHeaders() {
-    final headers = ['No.', 'User no.', 'Movies', 'Status', 'Earning', 'Details'];
+    final headers = [
+      'No.',
+      'User no.',
+      'Movies',
+      'Status',
+      'Earning',
+      'Details'
+    ];
 
     return headers.map((title) {
       return DataColumn(

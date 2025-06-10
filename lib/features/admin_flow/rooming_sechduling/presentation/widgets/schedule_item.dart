@@ -44,12 +44,28 @@ class _RoomSchedulePageState extends State<RoomSchedulePage> {
         content: SingleChildScrollView(
           child: Column(
             children: [
-              TextField(controller: roomController, decoration: const InputDecoration(labelText: 'Room')),
-              TextField(controller: movieController, decoration: const InputDecoration(labelText: 'Movie')),
-              TextField(controller: startDateController, decoration: const InputDecoration(labelText: 'Start Date (yyyy-MM-dd)')),
-              TextField(controller: startTimeController, decoration: const InputDecoration(labelText: 'Start Time (HH:mm)')),
-              TextField(controller: endDateController, decoration: const InputDecoration(labelText: 'End Date (yyyy-MM-dd)')),
-              TextField(controller: endTimeController, decoration: const InputDecoration(labelText: 'End Time (HH:mm)')),
+              TextField(
+                  controller: roomController,
+                  decoration: const InputDecoration(labelText: 'Room')),
+              TextField(
+                  controller: movieController,
+                  decoration: const InputDecoration(labelText: 'Movie')),
+              TextField(
+                  controller: startDateController,
+                  decoration: const InputDecoration(
+                      labelText: 'Start Date (yyyy-MM-dd)')),
+              TextField(
+                  controller: startTimeController,
+                  decoration:
+                      const InputDecoration(labelText: 'Start Time (HH:mm)')),
+              TextField(
+                  controller: endDateController,
+                  decoration: const InputDecoration(
+                      labelText: 'End Date (yyyy-MM-dd)')),
+              TextField(
+                  controller: endTimeController,
+                  decoration:
+                      const InputDecoration(labelText: 'End Time (HH:mm)')),
             ],
           ),
         ),
@@ -60,51 +76,50 @@ class _RoomSchedulePageState extends State<RoomSchedulePage> {
           ),
           ElevatedButton(
             onPressed: () {
-                final newRoom = roomController.text;
-                final newMovie = movieController.text;
-                final newStartDate = startDateController.text;
-                final newStartTime = startTimeController.text;
-                final newEndDate = endDateController.text;
-                final newEndTime = endTimeController.text;
+              final newRoom = roomController.text;
+              final newMovie = movieController.text;
+              final newStartDate = startDateController.text;
+              final newStartTime = startTimeController.text;
+              final newEndDate = endDateController.text;
+              final newEndTime = endTimeController.text;
 
-                bool isDuplicate = widget.scheduleItems.any((other) =>
-                other != item &&
-                    other.room.trim().toLowerCase() == newRoom.trim().toLowerCase() &&
-                    other.movie.trim().toLowerCase() == newMovie.trim().toLowerCase() &&
-                    other.startDate.trim() == newStartDate.trim() &&
-                    other.startTime.trim() == newStartTime.trim() &&
-                    other.endDate.trim() == newEndDate.trim() &&
-                    other.endTime.trim() == newEndTime.trim());
+              bool isDuplicate = widget.scheduleItems.any((other) =>
+                  other != item &&
+                  other.room.trim().toLowerCase() ==
+                      newRoom.trim().toLowerCase() &&
+                  other.movie.trim().toLowerCase() ==
+                      newMovie.trim().toLowerCase() &&
+                  other.startDate.trim() == newStartDate.trim() &&
+                  other.startTime.trim() == newStartTime.trim() &&
+                  other.endDate.trim() == newEndDate.trim() &&
+                  other.endTime.trim() == newEndTime.trim());
 
-
-                if (isDuplicate) {
-                  showDialog(
-                    context: context,
-                    builder: (_) => AlertDialog(
-                      title: const Text('تنبيه'),
-                      content: const Text('هذا الجدول موجود بالفعل!'),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('حسناً'),
-                        ),
-                      ],
-                    ),
-                  );
-                  return;
-                }
-                setState(() {
-                  item.room = roomController.text;
-                  item.movie = movieController.text;
-                  item.startDate = startDateController.text;
-                  item.startTime = startTimeController.text;
-                  item.endDate = endDateController.text;
-                  item.endTime = endTimeController.text;
-                });
-                Navigator.pop(context);
+              if (isDuplicate) {
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
+                    title: const Text('تنبيه'),
+                    content: const Text('هذا الجدول موجود بالفعل!'),
+                    actions: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context),
+                        child: const Text('حسناً'),
+                      ),
+                    ],
+                  ),
+                );
+                return;
+              }
+              setState(() {
+                item.room = roomController.text;
+                item.movie = movieController.text;
+                item.startDate = startDateController.text;
+                item.startTime = startTimeController.text;
+                item.endDate = endDateController.text;
+                item.endTime = endTimeController.text;
+              });
+              Navigator.pop(context);
             },
-
-
             child: const Text('حفظ'),
           ),
         ],
@@ -116,8 +131,10 @@ class _RoomSchedulePageState extends State<RoomSchedulePage> {
   Widget build(BuildContext context) {
     widget.scheduleItems.sort((a, b) {
       try {
-        final dateTimeA = DateFormat('yyyy-MM-dd HH:mm').parse('${a.startDate} ${a.startTime}');
-        final dateTimeB = DateFormat('yyyy-MM-dd HH:mm').parse('${b.startDate} ${b.startTime}');
+        final dateTimeA = DateFormat('yyyy-MM-dd HH:mm')
+            .parse('${a.startDate} ${a.startTime}');
+        final dateTimeB = DateFormat('yyyy-MM-dd HH:mm')
+            .parse('${b.startDate} ${b.startTime}');
         return dateTimeB.compareTo(dateTimeA);
       } catch (e) {
         return 0;

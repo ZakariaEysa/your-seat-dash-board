@@ -84,7 +84,6 @@ class MovieDeletedCompletely extends MovieState {}
 
 class MovieDeleting extends MovieState {}
 
-
 class MovieIndexSet extends MovieState {
   final int index;
   MovieIndexSet(this.index);

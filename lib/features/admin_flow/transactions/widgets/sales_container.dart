@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:yourseatgraduationproject/features/admin_flow/payment/presentation/cubit/payment_cubit.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/transactions/widgets/sales_card.dart';
 
 class SalesContainer extends StatefulWidget {
@@ -33,7 +31,7 @@ class _SalesContainerState extends State<SalesContainer> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
+                  const Text(
                     'Sales Summary',
                     style: TextStyle(
                       fontSize: 18,
@@ -48,19 +46,19 @@ class _SalesContainerState extends State<SalesContainer> {
                       SalesCard(
                         title: 'Complete Transactions',
                         value: widget.status["completed"].toString(),
-                        color: Color(0xFFFFE2E5),
+                        color: const Color(0xFFFFE2E5),
                         imagePath: 'assets/images/sale1.png',
                       ),
                       SalesCard(
                         title: 'Refund Transactions',
                         value: widget.status["refunded"].toString(),
-                        color: Color(0xFFFFF4DE),
+                        color: const Color(0xFFFFF4DE),
                         imagePath: 'assets/images/sale2.png',
                       ),
                       SalesCard(
                         title: 'Total Amount',
                         value: widget.status["total"].toString(),
-                        color: Color(0xFFDCFCE7),
+                        color: const Color(0xFFDCFCE7),
                         imagePath: 'assets/images/sale3.png',
                       ),
                     ],

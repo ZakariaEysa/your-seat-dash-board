@@ -151,7 +151,6 @@
 //   }
 // }
 
-
 import 'dart:convert';
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
@@ -192,14 +191,17 @@ class _ActorNamesState extends State<ActorNames> {
     super.initState();
     final cubit = MovieCubit.get(context);
 
-    cubit.actorControllers = widget.actors.map((name) => TextEditingController(text: name)).toList();
+    cubit.actorControllers =
+        widget.actors.map((name) => TextEditingController(text: name)).toList();
 
     _pickedImages = List.generate(cubit.actorControllers!.length, (_) => null);
     _actorImages = List.generate(cubit.actorControllers!.length, (_) => null);
-    cubit.pickedActorImages = List.generate(cubit.actorControllers!.length, (_) => null);
+    cubit.pickedActorImages =
+        List.generate(cubit.actorControllers!.length, (_) => null);
 
     // قراءة الصور من Base64
-    if (widget.movieData["cast_images"] != null && widget.movieData["cast_images"] is List) {
+    if (widget.movieData["cast_images"] != null &&
+        widget.movieData["cast_images"] is List) {
       List<dynamic> images = widget.movieData["cast_images"];
       for (int i = 0; i < images.length && i < _actorImages.length; i++) {
         if (images[i] != null && images[i] is String) {
@@ -281,7 +283,9 @@ class _ActorNamesState extends State<ActorNames> {
               controller: cubit.actorControllers![i],
               imageBytes: _actorImages[i],
               onAdd: widget.isViewOnly ? null : _addActorField,
-              onDelete: widget.isViewOnly || i == 0 ? null : () => _removeActorField(i),
+              onDelete: widget.isViewOnly || i == 0
+                  ? null
+                  : () => _removeActorField(i),
               onUpload: () => _pickImage(i),
               onDeleteImage: () => _deleteImage(i),
               validator: (value) => Validators.validateRequired(
@@ -302,7 +306,8 @@ class _ActorNamesState extends State<ActorNames> {
                 controller: cubit.actorControllers![i + 1],
                 imageBytes: _actorImages[i + 1],
                 onAdd: null,
-                onDelete: widget.isViewOnly ? null : () => _removeActorField(i + 1),
+                onDelete:
+                    widget.isViewOnly ? null : () => _removeActorField(i + 1),
                 onUpload: () => _pickImage(i + 1),
                 onDeleteImage: () => _deleteImage(i + 1),
                 validator: (value) => Validators.validateRequired(
@@ -344,4 +349,3 @@ class _ActorNamesState extends State<ActorNames> {
     );
   }
 }
-

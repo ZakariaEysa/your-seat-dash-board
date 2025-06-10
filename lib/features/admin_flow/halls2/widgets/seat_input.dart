@@ -11,6 +11,7 @@ class SeatInput extends StatelessWidget {
   final String? Function(String?)? validator;
 
   const SeatInput({
+    super.key,
     required this.label,
     required this.color,
     this.controller,

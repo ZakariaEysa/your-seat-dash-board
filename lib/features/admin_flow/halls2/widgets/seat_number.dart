@@ -12,6 +12,7 @@ class SeatNumber extends StatelessWidget {
   final VoidCallback? onChanged;
 
   const SeatNumber({
+    super.key,
     required this.vipController,
     required this.premiumController,
     required this.standardController,
@@ -45,7 +46,7 @@ class SeatNumber extends StatelessWidget {
               Expanded(
                 child: SeatInput(
                   label: 'VIP',
-                  color: Color(0xFFA79F06),
+                  color: const Color(0xFFA79F06),
                   controller: vipController,
                   errorText: vipError,
                   onChanged: (value) => onChanged?.call(),
@@ -55,7 +56,7 @@ class SeatNumber extends StatelessWidget {
               Expanded(
                 child: SeatInput(
                   label: 'Premium',
-                  color: Color(0xFFFF5E3A),
+                  color: const Color(0xFFFF5E3A),
                   controller: premiumController,
                   errorText: premiumError,
                   onChanged: (value) => onChanged?.call(),
@@ -74,12 +75,12 @@ class SeatNumber extends StatelessWidget {
               Column(
                 children: [
                   IconButton(
-                    icon: Icon(Icons.add_circle_outline),
+                    icon: const Icon(Icons.add_circle_outline),
                     color: Colors.black,
                     onPressed: () {},
                   ),
                   IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
+                    icon: const Icon(Icons.delete, color: Colors.red),
                     onPressed: () {},
                   ),
                 ],

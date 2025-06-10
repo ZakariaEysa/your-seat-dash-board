@@ -80,13 +80,15 @@ class _DateFieldState extends State<DateField> {
       if (widget.compareWithDate != null) {
         if (widget.isStartDate && picked.isAfter(widget.compareWithDate!)) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Start date must be before end date 📅")),
+            const SnackBar(
+                content: Text("Start date must be before end date 📅")),
           );
           return;
         }
         if (!widget.isStartDate && picked.isBefore(widget.compareWithDate!)) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("End date must be after start date 📅")),
+            const SnackBar(
+                content: Text("End date must be after start date 📅")),
           );
           return;
         }

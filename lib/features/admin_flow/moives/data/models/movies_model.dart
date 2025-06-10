@@ -1,10 +1,9 @@
 import 'package:equatable/equatable.dart';
 import 'package:yourseatgraduationproject/features/admin_flow/moives/data/models/crew_model.dart';
 
-
 class MoviesDetailsModel extends Equatable {
   final List<dynamic>? castImages;
-  final Map<String,dynamic>? crewImages;
+  final Map<String, dynamic>? crewImages;
   final List<dynamic>? cast;
   final Crew? crew;
   final String? category;
@@ -19,7 +18,6 @@ class MoviesDetailsModel extends Equatable {
   final String? posterImage;
   final String? releaseDate;
   final String? trailer;
-
 
   const MoviesDetailsModel({
     this.crewImages,
@@ -43,11 +41,12 @@ class MoviesDetailsModel extends Equatable {
   factory MoviesDetailsModel.fromJson(Map<String, dynamic> json) {
     return MoviesDetailsModel(
       castImages: json['cast_images'] as List<dynamic>?,
-      crewImages: json['crew_images'] as Map<String,dynamic>? ??{
-        'director' : "https://picsum.photos/150/130",
-        'producer' : "https://picsum.photos/150/130",
-        'writer' : "https://picsum.photos/150/130"
-      },
+      crewImages: json['crew_images'] as Map<String, dynamic>? ??
+          {
+            'director': "https://picsum.photos/150/130",
+            'producer': "https://picsum.photos/150/130",
+            'writer': "https://picsum.photos/150/130"
+          },
       cast: json['cast'] as List<dynamic>?,
       crew: json['crew'] == null
           ? null
@@ -67,23 +66,23 @@ class MoviesDetailsModel extends Equatable {
   }
 
   Map<String, dynamic> toJson() => {
-    // 'Comments': comments?.map((e) => e.toJson()).toList(),
-    'cast_images': castImages,
-    'crew_images': crewImages,
-    'cast': cast,
-    'crew': crew?.toJson(),
-    'category': category,
-    'rating': rating,
-    'description': description,
-    'language': language,
-    'age_rating': ageRating,
-    'duration': duration,
-    'name': name,
-    'poster_image': posterImage,
-    'release_date': releaseDate,
-    'trailer': trailer,
-    'status' : status
-  };
+        // 'Comments': comments?.map((e) => e.toJson()).toList(),
+        'cast_images': castImages,
+        'crew_images': crewImages,
+        'cast': cast,
+        'crew': crew?.toJson(),
+        'category': category,
+        'rating': rating,
+        'description': description,
+        'language': language,
+        'age_rating': ageRating,
+        'duration': duration,
+        'name': name,
+        'poster_image': posterImage,
+        'release_date': releaseDate,
+        'trailer': trailer,
+        'status': status
+      };
 
   @override
   List<Object?> get props {
